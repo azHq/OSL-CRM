@@ -9,7 +9,7 @@
 		<div class="header-left">
 			<a href="{{url('/')}}" class="logo">
 				<img src="{{ URL::asset('/assets/img/cover.jpg')}}" alt="Logo" class="sidebar-logo">
-				<img src="{{ URL::asset('/assets/img/mini-logo.png')}}" alt="Logo" class="mini-sidebar-logo">
+				<img src="{{ URL::asset('/assets/img/cover-sm.jpg')}}" alt="Logo" class="mini-sidebar-logo">
 			</a>
 		</div>
 		<!-- /Logo -->
@@ -68,7 +68,11 @@
 				<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
 					<span class="user-img"><img src="{{ URL::asset('/assets/img/profiles/profile.png')}}" alt="">
 						<span class="status online"></span></span>
-					<span>{{ Auth::user()->name }}</span>
+					<span class="">
+						{{ Auth::user()->name }} <br>
+						{{ Auth::user()->role_name }}
+					</span>
+
 				</a>
 				<div class="dropdown-menu">
 					<a class="dropdown-item" href="{{url('profile')}}">My Profile</a>

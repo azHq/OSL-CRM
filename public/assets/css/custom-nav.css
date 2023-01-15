@@ -1,3 +1,4 @@
-/* #sidebar {
-    background-image: url('../img/sidebar_card_black.png');
-} */
+#sidebar {
+    background-color: #14273a;
+    padding-top: 8px;
+}

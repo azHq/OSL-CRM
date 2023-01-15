@@ -44,14 +44,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('leads/multiple/convert', [LeadController::class, 'convertMultipleLeads'])->name('leads.multiple.convert');
     Route::post('leads/multiple/assign', [LeadController::class, 'assignMultipleLeads'])->name('leads.multiple.assign');
 
+    
+    Route::get('leads/subcategories/{category_id}', [LeadController::class, 'subcategoriesList'])->name('leads.subcategories.list');
+
+    Route::get('leads/status/{status}', [LeadController::class, 'indexByStatus'])->name('leads.status.index');
+    Route::get('leads/status/{status}/list', [LeadController::class, 'lisByStatus'])->name('leads.status.list');
+
     Route::post('leads/import', [LeadController::class, 'import'])->name('leads.import');
     Route::get('leads/export', [LeadController::class, 'export'])->name('leads.export');
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
     Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
-    Route::get('leads/new', [LeadController::class, 'newLead'])->name('leads.newleads');
-    Route::get('leads/new/list', [LeadController::class, 'listNewLeads'])->name('leads.new.list');
-    Route::get('leads/first-contact', [LeadController::class, 'firstContactLead'])->name('leads.first.contact');
-    Route::get('leads/first-contact/list', [LeadController::class, 'listFirstContactLead'])->name('leads.first.contact.list');
     Route::get('leads/{id}', [LeadController::class, 'view'])->name('leads.view');
     Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
     Route::post('leads', [LeadController::class, 'store'])->name('leads.store');
@@ -106,6 +108,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::get('tasks/{id}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+    Route::get('tasks/{id}/cancel', [TaskController::class, 'cancel'])->name('tasks.cancel');
     Route::get('tasks/{id}/delete', [TaskController::class, 'delete'])->name('tasks.delete');
     Route::put('tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
 

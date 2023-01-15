@@ -538,7 +538,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .btn.btn-rounded {
-	border-radius: 50px;
+	border-radius: 5px;
 }
 
 
@@ -1044,7 +1044,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .bg-gradient-primary {
-	background: linear-gradient(to right, #da8cff, #9a55ff);
+	background: linear-gradient(to right, #a68fc7, #9077b5, #8869b5);
 }
 
 .bg-gradient-secondary {
@@ -1534,6 +1534,7 @@ table.dataTable thead>tr>td.sorting {
 
 .mini-sidebar-logo {
 	display: none;
+	width: 100px;
 }
 
 .mini-sidebar .header-left .mini-sidebar-logo {
@@ -1731,7 +1732,7 @@ table.dataTable thead>tr>td.sorting {
 	left: 0;
 	margin-top: 0;
 	position: fixed;
-	top: 60px;
+	top: 101px;
 	transition: all 0.2s ease-in-out 0s;
 	width: 230px;
 	z-index: 1001;
@@ -1769,13 +1770,13 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .sidebar-menu li a:hover {
-	background-color: #9a55ff;
+	background-color: #937bb7;
 	color: #fff;
 }
 
 .sidebar-menu li.active a {
 	color: #fff;
-	background-color: #9a55ff;
+	background-color: #9077b5;
 }
 
 .menu-title {
@@ -2195,10 +2196,10 @@ table.dataTable thead>tr>td.sorting {
 
 .account-box .account-btn {
 	background: #9a55ff;
-	background: -moz-linear-gradient(left, #9a55ff 0%, #fc6075 100%);
-	background: -webkit-linear-gradient(left, #9a55ff 0%, #fc6075 100%);
-	background: -ms-linear-gradient(left, #9a55ff 0%, #fc6075 100%);
-	background: linear-gradient(to right, #9a55ff 0%, #fc6075 100%);
+	background: -moz-linear-gradient(left, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
+	background: -webkit-linear-gradient(left, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
+	background: -ms-linear-gradient(left, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
+	background: linear-gradient(to right, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
 	border: 0;
 	border-radius: 4px;
 	display: block;
@@ -4395,7 +4396,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .user-menu.nav>li>a .badge {
-	background: linear-gradient(to right, #da8cff, #9a55ff);
+	background: linear-gradient(to right, #a68fc7, #9077b5, #8869b5);
 }
 
 .user-menu.nav>li>a:hover,
@@ -7795,7 +7796,7 @@ table .badge {
 /*btn styles*/
 
 .btn-gradient-primary {
-	background: linear-gradient(to right, #da8cff, #9a55ff);
+	background: linear-gradient(to right, #a68fc7, #9077b5, #8869b5);
 	font-size: 14px;
 	padding: 10px 30px;
 	color: #fff;
@@ -10610,7 +10611,7 @@ td.add-remove {
 .inovices-widget-header .inovices-amount {
 	font-weight: 600;
 	font-size: 24px;
-	background-color: #9a55ff;
+	background-color: #9077b5;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
@@ -12167,7 +12168,7 @@ table .badge {
 }
 
 .card-icon-color {
-	color: #9a55ff;
+	color: #9077b5;
 }
 
 .dataTables_filter {
@@ -12211,6 +12212,6 @@ table.dataTable thead .sorting_disabled:after {
 }
 
 .login-logo {
-	width: 236px;
+	width: 500px;
 	margin-bottom: 16px;
 }

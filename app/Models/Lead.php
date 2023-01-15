@@ -32,7 +32,7 @@ class Lead extends Model
         self::updated(function ($lead) {
             $updatedFields = '';
             foreach ($lead->getDirty() as $key => $value) {
-                $updatedFields .= (' ' . $key.',');
+                $updatedFields .= (' ' . $key . ',');
             }
             NewLog::create('Lead Updated', 'Lead "' . $lead->name . '" has been updated. Changed fields are' . $updatedFields . '.');
         });
@@ -60,5 +60,10 @@ class Lead extends Model
     public function scopePure($query)
     {
         return $query->doesntHave('student');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
     }
 }

@@ -245,9 +245,36 @@ class TaskController extends Controller
         }
     }
 
-    public function complete()
+    public function complete($id)
     {
-        // 
+        try {
+            $task = Task::find($id);
+            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            $task->update([
+                'status' => 'Resolved'
+            ]);
+            Session::flash('success', 'Task completed successfully.');
+            return response('Task completed successfully.');
+        } catch (\Exception $e) {
+            Session::flash('error', $e->getMessage());
+            return response($e->getMessage());
+        }
+    }
+
+    public function cancel($id)
+    {
+        try {
+            $task = Task::find($id);
+            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            $task->update([
+                'status' => 'Canceled'
+            ]);
+            Session::flash('success', 'Task canceled successfully.');
+            return response('Task canceled successfully.');
+        } catch (\Exception $e) {
+            Session::flash('error', $e->getMessage());
+            return response($e->getMessage());
+        }
     }
 
     public function delete($id, Request $request)

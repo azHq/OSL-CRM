@@ -20,6 +20,8 @@ class Task extends Model
         'status'
     ];
 
+    protected $append = ['color'];
+
     protected static function booted()
     {
         static::addGlobalScope('rolewise', function ($query) {
@@ -47,5 +49,23 @@ class Task extends Model
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assignee_id');
+    }
+
+    public function getColorAttribute()
+    {
+        switch ($this->status) {
+            case 'Pending':
+                return '#000';
+                break;
+            case 'Resolved':
+                return 'green';
+                break;
+            case 'Canceled':
+                return 'red';
+                break;
+            default:
+                return '#000';
+                break;
+        }
     }
 }

@@ -69,17 +69,33 @@ class AuthController extends Controller
             return view('layout.mainlayout');
         }
 
-        $leads = Lead::pure()->count();
-        $students = Student::count();
-        $documents = Student::where('documents_pending', true)->count();
+        $leads = Lead::pure()->whereHas('subcategory', function ($query) {
+            $query->where('category_id', 1);
+        })->count();
+
+        $pendings = Lead::pure()->whereHas('subcategory', function ($query) {
+            $query->where('category_id', 2);
+        })->count();
+
+        $admissions = Lead::pure()->whereHas('subcategory', function ($query) {
+            $query->where('category_id', 3);
+        })->count();
+
+        $visa_compliances = Lead::pure()->whereHas('subcategory', function ($query) {
+            $query->where('category_id', 4);
+        })->count();
+
+
         $list = Task::count();
 
         $data['leads'] = $leads;
-        $data['students'] = $students;
-        $data['documents'] = $documents;
+        $data['pendings'] = $pendings;
+        $data['admissions'] = $admissions;
+        $data['visa_compliances'] = $visa_compliances;
         $data['list'] = $list;
 
-        return view('index', compact('data'));
+        $tasks = Task::paginate(15);
+        return view('index', compact('data', 'tasks'));
     }
 
     public function create(array $data)

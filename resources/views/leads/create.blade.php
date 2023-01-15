@@ -77,15 +77,11 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Status</label>
+											<label class="col-form-label">Student Status</label>
 											<select class=" form-control form-select" name="status">
-												<option value="New Lead">New Lead</option>
-												<option value="1st Contact">1st Contact</option>
-												<option value="2nd Contact">2nd Contact</option>
-												<option value="3rd Contact">3rd Contact</option>
-												<option value="Final Call">Final Call</option>
-												<option value="Cold">Cold</option>
-												<option value="Dead">Dead</option>
+												<option value="Unknown">Unknown</option>
+												<option value="Potential">Potential</option>
+												<option value="Not Potential">Not Potential</option>
 											</select>
 										</div>
 									</div>
@@ -160,11 +156,35 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<div class="col-md-6 col-sm-12">
+								<div class="col-4 col-sm-12">
 									<label class="col-form-label">Counsellor</label>
 									<select class=" form-control form-select" name="owner_id" id="create-lead-owners" readonly>
 										<option value="{{Auth::user()->id}}" selected>{{Auth::user()->name}}</option>
 									</select>
+								</div>
+								<div class="col">
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<label class="col-form-label">Category</label>
+											<select id="lead-create-category" class=" form-control form-select" name="category_id">
+												@foreach(App\Models\Category::all() as $category)
+												<option value="{{$category->id}}">{{$category->name}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<label class="col-form-label">Subcategory</label>
+											<select id="lead-create-subcategory" class=" form-control form-select" name="subcategory_id">
+												@foreach(App\Models\Subcategory::where('category_id', 1)->get() as $subcategory)
+												<option value="{{$subcategory->id}}">{{$subcategory->name}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="text-center py-3">
@@ -217,5 +237,22 @@
 				}
 			});
 		}
+	});
+
+	$('#lead-create-category').on('change', function() {
+		var category_id = $('#lead-create-category').val();
+		var url = "{{route('leads.subcategories.list', 'category_id')}}";
+		url = url.replace('category_id', category_id);
+		$.ajax({
+			type: 'GET',
+			url: url,
+			success: function(data) {
+				var subcats = "";
+				data.forEach(function(subcategory) {
+					subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
+				})
+				$('#lead-create-subcategory').html(subcats);
+			}
+		});
 	});
 </script>

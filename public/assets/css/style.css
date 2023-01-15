@@ -538,7 +538,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .btn.btn-rounded {
-	border-radius: 50px;
+	border-radius: 5px;
 }
 
 
@@ -1044,7 +1044,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .bg-gradient-primary {
-	background: linear-gradient(to right, #987ddbfa, #9a55ff);
+	background: linear-gradient(to right, #a68fc7, #9077b5, #8869b5);
 }
 
 .bg-gradient-secondary {
@@ -1534,6 +1534,7 @@ table.dataTable thead>tr>td.sorting {
 
 .mini-sidebar-logo {
 	display: none;
+	width: 100px;
 }
 
 .mini-sidebar .header-left .mini-sidebar-logo {
@@ -1545,9 +1546,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .header-left img {
-	/* width: 100%; */
-	width: 230px;
-	height: 60px;
+	width: 100%;
 }
 
 .header .header-left .logo {
@@ -1727,13 +1726,13 @@ table.dataTable thead>tr>td.sorting {
 -----------------------*/
 
 .sidebar {
-	background-color: #987ddbfa;
+	background-color: #fff;
 	box-shadow: 0px 0px 20px 2px #eaeaea;
 	bottom: 0;
 	left: 0;
 	margin-top: 0;
 	position: fixed;
-	top: 60px;
+	top: 101px;
 	transition: all 0.2s ease-in-out 0s;
 	width: 230px;
 	z-index: 1001;
@@ -1763,21 +1762,21 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .sidebar-menu li a {
-	color: #fff;
+	color: #dac6f8;
 	display: block;
 	font-size: 15px;
 	height: auto;
-	padding: 15px 20px;
+	padding: 0 20px;
 }
 
 .sidebar-menu li a:hover {
-	background-color: #ccc;
+	background-color: #937bb7;
 	color: #fff;
 }
 
 .sidebar-menu li.active a {
 	color: #fff;
-	background-color: #ccc;
+	background-color: #9077b5;
 }
 
 .menu-title {
@@ -1889,9 +1888,9 @@ table.dataTable thead>tr>td.sorting {
 	position: relative;
 }
 
-/* .sidebar-menu ul ul {
+.sidebar-menu ul ul {
 	display: none;
-} */
+}
 
 .sidebar-menu ul ul ul a {
 	padding-left: 70px;
@@ -1904,21 +1903,7 @@ table.dataTable thead>tr>td.sorting {
 .sidebar-menu>ul>li {
 	position: relative;
 }
-.sidebar-menu .sub-category{
-	transition: all 0.5s linear;
-	padding: 0 !important;
-	background-color: #ccc;
-	margin: 0px;
-}
-.sidebar-menu .sub-category li a{
-	font-weight: 400;
-	font-size: 15px !important;
-	color: #ffffff !important;
-	border-bottom: 1px solid #ffffff47;
-	background-color: transparent;
-	padding: 5px;
-	margin-left: 20px;
-  }
+
 .sidebar-menu .menu-arrow {
 	-webkit-transition: -webkit-transform 0.15s;
 	-o-transition: -o-transform 0.15s;
@@ -2009,10 +1994,10 @@ table.dataTable thead>tr>td.sorting {
 	position: relative;
 }
 
-/* .sidebar-menu li .active {
+.sidebar-menu li .active {
 	background: #9a55ff;
 	color: #fff;
-} */
+}
 
 .sidebar-menu ul li a i {
 	display: inline-block;
@@ -2211,10 +2196,10 @@ table.dataTable thead>tr>td.sorting {
 
 .account-box .account-btn {
 	background: #9a55ff;
-	background: -moz-linear-gradient(left, #9a55ff 0%, #fc6075 100%);
-	background: -webkit-linear-gradient(left, #9a55ff 0%, #fc6075 100%);
-	background: -ms-linear-gradient(left, #9a55ff 0%, #fc6075 100%);
-	background: linear-gradient(to right, #9a55ff 0%, #fc6075 100%);
+	background: -moz-linear-gradient(left, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
+	background: -webkit-linear-gradient(left, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
+	background: -ms-linear-gradient(left, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
+	background: linear-gradient(to right, #c7bad9, #a68fc7, #9077b5, #8869b5 100%);
 	border: 0;
 	border-radius: 4px;
 	display: block;
@@ -4411,7 +4396,7 @@ table.dataTable thead>tr>td.sorting {
 }
 
 .user-menu.nav>li>a .badge {
-	background: linear-gradient(to right, #987ddbfa, #ccc);
+	background: linear-gradient(to right, #a68fc7, #9077b5, #8869b5);
 }
 
 .user-menu.nav>li>a:hover,
@@ -7686,7 +7671,7 @@ table td {
 
 .nav-profile,
 .nav-profile a:hover {
-	background-color: #987ddbfa;
+	background: linear-gradient(to right, #da8cff, #9a55ff);
 }
 
 .nav-profile {
@@ -7811,7 +7796,7 @@ table .badge {
 /*btn styles*/
 
 .btn-gradient-primary {
-	background: linear-gradient(to right, #987ddbfa, #9a55ff);
+	background: linear-gradient(to right, #a68fc7, #9077b5, #8869b5);
 	font-size: 14px;
 	padding: 10px 30px;
 	color: #fff;
@@ -10625,11 +10610,11 @@ td.add-remove {
 
 .inovices-widget-header .inovices-amount {
 	font-weight: 600;
-	font-size: 16px;
-	background-color: #987ddbfa;
-	width: 40px;
-	height: 40px;
-	border-top-left-radius: 40%;
+	font-size: 24px;
+	background-color: #9077b5;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
 	color: white;
 	display: flex;
 }
@@ -11206,19 +11191,15 @@ table .badge {
 	}
 
 	.mini-sidebar .header-left .logo img {
-		/* height: auto;
+		height: auto;
 		max-height: 23px;
 		width: auto;
 		position: relative;
-		top: 17px; */
-		height: 60px;
-		max-height: 60px;
-		width: auto;
-		position: relative;
+		top: 17px;
 	}
 
 	.mini-sidebar .header .header-left {
-		/* padding: 0 5px; */
+		padding: 0 5px;
 		width: 60px;
 	}
 
@@ -12187,7 +12168,7 @@ table .badge {
 }
 
 .card-icon-color {
-	color: #987ddbfa;
+	color: #9077b5;
 }
 
 .dataTables_filter {
@@ -12231,6 +12212,6 @@ table.dataTable thead .sorting_disabled:after {
 }
 
 .login-logo {
-	width: 236px;
+	width: 500px;
 	margin-bottom: 16px;
 }

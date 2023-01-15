@@ -30,6 +30,7 @@ return new class extends Migration
             $table->boolean('documents_pending')->default(true);
             $table->string('tag')->nullable();
             $table->foreignId('owner_id')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
             $table->foreignId('creator_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
