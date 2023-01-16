@@ -60,7 +60,7 @@ class UserController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '';
-                    $action .= '<a href="' . route('students.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
+                    $action .= '<a href="' . route('users.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
                     $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_user" class="edit-user lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
                     $action .= '<a href="#" onclick="userDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     return $action;
