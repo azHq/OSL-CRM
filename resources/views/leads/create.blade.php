@@ -159,7 +159,10 @@
 								<div class="col-4 col-sm-12">
 									<label class="col-form-label">Counsellor</label>
 									<select class=" form-control form-select" name="owner_id" id="create-lead-owners" readonly>
-										<option value="{{Auth::user()->id}}" selected>{{Auth::user()->name}}</option>
+										<option value="">Unassigned</option>
+										@foreach(App\Models\User::admins()->get() as $user)
+										<option value="{{$user->id}}" {{Auth::user()->id==$user->id?'selected':''}}>{{$user->name}}</option>
+										@endforeach
 									</select>
 								</div>
 								<div class="col">
