@@ -151,21 +151,40 @@
 										</div>
 									</div>
 								</div>
-							</div>
-							@if (Auth::user()->hasRole('super-admin'))
-							<div class="form-group row">
-								<div class="col-md-6 col-sm-12">
-									<label class="col-form-label">Counsellor</label>
-									<select id="edit-lead-owner_id" class=" form-control form-select" name="owner_id">
-										<option value="">Unassigned</option>
-									</select>
+								<div class="form-group row">
+									@if (Auth::user()->hasRole('super-admin'))
+									<div class="col-md-4 col-sm-12">
+										<label class="col-form-label">Counsellor</label>
+										<select id="edit-lead-owner_id" class=" form-control form-select" name="owner_id">
+											<option value="">Unassigned</option>
+										</select>
+									</div>
+									@endif
+									<div class="col">
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<label class="col-form-label">Category</label>
+												<select id="lead-edit-category" class=" form-control form-select" name="category_id">
+													
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<label class="col-form-label">Subcategory</label>
+												<select id="lead-edit-subcategory" class=" form-control form-select" name="subcategory_id">
+
+												</select>
+											</div>
+										</div>
+									</div>
 								</div>
-							</div>
-							@endif
-							<div class="text-center py-3">
-								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
-								<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
-							</div>
+								<div class="text-center py-3">
+									<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
+									<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
+								</div>
 						</form>
 					</div>
 				</div>
@@ -194,19 +213,32 @@
 			type: 'GET',
 			url: url,
 			success: function(data) {
-				$('#edit-lead-name').val(data.name);
-				$('#edit-lead-email').val(data.email);
-				$('#edit-lead-mobile').val(data.mobile);
-				$('#edit-lead-intake_month').val(data.intake_month);
-				$('#edit-lead-status').val(data.status);
-				$('#edit-lead-intake_year').val(data.intake_year);
-				$('#edit-lead-last_education').val(data.last_education);
-				$('#edit-lead-completion_date').val(data.completion_date);
-				$('#edit-lead-education_details').val(data.education_details);
-				$('#edit-lead-english').val(data.english);
-				$('#edit-lead-english_result').val(data.english_result);
-				$('#edit-lead-job_experience').val(data.job_experience);
-				$('#edit-lead-owner_id').val(data.owner_id);
+				var lead = data.lead;
+				$('#edit-lead-name').val(lead.name);
+				$('#edit-lead-email').val(lead.email);
+				$('#edit-lead-mobile').val(lead.mobile);
+				$('#edit-lead-intake_month').val(lead.intake_month);
+				$('#edit-lead-status').val(lead.status);
+				$('#edit-lead-intake_year').val(lead.intake_year);
+				$('#edit-lead-last_education').val(lead.last_education);
+				$('#edit-lead-completion_date').val(lead.completion_date);
+				$('#edit-lead-education_details').val(lead.education_details);
+				$('#edit-lead-english').val(lead.english);
+				$('#edit-lead-english_result').val(lead.english_result);
+				$('#edit-lead-job_experience').val(lead.job_experience);
+				$('#edit-lead-owner_id').val(lead.owner_id);
+
+				var options = '';
+				data.categories.forEach(function(category) {
+					options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
+				});
+				$('#lead-edit-category').html(options);
+
+				options = '';
+				data.subcategories.forEach(function(subcategory) {
+					options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
+				});
+				$('#lead-edit-subcategory').html(options);
 			}
 		});
 	}
@@ -224,4 +256,21 @@
 			}
 		});
 	}
+
+	$('#lead-edit-category').on('change', function() {
+		var category_id = $('#lead-edit-category').val();
+		var url = "{{route('leads.subcategories.list', 'category_id')}}";
+		url = url.replace('category_id', category_id);
+		$.ajax({
+			type: 'GET',
+			url: url,
+			success: function(data) {
+				var subcats = "";
+				data.forEach(function(subcategory) {
+					subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
+				})
+				$('#lead-edit-subcategory').html(subcats);
+			}
+		});
+	});
 </script>

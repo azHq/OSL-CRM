@@ -177,7 +177,15 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $lead = Lead::find($id);
-            return response()->json($lead);
+            $categories = Category::all();
+            $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+            return response()->json([
+                'lead' => $lead,
+                'subcategories' => $subcategories,
+                'categories' => $categories,
+                'category_id' => $lead->subcategory->category_id,
+                'subcategory_id' => $lead->subcategory_id
+            ]);
         }
 
         try {
@@ -196,7 +204,7 @@ class LeadController extends Controller
             $lead = Lead::find($id);
             $leadCounsellorIdOld = $lead->owner_id;
             abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
-            $lead->update($request->except('_token', '_method'));
+            $lead->update($request->except('_token', '_method', 'category_id'));
             $lead = Lead::find($id);
             if ($leadCounsellorIdOld != $lead->owner_id && $lead->owner_id) {
                 LeadAssignedEvent::dispatch($lead);
@@ -204,6 +212,7 @@ class LeadController extends Controller
             }
             return Redirect::route('leads.index')->with('success', 'Lead updated successfully.');
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
