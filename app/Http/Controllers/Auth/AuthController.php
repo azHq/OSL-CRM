@@ -69,19 +69,19 @@ class AuthController extends Controller
             return view('layout.mainlayout');
         }
 
-        $leads = Lead::pure()->whereHas('subcategory', function ($query) {
+        $leads = Lead::whereHas('subcategory', function ($query) {
             $query->where('category_id', 1);
         })->count();
 
-        $pendings = Lead::pure()->whereHas('subcategory', function ($query) {
+        $pendings = Lead::whereHas('subcategory', function ($query) {
             $query->where('category_id', 2);
         })->count();
 
-        $admissions = Lead::pure()->whereHas('subcategory', function ($query) {
+        $admissions = Lead::whereHas('subcategory', function ($query) {
             $query->where('category_id', 3);
         })->count();
 
-        $visa_compliances = Lead::pure()->whereHas('subcategory', function ($query) {
+        $visa_compliances = Lead::whereHas('subcategory', function ($query) {
             $query->where('category_id', 4);
         })->count();
 

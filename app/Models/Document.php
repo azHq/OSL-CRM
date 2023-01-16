@@ -20,7 +20,7 @@ class Document extends Model
 
         static::addGlobalScope('rolewise', function ($query) {
             if (!Auth::user()->hasRole('super-admin')) {
-                $query->whereHas('student', function ($query) {
+                $query->whereHas('lead', function ($query) {
                     $query->where('owner_id', Auth::user()->id);
                 });
             }
@@ -28,31 +28,30 @@ class Document extends Model
 
         static::updated(function ($document) {
             if (
-                $document->masters &&
-                $document->bachelors &&
-                $document->hsc &&
-                $document->ssc &&
-                $document->cv &&
                 $document->passport &&
+                $document->academics &&
+                $document->cv &&
+                $document->moi &&
+                $document->recommendation &&
+                $document->job_experience &&
                 $document->sop &&
-                $document->recommendation_1 &&
-                $document->recommendation_2
+                $document->others
             ) {
-                Student::where('id', $document->student_id)->update(['documents_pending' => false]);
+                Lead::where('id', $document->lead_id)->update(['documents_pending' => false]);
             } else {
-                Student::where('id', $document->student_id)->update(['documents_pending' => true]);
+                Lead::where('id', $document->lead_id)->update(['documents_pending' => true]);
             }
 
             if (count($document->getDirty()) > 0) {
                 $updatedFields = $document->getDirty()[0];
-                NewLog::create('Document Uploaded', 'A New Document ' . $updatedFields . ' has been uploaded for student "' . $document->student->name . '".');
+                NewLog::create('Document Uploaded', 'A New Document ' . $updatedFields . ' has been uploaded for lead "' . $document->lead->name . '".');
             }
         });
     }
 
 
-    public function student()
+    public function lead()
     {
-        return $this->belongsTo(Student::class, 'student_id');
+        return $this->belongsTo(Lead::class, 'lead_id');
     }
 }

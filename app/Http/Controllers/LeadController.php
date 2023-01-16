@@ -42,7 +42,7 @@ class LeadController extends Controller
     public function list()
     {
         if (\request()->ajax()) {
-            $leads = Lead::pure()->orderBy('created_at', 'desc');
+            $leads = Lead::orderBy('created_at', 'desc');
             $leads = $leads->get();
             return datatables()->of($leads)
                 ->addColumn('name', function ($row) {
@@ -72,14 +72,10 @@ class LeadController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '';
-                    if (!$row->student)
-                        $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    if (!$row->student)
-                        $action .= '<a href="javascript:;" onclick="leadConvert(' . $row->id . ');" class="lkb-table-action-btn badge-success btn-convert"><i class="feather-navigation"></i></a>';
-                    if (!$row->student && Auth::user()->hasRole('super-admin'))
+                    $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    if (Auth::user()->hasRole('super-admin'))
                         $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
-                    if ($row->student)
-                        $action .= '<a href="' . route('students.view', $row->student->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
+                    $action .= '<a href="' . route('leads.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
                     return $action;
                 })
                 ->addIndexColumn()
@@ -91,7 +87,7 @@ class LeadController extends Controller
     public function lisByStatus()
     {
         if (\request()->ajax()) {
-            $leads = Lead::pure()->orderBy('created_at', 'desc');
+            $leads = Lead::orderBy('created_at', 'desc');
             $leads->whereHas('subcategory', function ($query) {
                 $query->where('slug', \request('status'));
             });

@@ -36,7 +36,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Student Name</th>
+                                    <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Counsellor</th>

@@ -52,18 +52,24 @@ class Lead extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function student()
+    public function document()
     {
-        return $this->hasOne(Student::class, 'lead_id');
-    }
-
-    public function scopePure($query)
-    {
-        return $query->doesntHave('student');
+        return $this->hasOne(Document::class, 'lead_id');
     }
 
     public function subcategory()
     {
         return $this->belongsTo(Subcategory::class);
+    }
+
+    public function getUploadedDocumentsNoAttribute()
+    {
+        if (!$this->document) return 0;
+        $uploaded = 0;
+        foreach ($this->document->toArray() as $key => $value) {
+            if ($key == 'id' || $key == 'student_id' || $key == 'created_at' || $key == 'updated_at') continue;
+            if ($value && $value != '') $uploaded++;
+        }
+        return $uploaded;
     }
 }

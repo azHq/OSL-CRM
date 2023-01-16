@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\NewLog;
 use App\Helper\Reply;
 use App\Models\Document;
+use App\Models\Lead;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,22 +29,6 @@ class DocumentController extends Controller
     {
         if (\request()->ajax()) {
             $students = Student::where('documents_pending', true)->orderBy('created_at', 'desc');
-            if (\request('filter_search') != '') {
-                $students->where('name', 'like', '%' . \request('filter_search') . '%')
-                    ->orWhere('email', 'like', '%' . \request('filter_search') . '%')
-                    ->orWhere('mobile', 'like', '%' . \request('filter_search') . '%');
-            }
-            if (\request('filter_status') != '' || \request('filter_status') != null) {
-                $students->where('status', \request('filter_status'));
-            }
-            if (\request('startDate') != '' && \request('endDate') != '') {
-                $startDate = Carbon::parse(\request('startDate'))->format('Y-m-d');
-                $endDate = Carbon::parse(\request('endDate'))->format('Y-m-d');
-                $students->whereDate('created_at', '>=', $startDate)->whereDate('created_at', '<=', $endDate);
-            }
-            if (\request('filter_owner') != '') {
-                $students->where('owner_id', request()->filter_owner);
-            }
             $students = $students->get();
 
             return datatables()->of($students)
@@ -88,17 +73,17 @@ class DocumentController extends Controller
         return view('documents.index');
     }
 
-    public function initializeDocument($studentId, Request $request)
+    public function initializeDocument($leadId, Request $request)
     {
-        Document::create(['student_id' => $studentId]);
-        return Reply::success('Done', ['student' => 'Amit']);
+        Document::create(['lead_id' => $leadId]);
+        return Reply::success('Done', ['lead' => 'Amit']);
     }
 
-    public function uploadDocument($studentId, Request $request)
+    public function uploadDocument($leadId, Request $request)
     {
         try {
-            $path = $request->file('file')->storeAs('students/' . $studentId, $request->name . '.' . $request->file('file')->extension());
-            $document = Document::where('student_id', $studentId)->first();
+            $path = $request->file('file')->storeAs('leads/' . $leadId, $request->name . '.' . $request->file('file')->extension());
+            $document = Document::where('lead_id', $leadId)->first();
             $document->update([$request->name => $path]);
             return Redirect::back()->with('success', 'File Uploaded Successfully.');
         } catch (\Exception $e) {
@@ -106,46 +91,37 @@ class DocumentController extends Controller
         }
     }
 
-    public function downloadDocument($studentId, Request $request)
+    public function downloadDocument($leadId, Request $request)
     {
-        $student = Student::find($studentId);
+        $lead = Lead::find($leadId);
         $path = "";
         switch ($request->name) {
-            case 'masters':
-                $path = $student->document->masters;
+            case 'passport':
+                $path = $lead->document->passport;
                 break;
-            case 'bachelors':
-                $path = $student->document->bachelors;
-                break;
-            case 'hsc':
-                $path = $student->document->hsc;
-                break;
-            case 'ssc':
-                $path = $student->document->ssc;
+            case 'academics':
+                $path = $lead->document->academics;
                 break;
             case 'cv':
-                $path = $student->document->cv;
+                $path = $lead->document->cv;
                 break;
-            case 'passport':
-                $path = $student->document->passport;
+            case 'moi':
+                $path = $lead->document->moi;
                 break;
-            case 'sop':
-                $path = $student->document->sop;
+            case 'recommendation':
+                $path = $lead->document->recommendation;
                 break;
             case 'job_experience':
-                $path = $student->document->job_experience;
+                $path = $lead->document->job_experience;
                 break;
-            case 'recommendation_1':
-                $path = $student->document->recommendation_1;
+            case 'sop':
+                $path = $lead->document->sop;
                 break;
-            case 'recommendation_2':
-                $path = $student->document->recommendation_2;
-                break;
-            case 'visa_refused':
-                $path = $student->document->visa_refused;
+            case 'others':
+                $path = $lead->document->recommendation_1;
                 break;
         }
-        NewLog::create('Document Downloaded', 'A Document ' . $request->name . ' has been downloaded of student "' . $student->name . '".');
+        NewLog::create('Document Downloaded', 'A Document ' . $request->name . ' has been downloaded of student "' . $lead->name . '".');
         return Storage::download($path);
     }
 }

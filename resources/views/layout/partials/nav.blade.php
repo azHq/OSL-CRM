@@ -27,14 +27,8 @@
 					</ul>
 				</li>
 				@endforeach
-				<li id="students" class="nav-li {{ Request::is('students*') ? 'active' : '' }}">
-					<a data-nav="students" data-href="{{url('students')}}" class="url"><i class="feather-award"></i> <span>Students</span></a>
-				</li>
 				<li id="pending-docs" class="nav-li {{ Request::is('documents*') ? 'active' : '' }}">
 					<a data-nav="pending-docs" data-href="{{url('documents')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
-				</li>
-				<li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
-					<a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="feather-file-plus"></i> <span>Applications</span></a>
 				</li>
 				<li id="tasks" class="nav-li {{ Request::is('tasks*') ? 'active' : '' }}">
 					<a data-nav="tasks" data-href="{{url('tasks')}}" class="url"><i class="feather-check-square"></i> <span>Tasks</span></a>

@@ -15,18 +15,15 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->string('masters');
-            $table->string('bachelors');
-            $table->string('hsc');
-            $table->string('ssc');
-            $table->string('cv');
+            $table->foreignId('lead_id')->references('id')->on('leads')->onDelete('cascade');
             $table->string('passport');
-            $table->string('sop');
+            $table->string('academics');
+            $table->string('cv');
+            $table->string('moi');
+            $table->string('recommendation');
             $table->string('job_experience')->nullable();
-            $table->string('recommendation_1');
-            $table->string('recommendation_2');
-            $table->string('visa_refused')->nullable();
+            $table->string('sop');
+            $table->string('others');
             $table->timestamps();
         });
     }

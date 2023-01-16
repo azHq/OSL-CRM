@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('leads/status/{status}', [LeadController::class, 'indexByStatus'])->name('leads.status.index');
     Route::get('leads/status/{status}/list', [LeadController::class, 'lisByStatus'])->name('leads.status.list');
 
+    Route::get('documents/initialize/{leadId}', [DocumentController::class, 'initializeDocument'])->name('documents.initialize');
     Route::post('leads/import', [LeadController::class, 'import'])->name('leads.import');
     Route::get('leads/export', [LeadController::class, 'export'])->name('leads.export');
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
@@ -83,9 +84,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('students/{id}', [StudentController::class, 'update'])->name('students.update');
 
     Route::get('documents/pending', [DocumentController::class, 'pendingDocuments'])->name('documents.pending');
-    Route::post('documents/download/{studentId}', [DocumentController::class, 'downloadDocument'])->name('documents.download');
-    Route::get('documents/initialize/{studentId}', [DocumentController::class, 'initializeDocument'])->name('documents.initialize');
-    Route::post('documents/upload/{studentId}', [DocumentController::class, 'uploadDocument'])->name('documents.upload');
+    Route::post('documents/download/{leadId}', [DocumentController::class, 'downloadDocument'])->name('documents.download');
+    
+    Route::post('documents/upload/{leadId}', [DocumentController::class, 'uploadDocument'])->name('documents.upload');
     Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
     
     Route::get('applications/list', [ApplicationController::class, 'list'])->name('applications.list');
