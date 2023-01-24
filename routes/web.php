@@ -102,6 +102,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('calendar-events-canceled', [TaskController::class, 'calendarEventsCanceled']);
     Route::post('calendar-crud-ajax', [TaskController::class, 'calendarEvents']);
 
+    Route::get('todo/list', [TaskController::class, 'todoList'])->name('tasks.todolist');
     Route::get('tasks/list', [TaskController::class, 'list'])->name('tasks.list');
     Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');

@@ -318,4 +318,25 @@ class TaskController extends Controller
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
+
+
+
+    public function todoList()
+    {
+        $todolist = Task::all();
+        $todolist = $todolist->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'color' => $item->color,
+                'name' => $item->name,
+                'details' => $item->details,
+                'start' => $item->start,
+                'end' => $item->end,
+                'status' => $item->status,
+                'assignee_id' => $item->assignee_id,
+                'assignee_name' => $item->assignee ? $item->assignee->name : '',
+            ];
+        })->toArray();
+        return response()->json(['tasks' => $todolist]);
+    }
 }

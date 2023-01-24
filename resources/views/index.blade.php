@@ -18,7 +18,7 @@
 			@php
 			$leadsIndexUrl = route('leads.index');
 			@endphp
-			<a class="url" onclick="gotoRoute('{{$leadsIndexUrl}}')">
+			<a class="url" onclick="gotoRoute('{{$leadsIndexUrl}}', 'leads')">
 				<div class="card inovices-card">
 					<div class="card-body">
 						<div class="inovices-widget-header">
@@ -136,10 +136,35 @@
 				<div class="col">
 					<div class="card rounded-3">
 						<div class="card-body p-4">
-
-							<h3 class="text-center my-3 pb-3">To Do List</h3>
-
-							<table class="table mb-4">
+							<h3 class="text-center my-3">To Do List</h3>
+							<div class="d-flex justify-content-between">
+								<div>
+									<select id="todo-filter-counsellor" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
+										<option value="" selected>Filter Counsellor</option>
+										<option value="Unknown">Unknown</option>
+										<option value="Potential">Potential</option>
+										<option value="Not Potential">Not Potential</option>
+									</select>
+									<select id="todo-filter-start-date" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
+										<option value="" selected>Start Date</option>
+										<option value="Unknown">Unknown</option>
+										<option value="Potential">Potential</option>
+										<option value="Not Potential">Not Potential</option>
+									</select>
+									<select id="todo-filter-end-date" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
+										<option value="" selected>End Date</option>
+										<option value="Unknown">Unknown</option>
+										<option value="Potential">Potential</option>
+										<option value="Not Potential">Not Potential</option>
+									</select>
+								</div>
+								<div>
+									<button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-lead" data-bs-toggle="modal" data-bs-target="#add_task">
+										<i class="fa fa-plus" aria-hidden="true"></i> New Task
+									</button>
+								</div>
+							</div>
+							<table class="table mb-4 mt-4">
 								<thead>
 									<tr>
 										<th scope="col">No.</th>
@@ -148,28 +173,12 @@
 										<th scope="col">From</th>
 										<th scope="col">To</th>
 										<th scope="col">Status</th>
+										<th scope="col">Assignee</th>
 										<th scope="col">Actions</th>
 									</tr>
 								</thead>
-								<tbody>
-									@forelse($tasks as $task)
-									<tr style="border-style: none !important; color:{{$task->color}} !important;">
-										<th style="border-style: none !important;" scope="row">{{$loop->index+1}}</th>
-										<td style="border-style: none !important;"> <b>{{$task->name}}</b> </td>
-										<td style="border-style: none !important;">{{$task->details}}</td>
-										<td style="border-style: none !important;">{{$task->status}}</td>
-										<td style="border-style: none !important;">{{ date('d-m-Y h:i A', strtotime($task->start)) }}</td>
-										<td style="border-style: none !important;">{{ date('d-m-Y h:i A', strtotime($task->end)) }}</td>
-										<td style="border-style: none !important;">
-											<button onclick="taskCancel('{{$task->id}}')" type="button" class="btn btn-danger">Cancel</button>
-											<button onclick="taskComplete('{{$task->id}}')" type="button" class="btn btn-success ms-1">Rsolve</button>
-										</td>
-									</tr>
-									@empty
-									<tr>
-										<th scope="row">No Task</th>
-									</tr>
-									@endforelse
+								<tbody id="todo-list-table">
+									
 								</tbody>
 							</table>
 						</div>
@@ -181,6 +190,9 @@
 </div>
 <!-- /Page Content -->
 <script>
+	$(document).ready(function(){
+		getTodoList();
+	});
 </script>
 <script>
 	function taskDelete(id) {
@@ -272,6 +284,41 @@
 						});
 					}
 				},
+			}
+		});
+	}
+
+	function getTodoList() {
+		$.ajax({
+			type: 'GET',
+			url: "{{ route('tasks.todolist') }}",
+			data: {},
+			success: function(data) {
+				if (data.tasks) {
+					var items = '';
+					var i = 0;
+					data.tasks.forEach(function(task) {
+						items += `<tr style="border-style: none !important; color:${task.color} !important;">
+										<th style="border-style: none !important;" scope="row">${++i}</th>
+										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
+										<td style="border-style: none !important;">${task.details}</td>
+										<td style="border-style: none !important;">${task.start}</td>
+										<td style="border-style: none !important;">${task.end}</td>
+										<td style="border-style: none !important;">${task.status}</td>
+										<td style="border-style: none !important;">${task.assignee_name}</td>
+										<td style="border-style: none !important;">
+											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
+											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Rsolve</button>
+										</td>
+									</tr>`;
+					});
+					$('#todo-list-table').html(items);
+				} else {
+					var items = `<tr>
+									<th scope="row">No Task</th>
+								</tr>`;
+					$('#todo-list-table').html(items);
+				}
 			}
 		});
 	}
