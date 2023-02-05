@@ -27,6 +27,9 @@
 					</ul>
 				</li>
 				@endforeach
+                <li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
+                    <a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>
+                </li>
 				<li id="pending-docs" class="nav-li {{ Request::is('documents*') ? 'active' : '' }}">
 					<a data-nav="pending-docs" data-href="{{url('documents')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
 				</li>
