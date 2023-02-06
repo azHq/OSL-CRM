@@ -159,7 +159,7 @@
 									</select>
 								</div>
 								<div>
-									<button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-lead" data-bs-toggle="modal" data-bs-target="#add_task">
+									<button onclick="showModal()" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-task" data-bs-toggle="modal" data-bs-target="#add_task">
 										<i class="fa fa-plus" aria-hidden="true"></i> New Task
 									</button>
 								</div>
@@ -178,7 +178,7 @@
 									</tr>
 								</thead>
 								<tbody id="todo-list-table">
-									
+
 								</tbody>
 							</table>
 						</div>
@@ -189,12 +189,18 @@
 	</div>
 </div>
 <!-- /Page Content -->
+@component('tasks.add')
+@endcomponent
+
 <script>
 	$(document).ready(function(){
 		getTodoList();
 	});
 </script>
 <script>
+    function showModal(){
+        $("#add_task").modal('show');
+    }
 	function taskDelete(id) {
 		$.confirm({
 			title: 'Confirm',
@@ -308,7 +314,7 @@
 										<td style="border-style: none !important;">${task.assignee_name}</td>
 										<td style="border-style: none !important;">
 											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
-											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Rsolve</button>
+											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Resolve</button>
 										</td>
 									</tr>`;
 					});
