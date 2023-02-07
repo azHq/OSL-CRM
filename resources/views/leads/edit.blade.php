@@ -165,7 +165,7 @@
 											<div class="col-sm-12">
 												<label class="col-form-label">Category</label>
 												<select id="lead-edit-category" class=" form-control form-select" name="category_id">
-													
+
 												</select>
 											</div>
 										</div>
