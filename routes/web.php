@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('leads/multiple/convert', [LeadController::class, 'convertMultipleLeads'])->name('leads.multiple.convert');
     Route::post('leads/multiple/assign', [LeadController::class, 'assignMultipleLeads'])->name('leads.multiple.assign');
 
-    
+
     Route::get('leads/subcategories/{category_id}', [LeadController::class, 'subcategoriesList'])->name('leads.subcategories.list');
 
     Route::get('leads/status/{status}', [LeadController::class, 'indexByStatus'])->name('leads.status.index');
@@ -85,10 +85,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('documents/pending', [DocumentController::class, 'pendingDocuments'])->name('documents.pending');
     Route::post('documents/download/{leadId}', [DocumentController::class, 'downloadDocument'])->name('documents.download');
-    
+
     Route::post('documents/upload/{leadId}', [DocumentController::class, 'uploadDocument'])->name('documents.upload');
     Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
-    
+
     Route::get('applications/list', [ApplicationController::class, 'list'])->name('applications.list');
     Route::get('applications/create', [ApplicationController::class, 'create'])->name('applications.create');
     Route::post('applications', [ApplicationController::class, 'store'])->name('applications.store');
@@ -103,6 +103,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('calendar-crud-ajax', [TaskController::class, 'calendarEvents']);
 
     Route::get('todo/list', [TaskController::class, 'todoList'])->name('tasks.todolist');
+    Route::get('todo/list/assignee/{id}', [TaskController::class, 'todoListByAssignee'])->name('tasks.todolistByAssignee');
     Route::get('tasks/list', [TaskController::class, 'list'])->name('tasks.list');
     Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');

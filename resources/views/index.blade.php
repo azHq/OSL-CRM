@@ -139,12 +139,11 @@
 							<h3 class="text-center my-3">To Do List</h3>
 							<div class="d-flex justify-content-between">
 								<div>
-									<select id="todo-filter-counsellor" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
+                                    @if(Auth::user()->hasRole('super-admin'))
+									<select id="todo-filter-counsellor" onchange="filterByCounsellor()" class="task-filter-counsellors form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
 										<option value="" selected>Filter Counsellor</option>
-										<option value="Unknown">Unknown</option>
-										<option value="Potential">Potential</option>
-										<option value="Not Potential">Not Potential</option>
 									</select>
+                                    @endif
 									<select id="todo-filter-start-date" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
 										<option value="" selected>Start Date</option>
 										<option value="Unknown">Unknown</option>
@@ -195,9 +194,17 @@
 <script>
 	$(document).ready(function(){
 		getTodoList();
+        getOwners();
 	});
 </script>
 <script>
+    function filterByCounsellor(){
+        var assigneeId = $('#todo-filter-counsellor').val();
+        if(assigneeId)
+            filterTodoList(assigneeId)
+        else
+            getTodoList();
+    }
     function showModal(){
         $("#add_task").modal('show');
     }
@@ -328,4 +335,65 @@
 			}
 		});
 	}
+
+    function filterTodoList(assigneeId){
+        var url = "{{ route('tasks.todolistByAssignee', 'id') }}";
+        url = url.replace('id', assigneeId);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: {},
+            success: function(data) {
+                if (data.tasks) {
+                    var items = '';
+                    var i = 0;
+                    data.tasks.forEach(function(task) {
+                        items += `<tr style="border-style: none !important; color:${task.color} !important;">
+										<th style="border-style: none !important;" scope="row">${++i}</th>
+										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
+										<td style="border-style: none !important;">${task.details}</td>
+										<td style="border-style: none !important;">${task.start}</td>
+										<td style="border-style: none !important;">${task.end}</td>
+										<td style="border-style: none !important;">${task.status}</td>
+										<td style="border-style: none !important;">${task.assignee_name}</td>
+										<td style="border-style: none !important;">
+											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
+											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Resolve</button>
+										</td>
+									</tr>`;
+                    });
+                    $('#todo-list-table').html(items);
+                } else {
+                    var items = `<tr>
+									<th scope="row">No Task</th>
+								</tr>`;
+                    $('#todo-list-table').html(items);
+                }
+            }
+        });
+    }
+
+    function getOwners() {
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('leads.create') }}",
+            success: function(data) {
+                if (data.users) {
+                    var options = '<option value="" selected>Filter Counsellor</option>';
+                    options += '<option value="Unassigned">Unassigned</option>';
+                    data.users.forEach(function(user) {
+                        options += '<option value="' + user.id + '">' + user.name + '</option>';
+                    });
+                    $('.task-filter-counsellors').html(options);
+                }
+                if (data.all_users) {
+                    var options = '<option value="" selected>Filter Counsellor</option>';
+                    data.all_users.forEach(function(user) {
+                        options += '<option value="' + user.id + '">' + user.name + '</option>';
+                    });
+                    $('.task-filter-counsellors').html(options);
+                }
+            }
+        });
+    }
 </script>

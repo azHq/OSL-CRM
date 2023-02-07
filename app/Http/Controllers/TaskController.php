@@ -337,4 +337,23 @@ class TaskController extends Controller
         })->toArray();
         return response()->json(['tasks' => $todolist]);
     }
+
+    public function todoListByAssignee($id)
+    {
+        $todolist = Task::where('assignee_id', $id)->get();
+        $todolist = $todolist->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'color' => $item->color,
+                'name' => $item->name,
+                'details' => $item->details,
+                'start' => $item->start,
+                'end' => $item->end,
+                'status' => $item->status,
+                'assignee_id' => $item->assignee_id,
+                'assignee_name' => $item->assignee ? $item->assignee->name : '',
+            ];
+        })->toArray();
+        return response()->json(['tasks' => $todolist]);
+    }
 }
