@@ -193,12 +193,12 @@ class TaskController extends Controller
 
     public function create()
     {
-        // 
+        //
     }
 
     public function view()
     {
-        // 
+        //
     }
 
     public function edit($id)
@@ -297,16 +297,14 @@ class TaskController extends Controller
             'name' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
             'details' => 'required',
             'assignee_id' => 'required'
         ]);
         try {
             $task = Task::create([
                 'name' => $request->name,
-                'start' => $request->start_date . ' ' . $request->start_time,
-                'end' => $request->end_date . ' ' . $request->end_time,
+                'start' => $request->start_date,
+                'end' => $request->end_date ,
                 'details' => $request->details,
                 'assignee_id' => $request->assignee_id,
             ]);
