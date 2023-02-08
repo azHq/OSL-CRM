@@ -104,6 +104,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('todo/list', [TaskController::class, 'todoList'])->name('tasks.todolist');
     Route::get('todo/list/assignee/{id}', [TaskController::class, 'todoListByAssignee'])->name('tasks.todolistByAssignee');
+    Route::get('todo/list/filter/{type}', [TaskController::class, 'todoListByDateRange'])->name('tasks.todoListByDateRange');
     Route::get('tasks/list', [TaskController::class, 'list'])->name('tasks.list');
     Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');

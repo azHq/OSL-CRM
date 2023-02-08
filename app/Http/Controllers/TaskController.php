@@ -356,4 +356,28 @@ class TaskController extends Controller
         })->toArray();
         return response()->json(['tasks' => $todolist]);
     }
+
+    public function todoListByDateRange($type){
+//        $type: 0 => weekly, 1=> monthly
+        if($type == 0)
+            $date = Carbon::now()->subWeek();
+        elseif ($type == 1)
+            $date = Carbon::now()->subMonth();
+
+        $todolist = Task::where('created_at', '>=', $date)->get();
+        $todolist = $todolist->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'color' => $item->color,
+                'name' => $item->name,
+                'details' => $item->details,
+                'start' => $item->start,
+                'end' => $item->end,
+                'status' => $item->status,
+                'assignee_id' => $item->assignee_id,
+                'assignee_name' => $item->assignee ? $item->assignee->name : '',
+            ];
+        })->toArray();
+        return response()->json(['tasks' => $todolist]);
+    }
 }

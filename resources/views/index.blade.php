@@ -144,18 +144,12 @@
 										<option value="" selected>Filter Counsellor</option>
 									</select>
                                     @endif
-									<select id="todo-filter-start-date" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
-										<option value="" selected>Start Date</option>
-										<option value="Unknown">Unknown</option>
-										<option value="Potential">Potential</option>
-										<option value="Not Potential">Not Potential</option>
-									</select>
-									<select id="todo-filter-end-date" class="form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
-										<option value="" selected>End Date</option>
-										<option value="Unknown">Unknown</option>
-										<option value="Potential">Potential</option>
-										<option value="Not Potential">Not Potential</option>
-									</select>
+                                    <button onclick="fetchTasksByDateRange(0)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">
+                                            Week
+                                    </button>
+                                    <button onclick="fetchTasksByDateRange(1)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">
+                                            Month
+                                    </button>
 								</div>
 								<div>
 									<button onclick="showModal()" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-task" data-bs-toggle="modal" data-bs-target="#add_task">
@@ -307,31 +301,7 @@
 			url: "{{ route('tasks.todolist') }}",
 			data: {},
 			success: function(data) {
-				if (data.tasks) {
-					var items = '';
-					var i = 0;
-					data.tasks.forEach(function(task) {
-						items += `<tr style="border-style: none !important; color:${task.color} !important;">
-										<th style="border-style: none !important;" scope="row">${++i}</th>
-										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
-										<td style="border-style: none !important;">${task.details}</td>
-										<td style="border-style: none !important;">${task.start}</td>
-										<td style="border-style: none !important;">${task.end}</td>
-										<td style="border-style: none !important;">${task.status}</td>
-										<td style="border-style: none !important;">${task.assignee_name}</td>
-										<td style="border-style: none !important;">
-											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
-											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Resolve</button>
-										</td>
-									</tr>`;
-					});
-					$('#todo-list-table').html(items);
-				} else {
-					var items = `<tr>
-									<th scope="row">No Task</th>
-								</tr>`;
-					$('#todo-list-table').html(items);
-				}
+				setTable(data);
 			}
 		});
 	}
@@ -344,31 +314,7 @@
             url: url,
             data: {},
             success: function(data) {
-                if (data.tasks) {
-                    var items = '';
-                    var i = 0;
-                    data.tasks.forEach(function(task) {
-                        items += `<tr style="border-style: none !important; color:${task.color} !important;">
-										<th style="border-style: none !important;" scope="row">${++i}</th>
-										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
-										<td style="border-style: none !important;">${task.details}</td>
-										<td style="border-style: none !important;">${task.start}</td>
-										<td style="border-style: none !important;">${task.end}</td>
-										<td style="border-style: none !important;">${task.status}</td>
-										<td style="border-style: none !important;">${task.assignee_name}</td>
-										<td style="border-style: none !important;">
-											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
-											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Resolve</button>
-										</td>
-									</tr>`;
-                    });
-                    $('#todo-list-table').html(items);
-                } else {
-                    var items = `<tr>
-									<th scope="row">No Task</th>
-								</tr>`;
-                    $('#todo-list-table').html(items);
-                }
+                setTable(data);
             }
         });
     }
@@ -393,6 +339,49 @@
                     });
                     $('.task-filter-counsellors').html(options);
                 }
+            }
+        });
+    }
+
+    function setTable(data){
+        if (data.tasks) {
+            var items = '';
+            var i = 0;
+            data.tasks.forEach(function(task) {
+                items += `<tr style="border-style: none !important; color:${task.color} !important;">
+										<th style="border-style: none !important;" scope="row">${++i}</th>
+										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
+										<td style="border-style: none !important;">${task.details}</td>
+										<td style="border-style: none !important;">${task.start}</td>
+										<td style="border-style: none !important;">${task.end}</td>
+										<td style="border-style: none !important;">${task.status}</td>
+										<td style="border-style: none !important;">${task.assignee_name}</td>
+										<td style="border-style: none !important;">
+											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
+											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Resolve</button>
+										</td>
+									</tr>`;
+            });
+            $('#todo-list-table').html(items);
+        } else {
+            var items = `<tr>
+									<th scope="row">No Task</th>
+								</tr>`;
+            $('#todo-list-table').html(items);
+        }
+    }
+</script>
+
+<script>
+    function fetchTasksByDateRange(type){
+        var url = "{{ route('tasks.todoListByDateRange', 'type') }}";
+        url = url.replace('type', type);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: {},
+            success: function(data) {
+                setTable(data);
             }
         });
     }
