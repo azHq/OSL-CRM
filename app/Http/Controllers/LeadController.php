@@ -73,6 +73,7 @@ class LeadController extends Controller
                 ->addColumn('action', function ($row) {
                     $action = '';
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#mail_lead" class="mail-lead lkb-table-action-btn url badge-success btn-edit"><i class="feather-mail"></i></a>';
                     $action .= '<a href="' . route('leads.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
                     if (Auth::user()->hasRole('super-admin'))
                         $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
@@ -122,6 +123,7 @@ class LeadController extends Controller
                     $action = '';
                     if (!$row->student)
                         $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-mail"></i></a>';
                     if (!$row->student)
                         $action .= '<a href="javascript:;" onclick="leadConvert(' . $row->id . ');" class="lkb-table-action-btn badge-success btn-convert"><i class="feather-navigation"></i></a>';
                     if (!$row->student && Auth::user()->hasRole('super-admin'))
@@ -193,6 +195,31 @@ class LeadController extends Controller
             abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             $users = User::admins()->select('id', 'name')->get();
             return view('leads.edit', compact('lead', 'users'));
+        } catch (\Exception $e) {
+            return Redirect::back()->with('info', $e->getMessage());
+        }
+    }
+
+    public function mail($id)
+    {
+        if (\request()->ajax()) {
+            $lead = Lead::find($id);
+            $categories = Category::all();
+            $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+            return response()->json([
+                'lead' => $lead,
+                'subcategories' => $subcategories,
+                'categories' => $categories,
+                'category_id' => $lead->subcategory->category_id,
+                'subcategory_id' => $lead->subcategory_id
+            ]);
+        }
+
+        try {
+            $lead = Lead::find($id);
+            abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            $users = User::admins()->select('id', 'name')->get();
+            return view('leads.mail', compact('lead', 'users'));
         } catch (\Exception $e) {
             return Redirect::back()->with('info', $e->getMessage());
         }

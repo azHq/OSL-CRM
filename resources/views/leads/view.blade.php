@@ -7,7 +7,7 @@
         @push('list') <li class="breadcrumb-item active">Lead</li> @endpush
         @endcomponent
         @include('components.flash')
-        <div class="card shadow p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+        <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
              <div class="row">
                  <div class="col-md-6 profile-left">
                      <div class="pic">
@@ -108,10 +108,16 @@
 
              </div>
         </div>
-        <div class="my-4 ps-2">
-              <h4>Reports</h4>
+        <div class="crms-title row bg-white mt-4">
+            <div class="col  p-0">
+                <h3 class="page-title m-0">
+                    <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </span> Reports
+                </h3>
+            </div>
         </div>
-        <div class="card shadow p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+        <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
             <div class="row">
                 <div class="col account d-flex">
                     <div class="company_img">
@@ -181,18 +187,22 @@
             </div>
         </div>
 
-            <div class="my-4 ps-2">
-                <div class="d-flex justify-content-between">
-                    <h4 class="my-auto">Applications</h4>
-                    <div>
+
+            <div class="crms-title row bg-white mt-4">
+                <div class="col  p-0">
+                    <h3 class="page-title m-0">
+                    <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </span> Applications
+                    </h3>
+                </div>
+                <div class="col p-0 text-end">
                         <button onclick="showModal()" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-application" data-bs-toggle="modal" data-bs-target="#add_application">
                             <i class="fa fa-plus" aria-hidden="true"></i> Apply
                         </button>
-                    </div>
                 </div>
-
             </div>
-            <div class="card shadow p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+            <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
                 <div class="row">
                     <div class="col account d-flex">
                         <div class="company_img">

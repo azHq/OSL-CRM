@@ -106,8 +106,13 @@
 @component('leads.import')
 @endcomponent
 
+@component('leads.mail')
+@endcomponent
+
 @component('leads.edit')
 @endcomponent
+
+
 
 @component('leads.assign')
 @endcomponent
@@ -452,6 +457,9 @@
 @endif
 
 <script>
+    function showModal(){
+        $("#mail_lead").modal('show');
+    }
     function leadDelete(id) {
         $.confirm({
             title: 'Confirm',
