@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -338,6 +339,30 @@ class LeadController extends Controller
             NewLog::create('Multiple Leads Assigned', 'Multiple Leads has been assigned to ' . $lead->owner->name . '.');
             Session::flash('success', 'All Leads assigned successfully.');
             return response('All Leads assigned successfully.');
+        } catch (\Exception $e) {
+            Session::flash('error', $e->getMessage());
+            return response($e->getMessage());
+        }
+    }
+
+    public function sendMail(Request $request){
+        try {
+            $request->validate([
+                'email' => 'required',
+                'subject' => 'required',
+                'email_body' => 'required',
+            ]);
+            $info=[
+                'to'=>$request->input('email'),
+                'subject' => $request->input('subject'),
+                'text_message' => $request->input('email_body'),
+            ];
+            Mail::send('mail', $info, function ($messages) use ($info){
+//                $messages->from('you@mail.com', 'OSL-CRM');
+                $messages->to($info['to'], 'OSL_CRM');
+                $messages->subject($info['subject']);
+            });
+            return Redirect::back()->with('success', 'Email sent successfully.');
         } catch (\Exception $e) {
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());

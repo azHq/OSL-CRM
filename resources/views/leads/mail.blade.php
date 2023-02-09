@@ -11,15 +11,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <form id="lead-mail" action="" method="POST">
+                        <form action="{{ route('leads.sendMail') }}" method="POST">
                             @csrf
-                            @method('put')
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group row">
                                         <div class="col-sm-12">
                                             <label class="col-form-label">To <span class="text-danger">*</span></label>
-                                            <input disabled id="mail-lead-email" type="text" class="form-control" name="email" required>
+                                            <input id="mail-lead-email" type="text" class="form-control" name="email" required>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +37,7 @@
                                <div class="form-group row">
                                    <div class="col-sm-12">
                                        <label class="col-form-label">Body <span class="text-danger">*</span></label>
-                                       <textarea style="height: 200px;" id="lead-email-body" class="form-control" name="body" required> </textarea>
+                                       <textarea style="height: 200px;" id="lead-email-body" class="form-control" name="email_body" required> </textarea>
                                    </div>
                                </div>
                            </div>
@@ -72,9 +71,6 @@
                 $('#lead-email-body').val("Mail body goes here: This is the body of this email.");
             }
         });
-        var url2 = "{{ route('leads.update', 'id') }}";
-        url2 = url2.replace('id', id);
-        $('#lead-mail').attr('action', url2);
     });
 
 </script>

@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('leads', [LeadController::class, 'store'])->name('leads.store');
     Route::get('leads/{id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
     Route::get('leads/{id}/mail', [LeadController::class, 'mail'])->name('leads.mail');
+    Route::post('leads/mail', [LeadController::class, 'sendMail'])->name('leads.sendMail');
     Route::get('leads/{id}/convert', [LeadController::class, 'convert'])->name('leads.convert');
     Route::get('leads/{id}/delete', [LeadController::class, 'delete'])->name('leads.delete');
     Route::put('leads/{id}', [LeadController::class, 'update'])->name('leads.update');
