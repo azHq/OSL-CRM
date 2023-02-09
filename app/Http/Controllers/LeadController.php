@@ -124,7 +124,7 @@ class LeadController extends Controller
                     $action = '';
                     if (!$row->student)
                         $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-mail"></i></a>';
+                    $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#mail_lead" class="mail-lead lkb-table-action-btn url badge-warning btn-edit"><i class="feather-mail"></i></a>';
                     if (!$row->student)
                         $action .= '<a href="javascript:;" onclick="leadConvert(' . $row->id . ');" class="lkb-table-action-btn badge-success btn-convert"><i class="feather-navigation"></i></a>';
                     if (!$row->student && Auth::user()->hasRole('super-admin'))
