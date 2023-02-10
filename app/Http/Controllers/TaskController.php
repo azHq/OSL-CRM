@@ -298,11 +298,13 @@ class TaskController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
             'details' => 'required',
-            'assignee_id' => 'required'
+            'assignee_id' => 'required',
+            'task_type' => 'required'
         ]);
         try {
             $task = Task::create([
                 'name' => $request->name,
+                'task_type' => $request->task_type,
                 'start' => $request->start_date,
                 'end' => $request->end_date ,
                 'details' => $request->details,
