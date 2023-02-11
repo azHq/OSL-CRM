@@ -41,33 +41,7 @@
 
         </div>
     </div>
-    <div class="row">
-        <div class="col-xl-12 col-lg-12 col-md-12">
-            <div class="card h-100">
-                <div class="card-title">
-                    <h3 class="card-title">Counselor Performance</h3>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th>Details</th>
-                                <th>Type</th>
-                                <th>Time</th>
-                                <th>Lead</th>
-                                <th>Counselor</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('reports.list')
 
     {{--    <div class="row graphs">--}}
     {{--        <div class="col-md-6">--}}
@@ -110,180 +84,180 @@
 </div>
 <!-- /Page Content -->
 <!-- Chart JS -->
-<script>
-    $(document).ready(async function () {
-        $.ajax({
-            type: 'GET',
-            url: "{{ route('leads.create') }}",
-            success: function (data) {
-                var options = '<option value="" selected>Select Counselor</option>';
-                data.users.forEach(function (user) {
-                    options += '<option value="' + user.id + '">' + user.name + '</option>';
-                });
-                $('#filter-user').html(options);
-            }
-        });
+{{--<script>--}}
+{{--    $(document).ready(async function () {--}}
+{{--        $.ajax({--}}
+{{--            type: 'GET',--}}
+{{--            url: "{{ route('leads.create') }}",--}}
+{{--            success: function (data) {--}}
+{{--                var options = '<option value="" selected>Select Counselor</option>';--}}
+{{--                data.users.forEach(function (user) {--}}
+{{--                    options += '<option value="' + user.id + '">' + user.name + '</option>';--}}
+{{--                });--}}
+{{--                $('#filter-user').html(options);--}}
+{{--            }--}}
+{{--        });--}}
 
-        fetchData();
-    });
+{{--        fetchData();--}}
+{{--    });--}}
 
-    $('#filter-user').on('change', function () {
-        fetchData();
-    });
+{{--    $('#filter-user').on('change', function () {--}}
+{{--        fetchData();--}}
+{{--    });--}}
 
-    $('#filter-from').on('change', function () {
-        fetchData();
-    });
+{{--    $('#filter-from').on('change', function () {--}}
+{{--        fetchData();--}}
+{{--    });--}}
 
-    $('#filter-to').on('change', function () {
-        fetchData();
-    });
+{{--    $('#filter-to').on('change', function () {--}}
+{{--        fetchData();--}}
+{{--    });--}}
 
-    async function fetchData() {
-        var reports = await getReportsList();
-        console.log(reports)
-        // Bar chart
-        new Chart(document.getElementById("bar-chart"), {
-            type: 'bar',
-            data: {
-                labels: ["Leads", "Students", "Applications"],
-                datasets: [{
-                    label: "Projects",
-                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9"],
-                    data: [reports.leads, reports.students, reports.applications]
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Counselor Performance'
-                }
-            }
-        });
+{{--    async function fetchData() {--}}
+{{--        var reports = await getReportsList();--}}
+{{--        console.log(reports)--}}
+{{--        // Bar chart--}}
+{{--        new Chart(document.getElementById("bar-chart"), {--}}
+{{--            type: 'bar',--}}
+{{--            data: {--}}
+{{--                labels: ["Leads", "Students", "Applications"],--}}
+{{--                datasets: [{--}}
+{{--                    label: "Projects",--}}
+{{--                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9"],--}}
+{{--                    data: [reports.leads, reports.students, reports.applications]--}}
+{{--                }]--}}
+{{--            },--}}
+{{--            options: {--}}
+{{--                legend: {--}}
+{{--                    display: false--}}
+{{--                },--}}
+{{--                title: {--}}
+{{--                    display: true,--}}
+{{--                    text: 'Counselor Performance'--}}
+{{--                }--}}
+{{--            }--}}
+{{--        });--}}
 
 
-        // Bar chart 2
-        new Chart(document.getElementById("bar-chart-2"), {
-            type: 'bar',
-            data: {
-                labels: ["Potential Leads", "Not Potential Leads", "Converted Leads"],
-                datasets: [{
-                    label: "Projects",
-                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9"],
-                    data: [reports.potential_leads, reports.not_potential_leads, reports.converted_leads]
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Lead Report'
-                }
-            }
-        });
+{{--        // Bar chart 2--}}
+{{--        new Chart(document.getElementById("bar-chart-2"), {--}}
+{{--            type: 'bar',--}}
+{{--            data: {--}}
+{{--                labels: ["Potential Leads", "Not Potential Leads", "Converted Leads"],--}}
+{{--                datasets: [{--}}
+{{--                    label: "Projects",--}}
+{{--                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9"],--}}
+{{--                    data: [reports.potential_leads, reports.not_potential_leads, reports.converted_leads]--}}
+{{--                }]--}}
+{{--            },--}}
+{{--            options: {--}}
+{{--                legend: {--}}
+{{--                    display: false--}}
+{{--                },--}}
+{{--                title: {--}}
+{{--                    display: true,--}}
+{{--                    text: 'Lead Report'--}}
+{{--                }--}}
+{{--            }--}}
+{{--        });--}}
 
-        // Bar chart 3
-        new Chart(document.getElementById("bar-chart-3"), {
-            type: 'bar',
-            data: {
-                labels: ["Applied", "Offer Recieved", "Paid", "Visa Applied"],
-                datasets: [{
-                    label: "Projects",
-                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9", "#de2036"],
-                    data: [reports.applied_applications, reports.offer_applications, reports.paid_applications, reports.visa_applications]
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Application Performance'
-                }
-            }
-        });
+{{--        // Bar chart 3--}}
+{{--        new Chart(document.getElementById("bar-chart-3"), {--}}
+{{--            type: 'bar',--}}
+{{--            data: {--}}
+{{--                labels: ["Applied", "Offer Recieved", "Paid", "Visa Applied"],--}}
+{{--                datasets: [{--}}
+{{--                    label: "Projects",--}}
+{{--                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9", "#de2036"],--}}
+{{--                    data: [reports.applied_applications, reports.offer_applications, reports.paid_applications, reports.visa_applications]--}}
+{{--                }]--}}
+{{--            },--}}
+{{--            options: {--}}
+{{--                legend: {--}}
+{{--                    display: false--}}
+{{--                },--}}
+{{--                title: {--}}
+{{--                    display: true,--}}
+{{--                    text: 'Application Performance'--}}
+{{--                }--}}
+{{--            }--}}
+{{--        });--}}
 
-        /*pie chart*/
+{{--        /*pie chart*/--}}
 
-        new Chart(document.getElementById("pie-chart"), {
-            type: 'pie',
-            data: {
-                labels: reports.universities,
-                datasets: [{
-                    label: "Population (millions)",
-                    backgroundColor: reports.uni_colors,
-                    data: reports.uni_applications
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: ''
-                }
-            }
-        });
+{{--        new Chart(document.getElementById("pie-chart"), {--}}
+{{--            type: 'pie',--}}
+{{--            data: {--}}
+{{--                labels: reports.universities,--}}
+{{--                datasets: [{--}}
+{{--                    label: "Population (millions)",--}}
+{{--                    backgroundColor: reports.uni_colors,--}}
+{{--                    data: reports.uni_applications--}}
+{{--                }]--}}
+{{--            },--}}
+{{--            options: {--}}
+{{--                title: {--}}
+{{--                    display: true,--}}
+{{--                    text: ''--}}
+{{--                }--}}
+{{--            }--}}
+{{--        });--}}
 
-    }
+{{--    }--}}
 
-    async function getReportsList() {
-        var user_id = $('#filter-user').val();
-        var from_date = $('#filter-from').val();
-        var to_date = $('#filter-to').val();
-        return await $.ajax({
-            type: 'GET',
-            url: "{{ route('reports.list') }}",
-            data: {
-                user_id: user_id,
-                from_date: from_date,
-                to_date: to_date
-            },
-            success: function (data) {
-                if (data) return data;
-            }
-        });
-    }
-</script>
+{{--    async function getReportsList() {--}}
+{{--        var user_id = $('#filter-user').val();--}}
+{{--        var from_date = $('#filter-from').val();--}}
+{{--        var to_date = $('#filter-to').val();--}}
+{{--        return await $.ajax({--}}
+{{--            type: 'GET',--}}
+{{--            url: "{{ route('reports.list') }}",--}}
+{{--            data: {--}}
+{{--                user_id: user_id,--}}
+{{--                from_date: from_date,--}}
+{{--                to_date: to_date--}}
+{{--            },--}}
+{{--            success: function (data) {--}}
+{{--                if (data) return data;--}}
+{{--            }--}}
+{{--        });--}}
+{{--    }--}}
+{{--</script>--}}
 
-<script>
-    $('.selectBox').on("click", function () {
-        $(this).parent().find('#checkBoxes').fadeToggle();
-        $(this).parent().parent().siblings().find('#checkBoxes').fadeOut();
-    });
+{{--<script>--}}
+{{--    $('.selectBox').on("click", function () {--}}
+{{--        $(this).parent().find('#checkBoxes').fadeToggle();--}}
+{{--        $(this).parent().parent().siblings().find('#checkBoxes').fadeOut();--}}
+{{--    });--}}
 
-    //Checkbox Select
+{{--    //Checkbox Select--}}
 
-    if ($('.SortBy').length > 0) {
-        var show = true;
-        var checkbox1 = document.getElementById("checkBox");
-        $('.selectBoxes').on("click", function () {
+{{--    if ($('.SortBy').length > 0) {--}}
+{{--        var show = true;--}}
+{{--        var checkbox1 = document.getElementById("checkBox");--}}
+{{--        $('.selectBoxes').on("click", function () {--}}
 
-            if (show) {
-                checkbox1.style.display = "block";
-                show = false;
-            } else {
-                checkbox1.style.display = "none";
-                show = true;
-            }
-        });
-    }
+{{--            if (show) {--}}
+{{--                checkbox1.style.display = "block";--}}
+{{--                show = false;--}}
+{{--            } else {--}}
+{{--                checkbox1.style.display = "none";--}}
+{{--                show = true;--}}
+{{--            }--}}
+{{--        });--}}
+{{--    }--}}
 
-    // Date Time Picker
+{{--    // Date Time Picker--}}
 
-    if ($('.datetimepicker').length > 0) {
-        $('.datetimepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                up: "fa fa-angle-up",
-                down: "fa fa-angle-down",
-                next: 'fa fa-angle-right',
-                previous: 'fa fa-angle-left'
-            }
-        });
-    }
-</script>
+{{--    if ($('.datetimepicker').length > 0) {--}}
+{{--        $('.datetimepicker').datetimepicker({--}}
+{{--            format: 'DD/MM/YYYY',--}}
+{{--            icons: {--}}
+{{--                up: "fa fa-angle-up",--}}
+{{--                down: "fa fa-angle-down",--}}
+{{--                next: 'fa fa-angle-right',--}}
+{{--                previous: 'fa fa-angle-left'--}}
+{{--            }--}}
+{{--        });--}}
+{{--    }--}}
+{{--</script>--}}
