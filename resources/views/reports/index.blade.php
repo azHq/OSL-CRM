@@ -1,26 +1,33 @@
 @push('style')
-<!-- Chart CSS -->
-<link rel="stylesheet" href="http://localhost:8001/assets/plugins/morris.js/morris.css">
+    <!-- Chart CSS -->
+    <link rel="stylesheet" href="http://localhost:8001/assets/plugins/morris.js/morris.css">
 @endpush
 
 <!-- Page Content -->
 <div class="content container-fluid">
 
     @component('components.custombreadcrumb')
-    @slot('icon') <i class="fa fa-user" aria-hidden="true"></i> @endslot
-    @slot('title') Reports @endslot
-    @push('list') <li class="breadcrumb-item active">Reports</li> @endpush
+        @slot('icon')
+            <i class="fa fa-user" aria-hidden="true"></i>
+        @endslot
+        @slot('title')
+            Reports
+        @endslot
+        @push('list')
+            <li class="breadcrumb-item active">Reports</li>
+        @endpush
     @endcomponent
 
 
     <div class="row my-4">
         @if (Auth::user()->hasRole('super-admin'))
-        <div class="col-2">
-            <label>Select Counselor</label>
-            <select id="filter-user" class="form-select focus-none" aria-label="Default select example" style="height:45px;">
-                <option value="" selected>All</option>
-            </select>
-        </div>
+            <div class="col-2">
+                <label>Select Counselor</label>
+                <select id="filter-user" class="form-select focus-none" aria-label="Default select example"
+                        style="height:45px;">
+                    <option value="" selected>All</option>
+                </select>
+            </div>
         @endif
         <div class="col-2">
             <span>From Date</span>
@@ -34,58 +41,83 @@
 
         </div>
     </div>
-
-
-
-    <div class="row graphs">
-        <div class="col-md-6">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-title">
                     <h3 class="card-title">Counselor Performance</h3>
-                    <canvas id="bar-chart" width="800" height="550"></canvas>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card h-100">
                 <div class="card-body">
-                    <h3 class="card-title">Lead Report</h3>
-                    <canvas id="bar-chart-2" width="800" height="550"></canvas>
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Details</th>
+                                <th>Type</th>
+                                <th>Time</th>
+                                <th>Lead</th>
+                                <th>Counselor</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row graphs">
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3 class="card-title">Application Performance</h3>
-                    <canvas id="bar-chart-3" width="800" height="550"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3 class="card-title">Application Reports</h3>
-                    <canvas id="pie-chart" width="800" height="550"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{--    <div class="row graphs">--}}
+    {{--        <div class="col-md-6">--}}
+    {{--            <div class="card h-100">--}}
+    {{--                <div class="card-body">--}}
+    {{--                    <h3 class="card-title">Counselor Performance</h3>--}}
+    {{--                    <canvas id="bar-chart" width="800" height="550"></canvas>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--        <div class="col-md-6">--}}
+    {{--            <div class="card h-100">--}}
+    {{--                <div class="card-body">--}}
+    {{--                    <h3 class="card-title">Lead Report</h3>--}}
+    {{--                    <canvas id="bar-chart-2" width="800" height="550"></canvas>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
+
+    {{--    <div class="row graphs">--}}
+    {{--        <div class="col-md-6">--}}
+    {{--            <div class="card h-100">--}}
+    {{--                <div class="card-body">--}}
+    {{--                    <h3 class="card-title">Application Performance</h3>--}}
+    {{--                    <canvas id="bar-chart-3" width="800" height="550"></canvas>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--        <div class="col-md-6">--}}
+    {{--            <div class="card h-100">--}}
+    {{--                <div class="card-body">--}}
+    {{--                    <h3 class="card-title">Application Reports</h3>--}}
+    {{--                    <canvas id="pie-chart" width="800" height="550"></canvas>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 
 </div>
 <!-- /Page Content -->
 <!-- Chart JS -->
 <script>
-    $(document).ready(async function() {
+    $(document).ready(async function () {
         $.ajax({
             type: 'GET',
             url: "{{ route('leads.create') }}",
-            success: function(data) {
+            success: function (data) {
                 var options = '<option value="" selected>Select Counselor</option>';
-                data.users.forEach(function(user) {
+                data.users.forEach(function (user) {
                     options += '<option value="' + user.id + '">' + user.name + '</option>';
                 });
                 $('#filter-user').html(options);
@@ -95,15 +127,15 @@
         fetchData();
     });
 
-    $('#filter-user').on('change', function() {
+    $('#filter-user').on('change', function () {
         fetchData();
     });
 
-    $('#filter-from').on('change', function() {
+    $('#filter-from').on('change', function () {
         fetchData();
     });
 
-    $('#filter-to').on('change', function() {
+    $('#filter-to').on('change', function () {
         fetchData();
     });
 
@@ -211,7 +243,7 @@
                 from_date: from_date,
                 to_date: to_date
             },
-            success: function(data) {
+            success: function (data) {
                 if (data) return data;
             }
         });
@@ -219,7 +251,7 @@
 </script>
 
 <script>
-    $('.selectBox').on("click", function() {
+    $('.selectBox').on("click", function () {
         $(this).parent().find('#checkBoxes').fadeToggle();
         $(this).parent().parent().siblings().find('#checkBoxes').fadeOut();
     });
@@ -229,7 +261,7 @@
     if ($('.SortBy').length > 0) {
         var show = true;
         var checkbox1 = document.getElementById("checkBox");
-        $('.selectBoxes').on("click", function() {
+        $('.selectBoxes').on("click", function () {
 
             if (show) {
                 checkbox1.style.display = "block";
