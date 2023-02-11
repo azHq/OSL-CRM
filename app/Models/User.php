@@ -95,4 +95,8 @@ class User extends Authenticatable
     {
         return $this->roles()->first()->name == 'super-admin' ? 'Manager' : 'Counsellor';
     }
+    public function reports()
+    {
+        return $this->hasMany(Reports::class);
+    }
 }
