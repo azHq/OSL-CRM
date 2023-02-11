@@ -104,6 +104,9 @@
 @component('leads.import')
 @endcomponent
 
+@component('leads.mail')
+@endcomponent
+
 @component('leads.edit')
 @endcomponent
 

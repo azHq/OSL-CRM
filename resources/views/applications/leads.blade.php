@@ -32,9 +32,6 @@
                                 <th>Counsellor</th>
                             @endif
                             <th>Lead Created</th>
-                            @if (Auth::user()->hasRole('super-admin'))
-                                <th>Created By</th>
-                            @endif
                             <th>Lead Status</th>
                             <th>Action</th>
                         </tr>
@@ -134,11 +131,6 @@
                                                 <option value="" selected>Filter Counsellor</option>
                                             </select>`);
                                     break;
-                                case 'Created By':
-                                    $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Creator</option>
-                                            </select>`);
-                                    break;
                                 case 'Lead Created':
                                     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
                                     break;
@@ -224,9 +216,6 @@
                     },
                     {
                         data: 'created_at'
-                    },
-                    {
-                        data: 'created_by'
                     },
                     {
                         data: 'status'

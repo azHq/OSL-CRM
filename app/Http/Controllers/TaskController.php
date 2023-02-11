@@ -193,12 +193,12 @@ class TaskController extends Controller
 
     public function create()
     {
-        // 
+        //
     }
 
     public function view()
     {
-        // 
+        //
     }
 
     public function edit($id)
@@ -297,16 +297,14 @@ class TaskController extends Controller
             'name' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
             'details' => 'required',
             'assignee_id' => 'required'
         ]);
         try {
             $task = Task::create([
                 'name' => $request->name,
-                'start' => $request->start_date . ' ' . $request->start_time,
-                'end' => $request->end_date . ' ' . $request->end_time,
+                'start' => $request->start_date,
+                'end' => $request->end_date ,
                 'details' => $request->details,
                 'assignee_id' => $request->assignee_id,
             ]);
@@ -324,6 +322,49 @@ class TaskController extends Controller
     public function todoList()
     {
         $todolist = Task::all();
+        $todolist = $todolist->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'color' => $item->color,
+                'name' => $item->name,
+                'details' => $item->details,
+                'start' => $item->start,
+                'end' => $item->end,
+                'status' => $item->status,
+                'assignee_id' => $item->assignee_id,
+                'assignee_name' => $item->assignee ? $item->assignee->name : '',
+            ];
+        })->toArray();
+        return response()->json(['tasks' => $todolist]);
+    }
+
+    public function todoListByAssignee($id)
+    {
+        $todolist = Task::where('assignee_id', $id)->get();
+        $todolist = $todolist->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'color' => $item->color,
+                'name' => $item->name,
+                'details' => $item->details,
+                'start' => $item->start,
+                'end' => $item->end,
+                'status' => $item->status,
+                'assignee_id' => $item->assignee_id,
+                'assignee_name' => $item->assignee ? $item->assignee->name : '',
+            ];
+        })->toArray();
+        return response()->json(['tasks' => $todolist]);
+    }
+
+    public function todoListByDateRange($type){
+//        $type: 0 => weekly, 1=> monthly
+        if($type == 0)
+            $date = Carbon::now()->subWeek();
+        elseif ($type == 1)
+            $date = Carbon::now()->subMonth();
+
+        $todolist = Task::where('created_at', '>=', $date)->get();
         $todolist = $todolist->map(function ($item) {
             return [
                 'id' => $item->id,

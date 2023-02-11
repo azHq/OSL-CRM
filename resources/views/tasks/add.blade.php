@@ -45,37 +45,19 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Start Date <span class="text-danger">*</span></label>
-											<input type="date" id="task-add-start-date" class="form-control" name="start_date" required>
+											<label class="col-form-label">Start Date and Time <span class="text-danger">*</span></label>
+											<input type="datetime-local" id="task-add-start-date" class="form-control" name="start_date" required>
 										</div>
 									</div>
 								</div>
-								<div class="col">
-									<div class="form-group row">
-										<div class="col-sm-12">
-											<label class="col-form-label">Start Time <span class="text-danger">*</span></label>
-											<input type="time" step="1" id="task-add-start-time" class="form-control" name="start_time" required>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col">
-									<div class="form-group row">
-										<div class="col-sm-12">
-											<label class="col-form-label">End Date <span class="text-danger">*</span></label>
-											<input type="date" id="task-add-end-date" class="form-control" name="end_date" required>
-										</div>
-									</div>
-								</div>
-								<div class="col">
-									<div class="form-group row">
-										<div class="col-sm-12">
-											<label class="col-form-label">End Time <span class="text-danger">*</span></label>
-											<input type="time" step="1" id="task-add-end-time" class="form-control" name="end_time" required>
-										</div>
-									</div>
-								</div>
+                                <div class="col">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">End Date and Time<span class="text-danger">*</span></label>
+                                            <input type="datetime-local" id="task-add-end-date" class="form-control" name="end_date" required>
+                                        </div>
+                                    </div>
+                                </div>
 							</div>
 							<div class="text-center py-3">
 								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
