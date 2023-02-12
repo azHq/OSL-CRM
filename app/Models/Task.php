@@ -17,7 +17,8 @@ class Task extends Model
         'end',
         'details',
         'assignee_id',
-        'status'
+        'status',
+        'task_type'
     ];
 
     protected $append = ['color'];

@@ -169,7 +169,6 @@
                 }
             },
             select: function(selectionInfo) {
-                console.log(selectionInfo)
                 $("#task-add-start-date").val(selectionInfo.start.toLocaleDateString());
                 $("#add_task").attr('data-end', selectionInfo.end.toLocaleString());
                 $("#add_task").attr('data-all-day', selectionInfo.allDay);
@@ -216,7 +215,7 @@
                             }
                         },
                         cancel: function() {
-                            //    
+                            //
                         },
 
                     }

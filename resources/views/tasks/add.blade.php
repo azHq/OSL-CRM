@@ -58,6 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" id="task-type" class="form-control" name="task_type" required>
 							</div>
 							<div class="text-center py-3">
 								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
@@ -73,6 +74,17 @@
 	</div>
 	<!-- modal-dialog -->
 </div>
+
+@if(Route::current()->getName() == 'tasks.index')
+    <script>
+        $('#task-type').val('Scheduled');
+    </script>
+@endif
+@if(Route::current()->getName() == 'dashboard')
+    <script>
+        $('#task-type').val('Normal');
+    </script>
+@endif
 
 @if(Auth::user()->hasRole('super-admin'))
 <script>

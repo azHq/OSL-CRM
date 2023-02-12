@@ -105,6 +105,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('calendar-crud-ajax', [TaskController::class, 'calendarEvents']);
 
     Route::get('todo/list', [TaskController::class, 'todoList'])->name('tasks.todolist');
+    Route::get('todo/today/scheduled/list', [TaskController::class, 'todoScheduledList'])->name('tasks.todoScheduledList');
     Route::get('todo/list/assignee/{id}', [TaskController::class, 'todoListByAssignee'])->name('tasks.todolistByAssignee');
     Route::get('todo/list/filter/{type}', [TaskController::class, 'todoListByDateRange'])->name('tasks.todoListByDateRange');
     Route::get('tasks/list', [TaskController::class, 'list'])->name('tasks.list');

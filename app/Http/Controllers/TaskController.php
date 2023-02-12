@@ -249,7 +249,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+//            abort_if((!Auth::user()->hasRole('super-admin')), 403);
             $task->update([
                 'status' => 'Resolved'
             ]);
@@ -298,11 +298,13 @@ class TaskController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
             'details' => 'required',
-            'assignee_id' => 'required'
+            'assignee_id' => 'required',
+            'task_type' => 'required'
         ]);
         try {
             $task = Task::create([
                 'name' => $request->name,
+                'task_type' => $request->task_type,
                 'start' => $request->start_date,
                 'end' => $request->end_date ,
                 'details' => $request->details,
@@ -322,6 +324,28 @@ class TaskController extends Controller
     public function todoList()
     {
         $todolist = Task::all();
+        $todolist = $todolist->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'color' => $item->color,
+                'name' => $item->name,
+                'details' => $item->details,
+                'start' => $item->start,
+                'end' => $item->end,
+                'status' => $item->status,
+                'assignee_id' => $item->assignee_id,
+                'assignee_name' => $item->assignee ? $item->assignee->name : '',
+            ];
+        })->toArray();
+        return response()->json(['tasks' => $todolist]);
+    }
+
+    public function todoScheduledList(){
+        $todolist = Task::where('task_type', 'Scheduled')
+            ->where('status', '!=', 'Resolved')
+            ->where('start', '<=', Carbon::today())->where('end', '>=', Carbon::today())
+            ->skip(0)->take(5)->get();
+
         $todolist = $todolist->map(function ($item) {
             return [
                 'id' => $item->id,
