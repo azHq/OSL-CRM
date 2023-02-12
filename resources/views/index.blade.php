@@ -7,6 +7,15 @@
 	.dashboard-card {
 		height: 8em;
 	}
+    .floating-div {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        width: 300px;
+        height: 200px;
+        background-color: #de1111;
+        z-index: 1;
+    }
 </style>
 @endpush
 
@@ -173,6 +182,7 @@
 								<tbody id="todo-list-table">
 
 								</tbody>
+
 							</table>
 						</div>
 					</div>
@@ -180,6 +190,13 @@
 			</div>
 		</div>
 	</div>
+    <div class="floating-div" id="today-scheduled-task" style="position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 300px;
+        z-index: 1;"
+    >
+    </div>
 </div>
 <!-- /Page Content -->
 @component('tasks.add')
@@ -189,6 +206,7 @@
 	$(document).ready(function(){
 		getTodoList();
         getOwners();
+        getScheduledTasks();
 	});
 </script>
 <script>
@@ -370,6 +388,41 @@
             $('#todo-list-table').html(items);
         }
     }
+
+    function getScheduledTasks(){
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('tasks.todoScheduledList') }}",
+            data: {},
+            success: function(data) {
+                if (data.tasks) {
+                    var items = '';
+                    var i = 0;
+                    data.tasks.forEach(function(task) {
+                        items += `<div class="card shadow mb-2" id="task-scheduled-${task.id}">
+                                    <div class="m-2">${task.name}</div>
+                                        <div class="d-flex justify-content-center mb-2">
+                                        <div>
+                                            <button onclick="taskComplete(${task.id})" type="button" class="btn btn-success btn-sm">Resolve</button>
+                                        </div>
+                                        <div>
+                                            <button onclick="hideCard(${task.id})" type="button" class="btn btn-danger ms-1 btn-sm">Close</button>
+                                        </div>
+                                        </div>
+                                  </div>`;
+                    });
+                    $('#today-scheduled-task').html(items);
+                }
+            }
+        });
+    }
+
+    function hideCard(id){
+        var divId = "task-scheduled-" + id;
+        var div = document.getElementById(divId);
+        div.style.display = "none";
+    }
+
 </script>
 
 <script>
@@ -386,3 +439,4 @@
         });
     }
 </script>
+
