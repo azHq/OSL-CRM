@@ -1,54 +1,30 @@
-@push('style')
-<style>
-    .focus-none {
-        box-shadow: inset 0 -1px 0 #ddd !important;
-    }
-
-    #myTable tbody tr td:nth-child(9) {
-        text-align: left !important;
-    }
-</style>
-@endpush
-
-@include('components.flash')
-
-<div class="page-header pt-3 mb-0 ">
-
-    <div class="row">
-        <div class="col-5">
-
-        </div>
-        <div class="col-1">
-
-        </div>
-
-    </div>
-</div>
-<!-- Content Starts -->
 <div class="row">
-    <div class="col-md-12">
-        <div class="card mb-0">
+    <div class="col-xl-12 col-lg-12 col-md-12">
+        <div class="card h-100">
+            <div class="card-title">
+                <h3 class="card-title">Counselor Performance</h3>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>User</th>
-                                <th>Activity</th>
-                                <th>Details</th>
-                                <th>Date</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Details</th>
+                            <th>Type</th>
+                            <th>Time</th>
+                            <th>Lead</th>
+                            <th>Counselor</th>
+                            <th>Action</th>
+                        </tr>
                         </thead>
-
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- /Content End -->
-
 <script>
     // On Load
     $(document).ready(function() {
@@ -109,7 +85,7 @@
                                 api.column(colIdx)
                                     .search(
                                         this.value != '' ?
-                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
                                         this.value != '',
                                         this.value == ''
                                     ).draw();
@@ -128,7 +104,7 @@
                                 api.column(colIdx)
                                     .search(
                                         this.value != '' ?
-                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
                                         this.value != '',
                                         this.value == ''
                                     ).draw();
@@ -149,9 +125,9 @@
                 });
             },
             columns: [{
-                    data: 'DT_RowIndex',
-                    width: '1%'
-                },
+                data: 'DT_RowIndex',
+                width: '1%'
+            },
                 {
                     data: 'user'
                 },
