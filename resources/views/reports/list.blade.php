@@ -1,7 +1,31 @@
+<div class="page-header pt-3 mb-0 ">
+
+    <div class="row">
+        <div class="col-5">
+
+        </div>
+        <div class="col-1">
+
+        </div>
+        <div class="col text-end">
+            @if(Auth::user()->hasRole('super-admin'))
+                <ul class="list-inline-item pl-0">
+                    <li class="list-inline-item">
+                        <button
+                            class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded"
+                            id="add-report" data-bs-toggle="modal" data-bs-target="#add_report">
+                            <i class="fa fa-plus" aria-hidden="true"></i> New Report
+                        </button>
+                    </li>
+                </ul>
+            @endif
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-xl-12 col-lg-12 col-md-12">
         <div class="card h-100">
-            <div class="card-title">
+            <div class="p-2">
                 <h3 class="card-title">Counselor Performance</h3>
             </div>
             <div class="card-body">
@@ -25,6 +49,10 @@
         </div>
     </div>
 </div>
+
+@component('reports.create')
+@endcomponent
+
 <script>
     // On Load
     $(document).ready(function() {
