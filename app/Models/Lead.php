@@ -67,11 +67,6 @@ class Lead extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
-    public function report()
-    {
-        return $this->hasMany(Report::class);
-    }
-
     public function getUploadedDocumentsNoAttribute()
     {
         if (!$this->document) return 0;

@@ -13,10 +13,10 @@ class Report extends Model
 
     public function lead()
     {
-        return $this->belongsTo(Lead::class);
+        return $this->belongsTo(Lead::class, 'leads_id');
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'counselor_id');
     }
 }

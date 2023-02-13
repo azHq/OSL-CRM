@@ -40,7 +40,6 @@
                             <th>Time</th>
                             <th>Lead</th>
                             <th>Counselor</th>
-                            <th>Action</th>
                         </tr>
                         </thead>
                     </table>
@@ -56,13 +55,13 @@
 <script>
     // On Load
     $(document).ready(function () {
-        getActivities();
+        getReports();
     });
 </script>
 
 
 <script>
-    function getActivities() {
+    function getReports() {
         $("#myTable").dataTable().fnDestroy();
         $('#myTable thead tr')
             .clone(true)
@@ -144,8 +143,9 @@
                     });
             },
             ajax: {
-                'url': '{{ route("activities.list") }}',
+                'url': '{{ route("reports.list") }}',
                 data: function (data) {
+                    console.log(data)
                 }
             },
             "fnDrawCallback": function (oSettings) {
@@ -158,13 +158,19 @@
                 width: '1%'
             },
                 {
-                    data: 'user'
+                    data: 'title'
                 },
                 {
-                    data: 'name'
+                    data: 'description'
                 },
                 {
-                    data: 'details'
+                    data: 'type'
+                },
+                {
+                    data: 'counselor'
+                },
+                {
+                    data: 'lead'
                 },
                 {
                     data: 'created_at',
