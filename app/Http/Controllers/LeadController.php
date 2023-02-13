@@ -142,7 +142,8 @@ class LeadController extends Controller
     public function view($id, Request $request)
     {
         if (\request()->ajax()) {
-            $lead = Lead::find($id);
+            $lead = Lead::find($id)->load('report');
+            error_log($lead);
             return view('leads.view', compact('lead'));
         }
 
