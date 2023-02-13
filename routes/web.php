@@ -120,6 +120,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('reports', [ReportController::class, 'store'])->name('reports.store');
     Route::get('reports/list', [ReportController::class, 'list'])->name('reports.list');
     Route::get('reports/leads-statistics', [ReportController::class, 'leadsStatistics'])->name('reports.leads-statistics');
 

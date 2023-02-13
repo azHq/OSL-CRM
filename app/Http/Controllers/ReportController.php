@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\ColorGenerator;
 use App\Models\Application;
 use App\Models\Lead;
+use App\Models\Report;
 use App\Models\Student;
 use App\Models\University;
 use Illuminate\Http\Request;
@@ -193,5 +194,16 @@ class ReportController extends Controller
             'students' => $students,
             'applications' => $applications
         ];
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            Report::create($request->except('_token'));
+            return Redirect::back()->with('success', 'Report created successfully.');
+        } catch (\Exception $e) {
+            Report::info($e->getMessage());
+            return Redirect::back()->with('error', $e->getMessage());
+        }
     }
 }

@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="" method="POST">
+                        <form action="{{ route('reports.store') }}" method="POST">
                             @csrf
                             <h4>Report Information</h4>
                             <div class="row">
@@ -40,11 +40,11 @@
                                 <div class="col">
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label class="col-form-label">Type </label>
-                                            <select class=" form-control form-select" name="type">
-                                                <option value="1">January</option>
-                                                <option value="2">Febraury</option>
-                                                <option value="3">March</option>
+                                            <label class="col-form-label">Type <span class="text-danger">*</span></label>
+                                            <select class=" form-control form-select" name="type" required>
+                                                <option value="mail">Email</option>
+                                                <option value="call">Call</option>
+                                                <option value="others">Others</option>
                                             </select>
                                         </div>
                                     </div>
@@ -53,10 +53,21 @@
                             <div class="form-group row">
                                 <div class="col-4 col-sm-12">
                                     <label class="col-form-label">Counsellor</label>
-                                    <select class=" form-control form-select" name="owner_id" id="create-lead-owners" readonly>
+                                    <select class=" form-control form-select" name="counselor_id" id="create-lead-owners" readonly>
                                         <option value="">Unassigned</option>
                                         @foreach(App\Models\User::admins()->get() as $user)
                                             <option value="{{$user->id}}" {{Auth::user()->id==$user->id?'selected':''}}>{{$user->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4 col-sm-12">
+                                    <label class="col-form-label">Lead</label>
+                                    <select class=" form-control form-select" name="leads_id" id="create-lead-owners" readonly>
+                                        <option value="">Not Selected</option>
+                                        @foreach(App\Models\Lead::all() as $l)
+                                            <option value="{{$l->id}}">{{$l->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

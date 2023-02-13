@@ -35,8 +35,8 @@
                         <tr>
                             <th>#</th>
                             <th>Title</th>
-                            <th>Details</th>
                             <th>Type</th>
+                            <th>Description</th>
                             <th>Time</th>
                             <th>Lead</th>
                             <th>Counselor</th>
@@ -55,7 +55,7 @@
 
 <script>
     // On Load
-    $(document).ready(function() {
+    $(document).ready(function () {
         getActivities();
     });
 </script>
@@ -79,10 +79,10 @@
                 'targets': [0],
                 'orderable': false,
             }],
-            initComplete: function() {
+            initComplete: function () {
                 var api = this.api();
                 api.columns().eq(0)
-                    .each(function(colIdx) {
+                    .each(function (colIdx) {
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
                         );
@@ -106,7 +106,7 @@
                         }
                         $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
                             .off('keyup change')
-                            .on('change', function(e) {
+                            .on('change', function (e) {
                                 $(this).attr('title', $(this).val());
                                 var regexr = '({search})';
                                 var cursorPosition = this.selectionStart;
@@ -118,14 +118,14 @@
                                         this.value == ''
                                     ).draw();
                             })
-                            .on('keyup', function(e) {
+                            .on('keyup', function (e) {
                                 e.stopPropagation();
                                 $(this).trigger('change');
                             });
 
                         $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
                             .off('keyup change')
-                            .on('change', function(e) {
+                            .on('change', function (e) {
                                 $(this).attr('title', $(this).val());
                                 var regexr = '({search})';
                                 var cursorPosition = this.selectionStart;
@@ -137,7 +137,7 @@
                                         this.value == ''
                                     ).draw();
                             })
-                            .on('keyup', function(e) {
+                            .on('keyup', function (e) {
                                 e.stopPropagation();
                                 $(this).trigger('change');
                             });
@@ -145,9 +145,10 @@
             },
             ajax: {
                 'url': '{{ route("activities.list") }}',
-                data: function(data) {}
+                data: function (data) {
+                }
             },
-            "fnDrawCallback": function(oSettings) {
+            "fnDrawCallback": function (oSettings) {
                 $("body").tooltip({
                     selector: '[data-toggle="tooltip"]'
                 });
@@ -178,7 +179,7 @@
 
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         getActivitiesUsers();
     });
 
@@ -186,10 +187,10 @@
         $.ajax({
             type: 'GET',
             url: "{{ route('leads.create') }}",
-            success: function(data) {
+            success: function (data) {
                 if (data.all_users) {
                     var options = '<option value="" selected>Filter User</option>';
-                    data.all_users.forEach(function(user) {
+                    data.all_users.forEach(function (user) {
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
                     });
                     $('#filter-activity-user').html(options);
