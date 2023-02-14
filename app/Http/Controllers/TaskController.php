@@ -343,7 +343,7 @@ class TaskController extends Controller
     public function todoScheduledList(){
         $todolist = Task::where('task_type', 'Scheduled')
             ->where('status', '!=', 'Resolved')
-            ->where('start', '<=', Carbon::today())->where('end', '>=', Carbon::today())
+            ->where('start', '<=', Carbon::now())->where('end', '>=', Carbon::now())
             ->skip(0)->take(5)->get();
 
         $todolist = $todolist->map(function ($item) {

@@ -143,6 +143,7 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $lead = Lead::find($id);
+            $lead->load('applications');
             return view('leads.view', compact('lead'));
         }
 

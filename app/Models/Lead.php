@@ -67,6 +67,11 @@ class Lead extends Model
         return $this->hasMany(Reports::class);
     }
 
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+
     public function getUploadedDocumentsNoAttribute()
     {
         if (!$this->document) return 0;

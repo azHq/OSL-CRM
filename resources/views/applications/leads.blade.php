@@ -45,6 +45,8 @@
 </div>
 <!-- /Content End -->
 
+@component('leads.mail')
+@endcomponent
 
 @component('applications.leads_edit')
 @endcomponent
@@ -53,31 +55,16 @@
 <script>
     // On Load
     $(document).ready(function() {
-        localStorage.setItem('SelectedLeads', JSON.stringify([]));
         getTransactions();
 
         $('#myTable tbody').on('click', 'tr', function() {
-            let SelectedLeads = JSON.parse(localStorage.getItem('SelectedLeads'));
 
             let leadId = $(':nth-child(2)', this).children("a").data('id');
 
-            $(this).toggleClass('selected-row');
-            if ($(this).hasClass('selected-row')) {
-                SelectedLeads.push(leadId);
-            } else {
-                SelectedLeads = SelectedLeads.filter(item => item !== leadId)
-            }
-            localStorage.setItem('SelectedLeads', JSON.stringify(SelectedLeads));
-            if (SelectedLeads.length > 0) {
-                $('#multiple-actions').removeClass('d-none');
-            } else {
-                $('#multiple-actions').addClass('d-none');
-            }
+            {{--window.location = "{{ route('leads.view', ['id' => ':leadId']) }}".replace(':leadId', leadId);--}}
+            // console.log(leadId);
         });
 
-        $('#button').click(function() {
-            alert(table.rows('.selected-row').data().length + ' row(s) selected');
-        });
     });
 
     $('#filter-search').keyup(function() {

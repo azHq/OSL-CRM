@@ -27,17 +27,17 @@ class ApplicationController extends Controller
     {
         if (\request()->ajax()) {
             $applications = Application::orderBy('created_at', 'desc');
-            if (\request('student_id')) {
-                $applications->where('student_id', \request('student_id'));
+            if (\request('lead_id')) {
+                $applications->where('lead_id', \request('lead_id'));
             }
             $applications = $applications->get();
 
             return datatables()->of($applications)
-                ->addColumn('student', function ($row) {
-                    return $row->student->name;
+                ->addColumn('lead', function ($row) {
+                    return $row->lead->name;
                 })
                 ->addColumn('counsellor', function ($row) {
-                    return $row->student->owner ? $row->student->owner->name : 'Unassigned';
+                    return $row->lead->owner ? $row->lead->owner->name : 'Unassigned';
                 })
                 ->addColumn('course', function ($row) {
                     return $row->course;
@@ -67,14 +67,14 @@ class ApplicationController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit" data-student-id="' . $row->student->id . '" data-student-name="' . $row->student->name . '"><i class="feather-edit"></i></a>';
-                    $action .= '<a href="#" data-id="' . $row->student_id . '" data-name="' . $row->student->name . '" data-bs-toggle="modal" data-bs-target="#add_application" class="add-application lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
+                    $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit" data-lead-id="' . $row->lead->id . '" data-lead-name="' . $row->lead->name . '"><i class="feather-edit"></i></a>';
+                    $action .= '<a href="#" data-id="' . $row->lead_id . '" data-name="' . $row->lead->name . '" data-bs-toggle="modal" data-bs-target="#add_application" class="add-application lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
                     if (Auth::user()->hasRole('super-admin'))
                         $action .= '<a href="javascript:;" onclick="applicationDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['student', 'counsellor', 'course', 'intake_month', 'intake_year', 'university', 'applied', 'status', 'action'])
+                ->rawColumns(['lead', 'counsellor', 'course', 'intake_month', 'intake_year', 'university', 'applied', 'status', 'action'])
                 ->make(true);
         }
     }
@@ -82,18 +82,36 @@ class ApplicationController extends Controller
     public function create(Request $request)
     {
         $universities = University::select('id', 'name')->get();
-        $students = Student::select('id', 'name')->get();
+        $leads = Student::select('id', 'name')->get();
         return response()->json([
             'universities' => $universities,
-            'students' => $students
+            'leads' => $leads
         ]);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'lead_id' => 'required',
+            'course' => 'required',
+            'course_details' => 'required',
+            'intake_year' => 'required',
+            'intake_month' => 'required',
+            'status' => 'required',
+            'compliance' => 'required',
+            'university_id' => 'required'
+        ]);
         try {
-            $data = $request->except('_token');
-            Application::create($data);
+            Application::create([
+                'lead_id' => $request->lead_id,
+                'course' => $request->course,
+                'course_details' => $request->course_details,
+                'intake_year' => $request->intake_year,
+                'intake_month' => $request->intake_month,
+                'status' => $request->status,
+                'compliance' => $request->compliance,
+                'university_id' => $request->university_id,
+            ]);
             return Redirect::back()->with('success', 'Application created successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
@@ -131,5 +149,23 @@ class ApplicationController extends Controller
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
+    }
+
+    public function listByLeadId($lead_id){
+        $applications = Application::where('lead_id', $lead_id)->get();
+        $applications = $applications->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'lead' => $item->lead->name,
+                'course' => $item->course,
+                'course_details' => $item->course_details,
+                'intake_year' => $item->intake_year,
+                'intake_month' => $item->intake_month,
+                'status' => $item->status,
+                'compliance' => $item->compliance,
+                'university' => $item->university->name,
+            ];
+        })->toArray();
+        return response()->json(['applications' => $applications]);
     }
 }

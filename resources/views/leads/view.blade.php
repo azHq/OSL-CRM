@@ -117,7 +117,7 @@
                 </h3>
             </div>
         </div>
-        <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+        <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
             <div class="row">
                 <div class="col account d-flex">
                     <div class="company_img">
@@ -197,91 +197,74 @@
                     </h3>
                 </div>
                 <div class="col p-0 text-end">
-                        <button onclick="showModal()" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-application" data-bs-toggle="modal" data-bs-target="#add_application">
+                        <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-application" data-bs-toggle="modal" data-bs-target="#add_application">
                             <i class="fa fa-plus" aria-hidden="true"></i> Apply
                         </button>
                 </div>
             </div>
-            <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
-                <div class="row">
-                    <div class="col account d-flex">
-                        <div class="company_img">
-                            <img src="{{ asset('assets/img/profiles/profile.png') }}" alt="User" class="user-image" />
-                        </div>
-                        <div class="my-auto">
-                            <p class="mb-0">Lead</p>
-                            <span class="modal-title"> <strong>{{$lead->name}}</strong> </span>&nbsp;
-                            <span class="rating-star"><i class="fa fa-star" aria-hidden="true"></i></span>&nbsp;
-                            <span class="lock"><i class="fa fa-lock" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <span>Lead Phone</span>
-                        <p class="font-weight-bold">{{$lead->mobile}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Lead Email</span>
-                        <p class="font-weight-bold">{{$lead->email}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Lead Status</span>
-                        <p class="font-weight-bold">{{$lead->status}}</p>
-                    </div>
+            <div class="card p-md-4 p-2 mt-2 mb-2 lkb-profile-board">
+                <table class="table mb-4 mt-4">
+                    <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th>Lead</th>
+                        <th>Course</th>
+                        <th>Intake Month</th>
+                        <th>Intake Year</th>
+                        <th>University</th>
+                        @if(Auth::user()->hasRole('super-admin'))
+                            <th>Counsellor</th>
+                        @endif
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    @foreach($lead->applications as $application)
+                        <tr style="border-style: none !important; color:black !important;">
+                            <td>
+                                {{$application->id}}
+                            </td>
+                            <td>
+                                {{$application->lead->name}}
+                            </td>
+                            <td>
+                                {{$application->course}}
+                            </td>
+                            <td>
+                                {{$application->intake_month}}
+                            </td>
+                            <td>
+                                {{$application->intake_year}}
+                            </td>
+                            <td>
+                                {{$application->university->name}}
+                            </td>
+                            <td>
+                                {{$lead->owner?$lead->owner->name:'Unassigned'}}
+                            </td>
+                            <td>
+                                {{$application->status}}
+                            </td>
+                            <td>
+                                <button  type="button" class="btn badge-info ms-1"><i class="feather-edit"></i></button>
+                            </td>
+                        </tr>
 
-                </div>
-                <div class="row mt-4">
-                    <div class="col">
-                        <span>Intake Month / Year</span>
-                        <p class="font-weight-bold">{{$lead->intake_month_year ?? 'N/A'}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Last Education</span>
-                        <p class="font-weight-bold">
-                            {{$lead->last_education??'N/A'}}
-                            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{$lead->education_details??'N/A'}}"></i>
-                        </p>
-                    </div>
-                    <div class="col">
-                        <span>Completion Date</span>
-                        <p class="font-weight-bold">{{$lead->completion_date??'N/A'}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Job Experience</span>
-                        <p class="font-weight-bold">{{$lead->job_experience??'N/A'}}</p>
-                    </div>
-                    <div class="col-1"></div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col">
-                        <span>English</span>
-                        <p class="font-weight-bold">{{$lead->english ?? 'N/A'}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Englist Result</span>
-                        <p class="font-weight-bold">{{$lead->english_result??'N/A'}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Counsellor</span>
-                        <p class="font-weight-bold">{{$lead->owner?$lead->owner->name:'Unassigned'}}</p>
-                    </div>
-                    <div class="col">
-                        <span>Creator</span>
-                        <p class="font-weight-bold">{{$lead->creator?$lead->creator->name:'NA'}}</p>
-                    </div>
-                    <div class="col-1"></div>
-                </div>
+                    @endforeach
+
+                </table>
             </div>
 
     </div>
     <!-- /Page Content -->
     @component('leads.edit')
     @endcomponent
-{{--    @component('applications.create')--}}
-{{--    @endcomponent--}}
 
+    @component('applications.create')
+    @endcomponent
     <script>
         function showModal(){
-            $("#edit_lead").modal('show');
+            $("#add_application").modal('show');
         }
         function leadConvert(id) {
             $.confirm({
