@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('type');
+            $table->string('mechanism');
             $table->foreignId('leads_id')->references('id')->on('leads');
             $table->foreignId('counselor_id')->references('id')->on('users');
             $table->timestamps();

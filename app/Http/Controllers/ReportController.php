@@ -30,7 +30,7 @@ class ReportController extends Controller
         if (\request()->ajax())
         {
             try{
-                $reports = Report::orderBy('created_at', 'desc')->get();
+                $reports = Report::orderBy('created_at', 'desc')->where('mechanism','manual')->get();
             }catch (\Exception $e){
                 dd($e->getMessage());
             }
@@ -131,6 +131,7 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         try {
+            $request['mechanism'] = 'manual';
             Report::create($request->except('_token'));
             return Redirect::back()->with('success', 'Report created successfully.');
         } catch (\Exception $e) {

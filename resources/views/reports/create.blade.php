@@ -42,9 +42,9 @@
                                         <div class="col-sm-12">
                                             <label class="col-form-label">Type <span class="text-danger">*</span></label>
                                             <select class=" form-control form-select" name="type" required>
-                                                <option value="mail">Email</option>
-                                                <option value="call">Call</option>
-                                                <option value="others">Others</option>
+                                                <option value="Email">Email</option>
+                                                <option value="Call">Call</option>
+                                                <option value="Others">Others</option>
                                             </select>
                                         </div>
                                     </div>
