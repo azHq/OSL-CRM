@@ -222,7 +222,7 @@
                     @foreach($lead->applications as $application)
                         <tr style="border-style: none !important; color:black !important;">
                             <td>
-                                {{$application->id}}
+                                {{ $loop->index }}
                             </td>
                             <td>
                                 {{$application->lead->name}}
@@ -246,7 +246,8 @@
                                 {{$application->status}}
                             </td>
                             <td>
-                                <button onclick="showEditModal({{$application->id}})" type="button" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" data-bs-toggle="modal" data-bs-target="#application_edit"><i class="feather-edit"></i></button>
+                                <button onclick="showEditModal({{$application->id}})" type="button" class="add btn btn-sm btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" data-bs-toggle="modal" data-bs-target="#application_edit"><i class="feather-edit"></i></button>
+                                <button onclick="deleteApplication({{$application->id}})" type="button" class="btn btn-danger font-weight-bold text-white todo-list-add-btn btn-rounded"><i class="feather-trash-2"></i></button>
                             </td>
                         </tr>
 
@@ -403,22 +404,23 @@
         function showModal(){
             $("#add_application").modal('show');
         }
-        function leadConvert(id) {
+        function deleteApplication(id) {
             $.confirm({
                 title: 'Confirm',
+                content: 'Do you want to delete this Application ?',
                 buttons: {
                     info: {
                         text: 'Cancel',
-                        btnClass: 'btn-red',
+                        btnClass: 'btn-blue',
                         action: function() {
                             // canceled
                         }
                     },
                     danger: {
-                        text: 'Convert',
-                        btnClass: 'btn-blue',
+                        text: 'Delete',
+                        btnClass: 'btn-red',
                         action: function() {
-                            var url = "{{ route('leads.convert','id') }}";
+                            var url = "{{ route('applications.delete','id') }}";
                             url = url.replace('id', id);
                             $.ajax({
                                 type: 'GET',
