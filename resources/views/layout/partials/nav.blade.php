@@ -49,6 +49,11 @@
 					<a data-nav="universities" data-href="{{url('universities')}}" class="url"><i class="fa fa-university" aria-hidden="true"></i> <span>Universities</span></a>
 				</li>
 				@endif
+                @if (Auth::user()->hasRole('super-admin'))
+                    <li id="universities" class="nav-li {{ Request::is('reports*') ? 'active' : '' }}">
+                        <a data-nav="universities" data-href="{{url('reports')}}" class="url"><i class="fa fa-key" aria-hidden="true"></i> <span>Parameters</span></a>
+                    </li>
+                @endif
 				<li id="notifications" class="nav-li {{ Request::is('notifications*') ? 'active' : '' }}">
 					<a data-nav="notifications" data-href="{{url('notifications')}}" class="url"><i class="fa fa-bell" aria-hidden="true"></i> <span>Notifications</span></a>
 				</li>
