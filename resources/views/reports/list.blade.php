@@ -110,7 +110,7 @@
                                            </select>`);
                                 break;
                             case 'Time':
-                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="">`);
                                 break;
                             case '#':
                                 $(cell).html(title);

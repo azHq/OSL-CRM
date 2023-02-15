@@ -51,7 +51,7 @@
 				@endif
                 @if (Auth::user()->hasRole('super-admin'))
                     <li id="universities" class="nav-li {{ Request::is('reports*') ? 'active' : '' }}">
-                        <a data-nav="universities" data-href="{{url('reports')}}" class="url"><i class="fa fa-key" aria-hidden="true"></i> <span>Parameters</span></a>
+                        <a data-nav="universities" data-href="{{url('reports')}}" class="url"><i class="fa fa-code" aria-hidden="true"></i> <span>Parameters</span></a>
                     </li>
                 @endif
 				<li id="notifications" class="nav-li {{ Request::is('notifications*') ? 'active' : '' }}">
