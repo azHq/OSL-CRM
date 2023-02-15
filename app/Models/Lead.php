@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helper\NewLog;
+use App\Helper\NewReportEntry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -27,18 +28,22 @@ class Lead extends Model
 
         self::created(function ($lead) {
             NewLog::create('New Lead Added', 'A new lead "' . $lead->name . '" has been added.');
+            NewReportEntry::create('Lead Created','A new lead "' . $lead->name . '" has been created.', 'Lead_Creation', $lead->id, $lead->creator_id);
         });
 
         self::updated(function ($lead) {
+
             $updatedFields = '';
             foreach ($lead->getDirty() as $key => $value) {
                 $updatedFields .= (' ' . $key . ',');
             }
             NewLog::create('Lead Updated', 'Lead "' . $lead->name . '" has been updated. Changed fields are' . $updatedFields . '.');
+            NewReportEntry::create('Lead Created','Lead "' . $lead->name . '" has been updated. Changed fields are' . $updatedFields . '.', 'Lead_Update', $lead->id, $lead->creator_id);
         });
 
         self::deleted(function ($lead) {
             NewLog::create('Lead Deleted', 'Lead "' . $lead->name . '" has been deleted.');
+            NewReportEntry::create('Lead Deleted', 'Lead "' . $lead->name . '" has been deleted.','Lead_Delete', $lead->id, $lead->creator_id);
         });
     }
 
@@ -62,9 +67,9 @@ class Lead extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
-    public function reports()
+    public function report()
     {
-        return $this->hasMany(Reports::class);
+        return $this->hasMany(Report::class,'leads_id');
     }
 
     public function applications()

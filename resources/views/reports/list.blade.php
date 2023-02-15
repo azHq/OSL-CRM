@@ -1,7 +1,31 @@
+<div class="page-header pt-3 mb-0 ">
+
+    <div class="row">
+        <div class="col-5">
+
+        </div>
+        <div class="col-1">
+
+        </div>
+        <div class="col text-end">
+            @if(Auth::user()->hasRole('super-admin'))
+                <ul class="list-inline-item pl-0">
+                    <li class="list-inline-item">
+                        <button
+                            class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded"
+                            id="add-report" data-bs-toggle="modal" data-bs-target="#add_report">
+                            <i class="fa fa-plus" aria-hidden="true"></i> New Report
+                        </button>
+                    </li>
+                </ul>
+            @endif
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-xl-12 col-lg-12 col-md-12">
         <div class="card h-100">
-            <div class="card-title">
+            <div class="p-2">
                 <h3 class="card-title">Counselor Performance</h3>
             </div>
             <div class="card-body">
@@ -11,12 +35,11 @@
                         <tr>
                             <th>#</th>
                             <th>Title</th>
-                            <th>Details</th>
                             <th>Type</th>
+                            <th>Description</th>
                             <th>Time</th>
                             <th>Lead</th>
                             <th>Counselor</th>
-                            <th>Action</th>
                         </tr>
                         </thead>
                     </table>
@@ -25,16 +48,20 @@
         </div>
     </div>
 </div>
+
+@component('reports.create')
+@endcomponent
+
 <script>
     // On Load
-    $(document).ready(function() {
-        getActivities();
+    $(document).ready(function () {
+        getReports();
     });
 </script>
 
 
 <script>
-    function getActivities() {
+    function getReports() {
         $("#myTable").dataTable().fnDestroy();
         $('#myTable thead tr')
             .clone(true)
@@ -51,10 +78,10 @@
                 'targets': [0],
                 'orderable': false,
             }],
-            initComplete: function() {
+            initComplete: function () {
                 var api = this.api();
                 api.columns().eq(0)
-                    .each(function(colIdx) {
+                    .each(function (colIdx) {
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
                         );
@@ -78,7 +105,7 @@
                         }
                         $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
                             .off('keyup change')
-                            .on('change', function(e) {
+                            .on('change', function (e) {
                                 $(this).attr('title', $(this).val());
                                 var regexr = '({search})';
                                 var cursorPosition = this.selectionStart;
@@ -90,14 +117,14 @@
                                         this.value == ''
                                     ).draw();
                             })
-                            .on('keyup', function(e) {
+                            .on('keyup', function (e) {
                                 e.stopPropagation();
                                 $(this).trigger('change');
                             });
 
                         $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
                             .off('keyup change')
-                            .on('change', function(e) {
+                            .on('change', function (e) {
                                 $(this).attr('title', $(this).val());
                                 var regexr = '({search})';
                                 var cursorPosition = this.selectionStart;
@@ -109,17 +136,19 @@
                                         this.value == ''
                                     ).draw();
                             })
-                            .on('keyup', function(e) {
+                            .on('keyup', function (e) {
                                 e.stopPropagation();
                                 $(this).trigger('change');
                             });
                     });
             },
             ajax: {
-                'url': '{{ route("activities.list") }}',
-                data: function(data) {}
+                'url': '{{ route("reports.list") }}',
+                data: function (data) {
+                    console.log(data)
+                }
             },
-            "fnDrawCallback": function(oSettings) {
+            "fnDrawCallback": function (oSettings) {
                 $("body").tooltip({
                     selector: '[data-toggle="tooltip"]'
                 });
@@ -129,13 +158,19 @@
                 width: '1%'
             },
                 {
-                    data: 'user'
+                    data: 'title'
                 },
                 {
-                    data: 'name'
+                    data: 'description'
                 },
                 {
-                    data: 'details'
+                    data: 'type'
+                },
+                {
+                    data: 'counselor'
+                },
+                {
+                    data: 'lead'
                 },
                 {
                     data: 'created_at',
@@ -150,7 +185,7 @@
 
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         getActivitiesUsers();
     });
 
@@ -158,10 +193,10 @@
         $.ajax({
             type: 'GET',
             url: "{{ route('leads.create') }}",
-            success: function(data) {
+            success: function (data) {
                 if (data.all_users) {
                     var options = '<option value="" selected>Filter User</option>';
-                    data.all_users.forEach(function(user) {
+                    data.all_users.forEach(function (user) {
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
                     });
                     $('#filter-activity-user').html(options);

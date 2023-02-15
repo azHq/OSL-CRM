@@ -2,18 +2,23 @@
 
 namespace App\Helper;
 
-use App\Models\Activity;
-use App\Models\Reports;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Report;
 
 class NewReportEntry
 {
-    public static function create()
+    public static function create($title,$details,$type,$lead_id,$counselor_id)
     {
-        Reports::create([
-//            'title' => '$activityName',
-//            'details' => '$activityDetails',
-//            'l' => Auth::user()->id,
-        ]);
+        error_log($type.' '.$lead_id.' '.$counselor_id);
+        try{
+            Report::create([
+                'title' => $title,
+                'description' => $details,
+                'type' => $type,
+                'leads_id' => $lead_id,
+                'counselor_id' => $counselor_id
+            ]);
+        } catch (\Exception $err){
+            dd($err->getMessage());
+        }
     }
 }
