@@ -44,8 +44,8 @@ class ReportController extends Controller
             ->editColumn('description', function ($row) {
                 return $row->description;
             })
-            ->editColumn('created_at', function ($row) {
-                return $row->created_at;
+            ->editColumn('time', function ($row) {
+                return $row->time;
             })
             ->editColumn('type', function ($row) {
                 return $row->type;

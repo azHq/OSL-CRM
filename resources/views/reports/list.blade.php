@@ -183,7 +183,7 @@
                     data: 'description'
                 },
                 {
-                    data: 'created_at',
+                    data: 'time',
                     width: '1%'
                 },
                 {

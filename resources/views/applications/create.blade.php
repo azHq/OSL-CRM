@@ -13,8 +13,34 @@
 					<div class="col-md-12">
 						<form action="{{ route('applications.store') }}" method="POST">
 							@csrf
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group row">
+                                        <div class="col-md-12"><label class="col-form-label">Name <span class="text-danger">*</span></label></div>
+                                        <div class="col-md-12">
+                                            <input disabled id="application-lead-name" class="form-control" type="text" name="name" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Email <span class="text-danger">*</span></label>
+                                            <input disabled id="application-lead-email" type="text" class="form-control" name="email" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Phone <span class="text-danger">*</span></label>
+                                            <input disabled id="application-lead-mobile" type="text" class="form-control" name="mobile" maxlength="13" minlength="7" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 							<div class="form-group row">
-								<div class="col-md-12 col-sm-12">
+								<div class="col-md-6 col-sm-12">
 									<label class="col-form-label">Course Label <span class="text-danger">*</span></label>
 									<select class=" form-control form-select" name="course" id="course">
 										<option value="Foundation">Foundation</option>
@@ -26,6 +52,12 @@
 										<option value="PHD">PHD</option>
 									</select>
 								</div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label class="col-form-label">University</label>
+                                    <select class=" form-control form-select" name="university_id" id="application-universities">
+                                        <option value="">Unassigned</option>
+                                    </select>
+                                </div>
 							</div>
 							<div class="form-group row">
 								<div class="col-md-6 col-sm-12">
@@ -56,19 +88,6 @@
 									<textarea type="text" class="form-control" name="course_details" placeholder="About Course" required></textarea>
 								</div>
 							</div>
-							<div class="form-group row">
-								<div class="col-md-6 col-sm-12">
-									<label class="col-form-label">Student</label>
-									<select class=" form-control form-select" name="student_id" id="application-students">
-									</select>
-								</div>
-								<div class="col-md-6 col-sm-12">
-									<label class="col-form-label">University</label>
-									<select class=" form-control form-select" name="university_id" id="application-universities">
-										<option value="">Unassigned</option>
-									</select>
-								</div>
-							</div>
 
 							<div class="form-group row">
 								<div class="col-md-6 col-sm-12">
@@ -91,6 +110,8 @@
 								</div>
 							</div>
 
+                            <input type="hidden" id="lead-id" class="form-control" name="lead_id" required>
+
 							<div class="text-center py-3">
 								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
 								<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
@@ -106,11 +127,15 @@
 	<!-- modal-dialog -->
 </div>
 
+@if (Route::current()->hasParameter('id'))
+    <script>
+        $(document).ready(function(){
+            getLead({{Route::current()->parameter('id')}});
+        });
+    </script>
+@endif
 <script>
 	$('body').on('click', '.add-application', function() {
-		var student_id = $(this).data('id');
-		var student_name = $(this).data('name');
-		$('#application-students').html('<option value="' + student_id + '" selected>' + student_name + '</option>');
 		createApplication();
 	});
 
@@ -145,4 +170,22 @@
 			});
 		}
 	});
+</script>
+
+<script>
+    function getLead(id) {
+        var url = "{{ route('leads.edit', 'id') }}";
+        url = url.replace('id', id);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(data) {
+                var lead = data.lead;
+                $('#lead-id').val(lead.id);
+                $('#application-lead-name').val(lead.name);
+                $('#application-lead-email').val(lead.email);
+                $('#application-lead-mobile').val(lead.mobile);
+            }
+        });
+    }
 </script>

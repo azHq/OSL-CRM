@@ -23,7 +23,7 @@ class Application extends Model
         });
 
         self::created(function ($application) {
-            NewLog::create('New Application', 'Applied on behalf of student "' . $application->student->name . '" for course-"' . $application->course . '" & university-"' . $application->university->name . '".');
+            NewLog::create('New Application', 'Applied on behalf of student "' . $application->lead->name . '" for course-"' . $application->course . '" & university-"' . $application->university->name . '".');
         });
 
         self::updated(function ($application) {
@@ -31,17 +31,17 @@ class Application extends Model
             foreach ($application->getDirty() as $key => $value) {
                 $updatedFields .= (' ' . $key.',');
             }
-            NewLog::create('Application Updated', 'Application updated for student "' . $application->student->name . '". Changed fields are' . $updatedFields . '.');
+            NewLog::create('Application Updated', 'Application updated for student "' . $application->lead->name . '". Changed fields are' . $updatedFields . '.');
         });
 
         self::deleted(function ($application) {
-            NewLog::create('Application Deleted', 'Application deleted on behalf of student "' . $application->student->name . '" for course-"' . $application->course . '" & university-"' . $application->university->name . '".');
+            NewLog::create('Application Deleted', 'Application deleted on behalf of student "' . $application->lead->name . '" for course-"' . $application->course . '" & university-"' . $application->university->name . '".');
         });
     }
 
-    public function student()
+    public function lead()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Lead::class);
     }
 
     public function university()

@@ -10,26 +10,8 @@
 </style>
 @endpush
 
-
-
-<div class="page-header pt-3 mb-0 ">
-
-    <div class="row">
-        <div class="col-4">
-            <div class="page-title-box w-100">
-                <div class="top-nav-search">
-
-                </div>
-            </div>
-        </div>
-        <div class="col text-end">
-            <ul class="list-inline-item pl-0">
-            </ul>
-        </div>
-    </div>
-</div>
 <!-- Content Starts -->
-<div class="row">
+<div class="row mt-2">
     <div class="col-md-12">
         <div class="card mb-0">
             <div class="card-body">
@@ -38,7 +20,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Student</th>
+                                <th>Lead</th>
                                 <th>Course</th>
                                 <th>Intake Month</th>
                                 <th>Intake Year</th>
@@ -179,7 +161,7 @@
                     data: 'DT_RowIndex'
                 },
                 {
-                    data: 'student'
+                    data: 'lead'
                 },
                 {
                     data: 'course'
@@ -236,7 +218,7 @@
                     data: 'DT_RowIndex'
                 },
                 {
-                    data: 'student'
+                    data: 'lead'
                 },
                 {
                     data: 'course'

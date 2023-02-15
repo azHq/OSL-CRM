@@ -153,12 +153,12 @@
 										<option value="" selected>Filter Counsellor</option>
 									</select>
                                     @endif
-                                    <button onclick="fetchTasksByDateRange(0)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">
-                                            Week
-                                    </button>
-                                    <button onclick="fetchTasksByDateRange(1)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">
-                                            Month
-                                    </button>
+{{--                                    <button onclick="fetchTasksByDateRange(0)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">--}}
+{{--                                            Week--}}
+{{--                                    </button>--}}
+{{--                                    <button onclick="fetchTasksByDateRange(1)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">--}}
+{{--                                            Month--}}
+{{--                                    </button>--}}
 								</div>
 								<div>
 									<button onclick="showModal()" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-task" data-bs-toggle="modal" data-bs-target="#add_task">
@@ -193,7 +193,7 @@
     <div class="floating-div" id="today-scheduled-task" style="position: fixed;
         bottom: 20px;
         right: 20px;
-        width: 300px;
+        width: 400px;
         z-index: 1;"
     >
     </div>
@@ -366,6 +366,11 @@
             var items = '';
             var i = 0;
             data.tasks.forEach(function(task) {
+                let resolveButton = task.status === 'Resolved' ? `<button onclick="taskComplete('${task.id}')" disabled type="button" class="btn btn-secondary ms-1">Resolved</button>`
+                    : `<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">&nbsp;Resolve&nbsp;</button>`;
+                let cancelButton = task.status === 'Canceled' ? `<button onclick="taskComplete('${task.id}')" disabled type="button" class="btn btn-secondary ms-1">Canceled</button>`
+                    : `<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-danger ms-1">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>`;
+
                 items += `<tr style="border-style: none !important; color:${task.color} !important;">
 										<th style="border-style: none !important;" scope="row">${++i}</th>
 										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
@@ -375,8 +380,8 @@
 										<td style="border-style: none !important;">${task.status}</td>
 										<td style="border-style: none !important;">${task.assignee_name}</td>
 										<td style="border-style: none !important;">
-											<button onclick="taskCancel('${task.id}')" type="button" class="btn btn-danger">Cancel</button>
-											<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">Resolve</button>
+											${cancelButton}
+											${resolveButton}
 										</td>
 									</tr>`;
             });
@@ -400,14 +405,18 @@
                     var i = 0;
                     data.tasks.forEach(function(task) {
                         items += `<div class="card shadow mb-2" id="task-scheduled-${task.id}">
-                                    <div class="m-2">${task.name}</div>
-                                        <div class="d-flex justify-content-center mb-2">
-                                        <div>
-                                            <button onclick="taskComplete(${task.id})" type="button" class="btn btn-success btn-sm">Resolve</button>
+                                    <div class="row">
+                                        <div class="text-center mt-1 col-10">${task.name} <br/>
+                                            <small>${task.start} - ${task.end} </small>
                                         </div>
-                                        <div>
-                                            <button onclick="hideCard(${task.id})" type="button" class="btn btn-danger ms-1 btn-sm">Close</button>
+                                        <div class="mt-1 col-2 text-end">
+                                            <button onclick="hideCard(${task.id})" align="right" type="button" class="btn-close xs-close me-1"></button>
                                         </div>
+                                    </div>
+                                        <div class="d-flex justify-content-end mb-2">
+                                            <div class="me-3">
+                                                <button onclick="taskComplete(${task.id})" type="button" class="btn btn-success btn-sm">Resolve</button>
+                                            </div>
                                         </div>
                                   </div>`;
                     });

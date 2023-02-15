@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->foreignId('lead_id')->references('id')->on('leads')->onDelete('cascade');
             $table->string('course');
             $table->text('course_details')->nullable();
             $table->smallInteger('intake_year');
             $table->smallInteger('intake_month');
             $table->enum('status', ['Applied', 'Offer Received', 'Paid', 'Visa', 'Enrolled']);
+            $table->enum('compliance', ['Pending', 'Approved', 'Rejected']);
             $table->foreignId('university_id')->references('id')->on('universities');
             $table->timestamps();
         });

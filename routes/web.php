@@ -92,6 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
 
     Route::get('applications/list', [ApplicationController::class, 'list'])->name('applications.list');
+    Route::get('applications/list/lead/{id}', [ApplicationController::class, 'listByLeadId'])->name('applications.listByLeadId');
     Route::get('applications/create', [ApplicationController::class, 'create'])->name('applications.create');
     Route::post('applications', [ApplicationController::class, 'store'])->name('applications.store');
     Route::get('applications', [ApplicationController::class, 'index'])->name('applications.index');
