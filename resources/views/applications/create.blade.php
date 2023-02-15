@@ -185,18 +185,6 @@
                 $('#application-lead-name').val(lead.name);
                 $('#application-lead-email').val(lead.email);
                 $('#application-lead-mobile').val(lead.mobile);
-                // $('#application-lead-intake_month').val(lead.intake_month);
-                // $('#application-lead-status').val(lead.status);
-                // $('#application-lead-intake_year').val(lead.intake_year);
-                // $('#application-lead-last_education').val(lead.last_education);
-                // $('#application-lead-completion_date').val(lead.completion_date);
-                // $('#application-lead-education_details').val(lead.education_details);
-                // $('#application-lead-english').val(lead.english);
-                // $('#application-lead-english_result').val(lead.english_result);
-                // $('#application-lead-job_experience').val(lead.job_experience);
-                // $('#application-lead-owner_id').val(lead.owner_id);
-                console.log(lead);
-
             }
         });
     }

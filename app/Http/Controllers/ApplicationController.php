@@ -122,6 +122,7 @@ class ApplicationController extends Controller
     {
         if (\request()->ajax()) {
             $application = Application::find($id);
+            $application->load('lead');
             return response()->json($application);
         }
     }
@@ -130,8 +131,8 @@ class ApplicationController extends Controller
     {
         try {
             $application = Application::find($id);
-            $application->update($request->except('_token', '_method'));
-            return Redirect::route('applications.index')->with('success', 'Application updated successfully.');
+            $application->update($request->except('_token', '_method','name', 'email', 'mobile'));
+            return Redirect::back()->with('success', 'Application updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }
