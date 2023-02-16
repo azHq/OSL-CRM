@@ -88,13 +88,29 @@
                         $(cell).removeClass('sorting_asc');
                         var title = $(cell).text();
                         switch (title) {
-                            case 'User':
-                                $(cell).html(`<select id="filter-activity-user" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter User</option>
-                                            </select>`);
+                            case 'Type':
+                                $(cell).html(`<select id="type" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="">All Type</option>
+                                                <option value="Email">Email</option>
+                                                <option value="Call">Call</option>
+                                                <option value="Others">Others</option>
+                                           </select>`);
                                 break;
-                            case 'Date':
-                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                            case 'Counselor':
+                                $(cell).html(`<select id="type" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="">All Counselor</option>
+                                                @foreach(App\Models\User::admins()->get() as $user)
+                                                    <option value="{{$user->name}}">{{$user->name}}</option>
+                                                @endforeach
+                                           </select>`);
+                                break;
+                            case 'Lead':
+                                $(cell).html(`<select id="filter-activity-user" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                 <option value="">Filter Lead</option>
+                                           </select>`);
+                                break;
+                            case 'Time':
+                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="">`);
                                 break;
                             case '#':
                                 $(cell).html(title);
@@ -161,21 +177,21 @@
                     data: 'title'
                 },
                 {
-                    data: 'description'
-                },
-                {
                     data: 'type'
                 },
                 {
-                    data: 'counselor'
+                    data: 'description'
+                },
+                {
+                    data: 'time',
+                    width: '1%'
                 },
                 {
                     data: 'lead'
                 },
                 {
-                    data: 'created_at',
-                    width: '1%'
-                },
+                    data: 'counselor'
+                }
             ]
 
         });
@@ -195,7 +211,7 @@
             url: "{{ route('leads.create') }}",
             success: function (data) {
                 if (data.all_users) {
-                    var options = '<option value="" selected>Filter User</option>';
+                    var options = '<option value="" selected>Filter Lead</option>';
                     data.all_users.forEach(function (user) {
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
                     });

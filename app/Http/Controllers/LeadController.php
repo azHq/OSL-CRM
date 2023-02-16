@@ -145,6 +145,7 @@ class LeadController extends Controller
             $lead = Lead::find($id);
             $lead->load('applications');
             $lead->load('report');
+            $lead->load("report.user");
             return view('leads.view', compact('lead'));
         }
 

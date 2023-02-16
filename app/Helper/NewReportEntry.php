@@ -15,7 +15,9 @@ class NewReportEntry
                 'description' => $details,
                 'type' => $type,
                 'leads_id' => $lead_id,
-                'counselor_id' => $counselor_id
+                'counselor_id' => $counselor_id,
+                'mechanism' => 'automatic',
+                'time' => date('d-m-y h:i:s')
             ]);
         } catch (\Exception $err){
             dd($err->getMessage());

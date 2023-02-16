@@ -119,7 +119,38 @@
         </div>
         <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
             <div class="row">
-                table shall go here
+                <div class="col-xl-12 col-lg-12 col-md-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
+                                    <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Time</th>
+                                        <th>Lead</th>
+                                        <th>Counselor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($lead->report as $report)
+                                        <tr>
+                                            <td>{{ $report->title }}</td>
+                                            <td>{{ $report->type }}</td>
+                                            <td>{{ $report->description }}</td>
+                                            <td>{{ $report->created_at }}</td>
+                                            <td>{{ $lead->name }}</td>
+                                            <td>{{ $report->user->name }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

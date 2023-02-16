@@ -30,8 +30,12 @@
                                 <div class="col">
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label class="col-form-label">Description <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="description" required>
+                                            <label class="col-form-label">Type <span class="text-danger">*</span></label>
+                                            <select class=" form-control form-select" name="type" required>
+                                                <option value="Email">Email</option>
+                                                <option value="Call">Call</option>
+                                                <option value="Others">Others</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -40,20 +44,16 @@
                                 <div class="col">
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label class="col-form-label">Type <span class="text-danger">*</span></label>
-                                            <select class=" form-control form-select" name="type" required>
-                                                <option value="mail">Email</option>
-                                                <option value="call">Call</option>
-                                                <option value="others">Others</option>
-                                            </select>
+                                            <label class="col-form-label">Description <span class="text-danger">*</span></label>
+                                            <textarea type="text" rows="4" class="form-control" name="description"></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-4 col-sm-12">
-                                    <label class="col-form-label">Counsellor</label>
-                                    <select class=" form-control form-select" name="counselor_id" id="create-lead-owners" readonly>
+                                    <label class="col-form-label">Counsellor <span class="text-danger">*</span></label>
+                                    <select class=" form-control form-select" name="counselor_id" id="create-lead-owners" required readonly>
                                         <option value="">Unassigned</option>
                                         @foreach(App\Models\User::admins()->get() as $user)
                                             <option value="{{$user->id}}" {{Auth::user()->id==$user->id?'selected':''}}>{{$user->name}}</option>
@@ -63,8 +63,8 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-4 col-sm-12">
-                                    <label class="col-form-label">Lead</label>
-                                    <select class=" form-control form-select" name="leads_id" id="create-lead-owners" readonly>
+                                    <label class="col-form-label">Lead <span class="text-danger">*</span></label>
+                                    <select class=" form-control form-select" name="leads_id" id="create-lead-owners" required readonly>
                                         <option value="">Not Selected</option>
                                         @foreach(App\Models\Lead::all() as $l)
                                             <option value="{{$l->id}}">{{$l->name}}</option>
