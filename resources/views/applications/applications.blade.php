@@ -30,7 +30,7 @@
                                 @endif
                                 <th>Status</th>
                                 <th>Applied On</th>
-                                <th>Apply</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
 
@@ -42,7 +42,7 @@
 </div>
 <!-- /Content End -->
 
-@component('applications.create')
+@component('applications.edit')
 @endcomponent
 
 <script>
@@ -102,7 +102,7 @@
                             case '#':
                                 $(cell).html(title);
                                 break;
-                            case 'Apply':
+                            case 'Actions':
                                 $(cell).html(title);
                                 break;
                             default:
@@ -252,7 +252,7 @@
     function applicationDelete(id) {
         $.confirm({
             title: 'Confirm',
-            content: 'Do you want to delete this Lead ?',
+            content: 'Do you want to delete this Application ?',
             buttons: {
                 info: {
                     text: 'Cancel',

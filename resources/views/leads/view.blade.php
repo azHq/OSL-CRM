@@ -117,7 +117,7 @@
                 </h3>
             </div>
         </div>
-        <div class="card p-md-4 p-2 lkb-profile-board">
+        <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
             <div class="row">
                 table shall go here
             </div>
@@ -138,59 +138,9 @@
                         </button>
                 </div>
             </div>
-            <div class="card p-md-4 p-2 mt-2 mb-2 lkb-profile-board">
-                <table class="table mb-4 mt-4">
-                    <thead>
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th>Lead</th>
-                        <th>Course</th>
-                        <th>Intake Month</th>
-                        <th>Intake Year</th>
-                        <th>University</th>
-                        @if(Auth::user()->hasRole('super-admin'))
-                            <th>Counsellor</th>
-                        @endif
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    @foreach($lead->applications as $application)
-                        <tr style="border-style: none !important; color:black !important;">
-                            <td>
-                                {{ $loop->index }}
-                            </td>
-                            <td>
-                                {{$application->lead->name}}
-                            </td>
-                            <td>
-                                {{$application->course}}
-                            </td>
-                            <td>
-                                {{$application->intake_month}}
-                            </td>
-                            <td>
-                                {{$application->intake_year}}
-                            </td>
-                            <td>
-                                {{$application->university->name}}
-                            </td>
-                            <td>
-                                {{$lead->owner?$lead->owner->name:'Unassigned'}}
-                            </td>
-                            <td>
-                                {{$application->status}}
-                            </td>
-                            <td>
-                                <button onclick="showEditModal({{$application->id}})" type="button" class="add btn btn-sm btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" data-bs-toggle="modal" data-bs-target="#application_edit"><i class="feather-edit"></i></button>
-                                <button onclick="deleteApplication({{$application->id}})" type="button" class="btn btn-danger font-weight-bold text-white todo-list-add-btn btn-rounded"><i class="feather-trash-2"></i></button>
-                            </td>
-                        </tr>
-
-                    @endforeach
-
-                </table>
-            </div>
+          <div>
+              @include('applications.applications')
+          </div>
 
             <div class="modal center fade" id="application_edit" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
                 <div class="modal-dialog lkb-modal-dialog" role="document">
