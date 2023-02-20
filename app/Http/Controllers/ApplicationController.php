@@ -67,8 +67,7 @@ class ApplicationController extends Controller
                     }
                 })
                 ->addColumn('action', function ($row) {
-                    $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit" data-lead-id="' . $row->lead->id . '" data-lead-name="' . $row->lead->name . '"><i class="feather-edit"></i></a>';
-                    $action .= '<a href="#" data-id="' . $row->lead_id . '" data-name="' . $row->lead->name . '" data-bs-toggle="modal" data-bs-target="#add_application" class="add-application lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
+                    $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
                     if (Auth::user()->hasRole('super-admin'))
                         $action .= '<a href="javascript:;" onclick="applicationDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     return $action;
@@ -132,7 +131,7 @@ class ApplicationController extends Controller
         try {
             $application = Application::find($id);
             $application->update($request->except('_token', '_method','name', 'email', 'mobile'));
-            return Redirect::back()->with('success', 'Application updated successfully.');
+//            return Redirect::back()->with('success', 'Application updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }

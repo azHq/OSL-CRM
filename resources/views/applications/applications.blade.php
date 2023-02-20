@@ -4,7 +4,7 @@
         box-shadow: inset 0 -1px 0 #ddd !important;
     }
 
-    #myTable tbody tr td:nth-child(9) {
+    #myApplicationTable tbody tr td:nth-child(9) {
         text-align: left !important;
     }
 </style>
@@ -16,7 +16,7 @@
         <div class="card mb-0">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
+                    <table id="myApplicationTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -30,7 +30,7 @@
                                 @endif
                                 <th>Status</th>
                                 <th>Applied On</th>
-                                <th>Apply</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
 
@@ -42,7 +42,7 @@
 </div>
 <!-- /Content End -->
 
-@component('applications.create')
+@component('applications.edit')
 @endcomponent
 
 <script>
@@ -54,9 +54,9 @@
 @if(Auth::user()->hasRole('super-admin'))
 <script>
     function getApplications() {
-        $("#myTable").dataTable().fnDestroy();
-        $('#myTable thead tr').clone(true).addClass('filters').appendTo('#myTable thead');
-        var table = $('#myTable').dataTable({
+        $("#myApplicationTable").dataTable().fnDestroy();
+        $('#myApplicationTable thead tr').clone(true).addClass('filters').appendTo('#myApplicationTable thead');
+        var table = $('#myApplicationTable').dataTable({
             responsive: true,
             processing: true,
             serverSide: true,
@@ -102,7 +102,7 @@
                             case '#':
                                 $(cell).html(title);
                                 break;
-                            case 'Apply':
+                            case 'Actions':
                                 $(cell).html(title);
                                 break;
                             default:
@@ -195,8 +195,8 @@
 @else
 <script>
     function getApplications() {
-        $("#myTable").dataTable().fnDestroy();
-        var table = $('#myTable').dataTable({
+        $("#myApplicationTable").dataTable().fnDestroy();
+        var table = $('#myApplicationTable').dataTable({
             responsive: true,
             processing: true,
             serverSide: true,
@@ -252,7 +252,7 @@
     function applicationDelete(id) {
         $.confirm({
             title: 'Confirm',
-            content: 'Do you want to delete this Lead ?',
+            content: 'Do you want to delete this Application ?',
             buttons: {
                 info: {
                     text: 'Cancel',
