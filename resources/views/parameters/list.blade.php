@@ -21,7 +21,19 @@
         <div class="col-1">
 
         </div>
-
+        <div class="col text-end">
+            @if(Auth::user()->hasRole('super-admin'))
+                <ul class="list-inline-item pl-0">
+                    <li class="list-inline-item">
+                        <button
+                            class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded"
+                            id="add-parameters" data-bs-toggle="modal" data-bs-target="#add_parameters">
+                            <i class="fa fa-plus" aria-hidden="true"></i> New Parameter
+                        </button>
+                    </li>
+                </ul>
+            @endif
+        </div>
     </div>
 </div>
 <!-- Content Starts -->
@@ -48,6 +60,9 @@
     </div>
 </div>
 <!-- /Content End -->
+
+@component('parameters.create')
+@endcomponent
 
 <script>
     // On Load
