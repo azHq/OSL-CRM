@@ -32,9 +32,9 @@
                                         <div class="col-sm-12">
                                             <label class="col-form-label">Type <span class="text-danger">*</span></label>
                                             <select class=" form-control form-select" name="type" required>
-                                                <option value="Email">Email</option>
-                                                <option value="Call">Call</option>
-                                                <option value="Others">Others</option>
+                                                @foreach(App\Models\Parameter::orderBy('created_at', 'desc')->get() as $param)
+                                                    <option value="{{$param->key}}">{{$param->value}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
