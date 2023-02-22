@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Parameter;
+use App\Models\MetaForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -11,10 +11,10 @@ class MetaFormsController extends Controller
     public function store(Request $request)
     {
         try {
-            Parameter::create($request->except('_token'));
+            MetaForm::create($request->except('_token'));
             return Redirect::back()->with('success', 'Parameter created successfully.');
         } catch (\Exception $e) {
-            Parameter::info($e->getMessage());
+            MetaForm::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
