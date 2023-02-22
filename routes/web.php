@@ -139,5 +139,4 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('parameters', [ParameterController::class, 'index'])->name('parameters.index');
     Route::get('parameters/list', [ParameterController::class, 'list'])->name('parameters.list');
     Route::post('parameters', [ParameterController::class, 'store'])->name('parameters.store');
-
 });
