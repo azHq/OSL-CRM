@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\MetaFormsController;
 use App\Http\Controllers\ParameterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
@@ -139,4 +140,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('parameters', [ParameterController::class, 'index'])->name('parameters.index');
     Route::get('parameters/list', [ParameterController::class, 'list'])->name('parameters.list');
     Route::post('parameters', [ParameterController::class, 'store'])->name('parameters.store');
+
+    Route::post('metaforms', [MetaFormsController::class, 'store'])->name('metaforms.store');
 });
