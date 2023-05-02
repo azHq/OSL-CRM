@@ -5,7 +5,7 @@
 	<div class="col d-flex login-side-section" style="height: 100vh;">
 		<!-- Account Logo -->
 		<div class="d-flex m-auto">
-			<a href="{{url('/')}}" class="m-auto"><img src="{{ URL::asset('/assets/img/logo-login.png')}}" alt="logo" class="login-logo"></a>
+			<a href="{{url('/')}}" class="m-auto"><img src="{{ URL::asset('/assets/img/new-login-logo.png')}}" alt="logo" class="login-logo"></a>
 		</div>
 		<!-- /Account Logo -->
 	</div>

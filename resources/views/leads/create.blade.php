@@ -93,15 +93,15 @@
 										<div class="col-sm-12">
 											<label class="col-form-label">Last Education <span class="text-danger">*</span></label>
 											<select class=" form-control form-select" name="last_education" required>
-												<option value="PHD">PHD</option>
+												<option value="PHD">PhD</option>
 												<option value="MBA">MBA</option>
 												<option value="Masters">Masters</option>
 												<option value="Bachelors">Bachelors</option>
 												<option value="Diploma">Diploma</option>
 												<option value="HSC">HSC</option>
 												<option value="SSC">SSC</option>
-												<option value="A-levels">A-levels</option>
-												<option value="o-levels">o-levels</option>
+												<option value="A-levels">A-Levels</option>
+												<option value="o-levels">O-Levels</option>
 											</select>
 										</div>
 									</div>
@@ -127,14 +127,17 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">English <span class="text-danger">*</span></label>
+											<label class="col-form-label">English Proficiency Test <span class="text-danger">*</span></label>
 											<select class=" form-control form-select" name="english" required>
-												<option value="IELTS">IELTS</option>
+												<option value="IELTS (Academic)">IELTS (Academic)</option>
+												<option value="IELTS (General)">IELTS (General)</option>
+												<option value="Duolingo">Duolingo</option>
 												<option value="MOI">MOI</option>
 												<option value="OIETC">OIETC</option>
 												<option value="PTE">PTE</option>
 												<option value="Internal Test">Internal Test</option>
-											</select>
+												<option value="Others">Others</option>
+                                            </select>
 										</div>
 									</div>
 								</div>
