@@ -5,6 +5,12 @@
 <meta name="author" content="Dreamguys - Bootstrap Admin Template">
 <meta name="robots" content="noindex, nofollow">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+
+{{--meta for form--}}
+<meta property="og:url" content="http://localhost:8000/metaforms">
+<meta property="fb:app_id" content="CRMS_ADMIN">
+<meta property="og:form_id" content="CRMS-form-id">
+
 <title>Dashboard - CRMS admin laravel template</title>
 <!-- Favicon -->
 <link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/favicon.png')}}">
@@ -51,7 +57,7 @@
     .main-wrapper {
         background-image: url('../assets/img/sidebar_card_white.png');
     }
-    
+
     .account-page {
         background-image: url('../assets/img/sidebar_card_white.png');
     }
