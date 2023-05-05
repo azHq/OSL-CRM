@@ -82,6 +82,17 @@ class UserController extends Controller
         return view('layout.mainlayout');
     }
 
+    public function croIndex(Request $request)
+    {
+        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+
+        if (\request()->ajax()) {
+            return view('cros.index');
+        }
+
+        return view('layout.mainlayout');
+    }
+
     public function view($id, Request $request)
     {
         abort_if(!Auth::user()->hasRole('super-admin'), 403);

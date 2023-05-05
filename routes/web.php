@@ -142,4 +142,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('parameters', [ParameterController::class, 'store'])->name('parameters.store');
 
     Route::post('metaforms', [MetaFormsController::class, 'store'])->name('metaforms.store');
+
+    Route::get('cros', [UserController::class, 'croIndex'])->name('cros.index');
 });

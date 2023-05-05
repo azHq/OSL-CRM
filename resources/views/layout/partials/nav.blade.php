@@ -44,6 +44,11 @@
 					<a data-nav="users" data-href="{{url('users')}}" class="url"><i class="feather-users"></i> <span>Counsellors</span></a>
 				</li>
 				@endif
+                @if (Auth::user()->hasRole('super-admin'))
+                    <li id="cros" class="nav-li {{ Request::is('cros*') ? 'active' : '' }}">
+                        <a data-nav="cros" data-href="{{url('cros')}}" class="url"><i class="feather-users"></i> <span>CROs</span></a>
+                    </li>
+                @endif
 				@if (Auth::user()->hasRole('super-admin'))
 				<li id="universities" class="nav-li {{ Request::is('universities*') ? 'active' : '' }}">
 					<a data-nav="universities" data-href="{{url('universities')}}" class="url"><i class="fa fa-university" aria-hidden="true"></i> <span>Universities</span></a>
