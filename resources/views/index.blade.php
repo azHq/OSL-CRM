@@ -47,7 +47,7 @@
 		</div>
 		<div class="col">
 			@php
-			$studentsIndexUrl = route('students.index');
+			$studentsIndexUrl = route('leads.status.index', ['status' => 'pending']);
 			@endphp
 			<a class="url" onclick="gotoRoute('{{$studentsIndexUrl}}')">
 				<div class="card inovices-card">
@@ -69,7 +69,7 @@
 		</div>
 		<div class="col">
 			@php
-			$documentsIndexUrl = route('documents.index');
+			$documentsIndexUrl = route('leads.status.index', ['status' => 'admissions']);
 			@endphp
 			<a class="url" onclick="gotoRoute('{{$documentsIndexUrl}}')">
 				<div class="card inovices-card">
@@ -91,7 +91,7 @@
 		</div>
 		<div class="col">
 			@php
-			$tasksIndexUrl = route('tasks.index');
+			$tasksIndexUrl = route('leads.status.index', ['status' => 'visa-issued']);
 			@endphp
 			<a class="url" onclick="gotoRoute('{{$tasksIndexUrl}}')">
 				<div class="card inovices-card">

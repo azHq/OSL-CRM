@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -55,5 +56,16 @@ class NotificationController extends Controller
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
+    }
+
+    public function updateNotifications($id){
+    $notifications = Notification::where('notifiable_id', $id)
+        ->whereNull('read_at')
+        ->get();
+    foreach ($notifications as $notification){
+        $notification->read_at = Carbon::now();
+        $notification->save();
+    }
+        return response('Notifications updated successfully.');
     }
 }

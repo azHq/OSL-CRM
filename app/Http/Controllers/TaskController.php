@@ -150,7 +150,7 @@ class TaskController extends Controller
             if (\request('filter_assignee') != '') {
                 $tasks->where('assignee_id', request()->filter_assignee);
             }
-            $tasks = $tasks->get();
+            $tasks = $tasks->orderBy('created_at', 'desc')->get();
 
             return datatables()->of($tasks)
                 ->addColumn('name', function ($row) {

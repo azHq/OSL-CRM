@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('notifications/list', [NotificationController::class, 'list'])->name('notifications.list');
     Route::get('notifications/{id}/delete', [NotificationController::class, 'delete'])->name('notifications.delete');
+    Route::get('notifications/users/{id}', [NotificationController::class, 'updateNotifications'])->name('notifications.update');
 
     Route::post('leads/multiple/convert', [LeadController::class, 'convertMultipleLeads'])->name('leads.multiple.convert');
     Route::post('leads/multiple/assign', [LeadController::class, 'assignMultipleLeads'])->name('leads.multiple.assign');

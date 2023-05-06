@@ -38,17 +38,23 @@
 			<!-- Notifications -->
 			<li class="nav-item dropdown">
 				<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-					<i class="fa fa-bell-o"></i> <span id="notification-count" class="badge rounded-pill">{{Auth::user()->notifications->count()}}</span>
+					<i class="fa fa-bell-o"></i>
+                    @if(Auth::user()->unreadNotifications->count()>0)
+                    <span id="notification-count" class="badge rounded-pill">{{Auth::user()->unreadNotifications->count()}}</span>
+                    @endif
 				</a>
 				<div class="dropdown-menu notifications">
+                    @php
+                        $user = auth()->user();
+                    @endphp
 					<div class="topnav-dropdown-header">
 						<span class="notification-title">Notifications</span>
-						<a onclick="clearNotification()" href="javascript:;" id="notification-clear-btn" class="clear-noti"> Clear All </a>
+						<a onclick="clearNotification({{$user->id}})" href="javascript:;" id="notification-clear-btn" class="clear-noti"> Clear All </a>
 					</div>
                     <input type="hidden" name="myVar" id="myVar" value="0">
                     <div class="noti-content" id="notifications">
                         <ul class="notification-list">
-                            @foreach (Auth::user()->notifications as $notification)
+                            @foreach (Auth::user()->unreadNotifications as $notification)
                                 <li class="notification-message">
                                     <a href="#">
                                         <div class="media d-flex">
@@ -102,16 +108,26 @@
 
 	</div>
     <script>
-        function clearNotification(){
-            isCleared=true;
-            var div = document.getElementById("notifications");
-            var div2 = document.getElementById("notification-count");
-            var div3= document.getElementById("notification-clear-btn");
-            if (isCleared) {
-                div.style.display = "none";
-                div2.style.display = "none";
-                div3.style.display = "none";
-            }
+        function clearNotification(userId){
+            // isCleared=true;
+            // var div = document.getElementById("notifications");
+            // var div2 = document.getElementById("notification-count");
+            // var div3= document.getElementById("notification-clear-btn");
+            // if (isCleared) {
+            //     div.style.display = "none";
+            //     div2.style.display = "none";
+            //     div3.style.display = "none";
+            // }
+            var url = "{{ route('notifications.update', 'id') }}";
+            url = url.replace('id', userId);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {},
+                success: function(data) {
+                    window.reload();
+                }
+            });
         }
     </script>
 	<!-- /Header -->
