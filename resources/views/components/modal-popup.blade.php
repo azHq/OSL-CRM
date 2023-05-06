@@ -6094,6 +6094,200 @@
 	<!-- modal-dialog -->
 </div>
 <!-- modal -->
+
+<!--add lead from meta modal-->
+<div class="modal right fade" id="add_lead_meta" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Leads From Meta</h4>
+                <button type="button" class="btn-close xs-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form>
+                            <h4>Lead Information</h4>
+                            <div class="form-group row">
+                                <div class="col-md-12"><label class="col-form-label">Name <span class="text-danger">*</span></label></div>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" placeholder="Prefix" name="prefix">
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" placeholder="First name" name="prefix-name">
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" placeholder="Last name" name="last-name">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Organization</label>
+                                    <select class=" form-control form-select">
+                                        <option>Select</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Title</label>
+                                    <input type="text" class="form-control" name="title" placeholder="Title">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Lead Status</label>
+                                    <select class=" form-control form-select">
+                                        <option>Select</option>
+                                        <option>Open - Contacted</option>
+                                        <option>Open - Not Contacted</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">User Responsible</label>
+                                    <select class=" form-control form-select">
+                                        <option>Select</option>
+                                        <option>John Doe</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Lead Rating</label>
+                                    <input type="number" class="form-control" name="rating" placeholder="Rating">
+                                </div>
+
+                            </div>
+                            <h4>Additional Information</h4>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Email</label>
+                                    <input type="text" class="form-control" name="email" placeholder="Email">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Email Opted out</label>
+                                    <div>
+                                        <div class="form-check m-0">
+                                            <label class="form-check-label">
+                                                <input class="checkbox" type="checkbox"> <i class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Phone</label>
+                                    <input type="text" class="form-control" name="phone" placeholder="Phone">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Mobile Phone</label>
+                                    <input type="text" class="form-control" name="m-phone" placeholder="Phone">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Fax</label>
+                                    <input type="text" class="form-control" name="fax" placeholder="Fax">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Website</label>
+                                    <input type="text" class="form-control" name="website" placeholder="Website">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Industry</label>
+                                    <input type="text" class="form-control" name="assistant-phone" placeholder="Industry">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Number of Employees</label>
+                                    <input type="text" class="form-control" name="employees" placeholder="Number of Employees">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Lead Source</label>
+                                    <select class=" form-control form-select">
+                                        <option>Web</option>
+                                        <option>Phone Enquiry</option>
+                                        <option>Partner Referral</option>
+                                        <option>Purchased List</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <h4>Address Information</h4>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label class="col-form-label">Mailing Address</label>
+                                    <textarea class="form-control" rows="3" name="address" placeholder="Address"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="City" name="city">
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="State/Provience" name="state">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="Postal Code" name="postal">
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class=" form-control form-select">
+                                        <option>India</option>
+                                        <option>US</option>
+                                        <option>Japan</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <h4>Description Information</h4>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label class="col-form-label">Description </label>
+                                    <textarea class="form-control" rows="3" id="description" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <h4>Tag Information</h4>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label class="col-form-label">Tag List</label>
+                                    <input type="text" class="form-control" name="tag-name" placeholder="Tag List">
+                                </div>
+                            </div>
+                            <h4>Permissions</h4>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Permission</label>
+                                    <select class=" form-control form-select">
+                                        <option>Task Visibility</option>
+                                        <option>Private Task</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="text-center py-3">
+                                <button type="button" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-secondary btn-rounded">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div><!-- modal-content -->
+    </div>
+    <!-- modal-dialog -->
+</div>
+<!-- modal -->
 <!-- Add project Modal -->
 <div class="modal right fade" id="add_project" tabindex="-1" role="dialog" aria-modal="true">
 	<div class="modal-dialog" role="document">

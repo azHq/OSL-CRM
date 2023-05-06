@@ -15,7 +15,7 @@
 <div class="page-header pt-3 mb-0 ">
 
     <div class="row">
-        <div class="col-5">
+        <div class="col-3">
 
         </div>
         <div class="col-1">
@@ -24,6 +24,14 @@
         <div class="col text-end">
             @if(Auth::user()->hasRole('super-admin'))
                 <ul class="list-inline-item pl-0">
+                    <li class="list-inline-item">
+                        <button
+                            class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded"
+                            id="add-lead-meta" data-bs-toggle="modal" data-bs-target="#add_lead_meta">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Add Lead From Meta
+                        </button>
+                    </li>
+
                     <li class="list-inline-item">
                         <button
                             class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded"
@@ -101,6 +109,9 @@
 
 
 @component('leads.create')
+@endcomponent
+
+@component('leads.lead-from-meta')
 @endcomponent
 
 @component('leads.import')
