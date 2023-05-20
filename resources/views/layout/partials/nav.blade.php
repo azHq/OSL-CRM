@@ -27,9 +27,9 @@
 					</ul>
 				</li>
 				@endforeach
-                <li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
-                    <a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>
-                </li>
+				<li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
+					<a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>
+				</li>
 				<li id="pending-docs" class="nav-li {{ Request::is('documents*') ? 'active' : '' }}">
 					<a data-nav="pending-docs" data-href="{{url('documents')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
 				</li>
@@ -44,21 +44,21 @@
 					<a data-nav="users" data-href="{{url('users')}}" class="url"><i class="feather-users"></i> <span>Counsellors</span></a>
 				</li>
 				@endif
-                @if (Auth::user()->hasRole('super-admin'))
-                    <li id="cros" class="nav-li {{ Request::is('cros*') ? 'active' : '' }}">
-                        <a data-nav="cros" data-href="{{url('cros')}}" class="url"><i class="feather-users"></i> <span>CROs</span></a>
-                    </li>
-                @endif
+				@if (Auth::user()->hasRole('super-admin'))
+				<li id="cros" class="nav-li {{ Request::is('cros*') ? 'active' : '' }}">
+					<a data-nav="cros" data-href="{{url('cros')}}" class="url"><i class="feather-users"></i> <span>CROs</span></a>
+				</li>
+				@endif
 				@if (Auth::user()->hasRole('super-admin'))
 				<li id="universities" class="nav-li {{ Request::is('universities*') ? 'active' : '' }}">
 					<a data-nav="universities" data-href="{{url('universities')}}" class="url"><i class="fa fa-university" aria-hidden="true"></i> <span>Universities</span></a>
 				</li>
 				@endif
-                @if (Auth::user()->hasRole('super-admin'))
-                    <li id="universities" class="nav-li {{ Request::is('parameters*') ? 'active' : '' }}">
-                        <a data-nav="universities" data-href="{{url('parameters')}}" class="url"><i class="fa fa-code" aria-hidden="true"></i> <span>Parameters</span></a>
-                    </li>
-                @endif
+				@if (Auth::user()->hasRole('super-admin'))
+				<li id="universities" class="nav-li {{ Request::is('parameters*') ? 'active' : '' }}">
+					<a data-nav="universities" data-href="{{url('parameters')}}" class="url"><i class="fa fa-code" aria-hidden="true"></i> <span>Parameters</span></a>
+				</li>
+				@endif
 				<li id="notifications" class="nav-li {{ Request::is('notifications*') ? 'active' : '' }}">
 					<a data-nav="notifications" data-href="{{url('notifications')}}" class="url"><i class="fa fa-bell" aria-hidden="true"></i> <span>Notifications</span></a>
 				</li>

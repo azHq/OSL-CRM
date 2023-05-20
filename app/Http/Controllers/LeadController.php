@@ -143,6 +143,10 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $lead = Lead::find($id);
+            $subCategory = Subcategory::find($lead->subcategory_id);
+            $category = Category::find($subCategory->category_id);
+            $lead->subCategory = $subCategory->name;
+            $lead->category = $category->name;
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
@@ -348,20 +352,21 @@ class LeadController extends Controller
         }
     }
 
-    public function sendMail(Request $request){
+    public function sendMail(Request $request)
+    {
         try {
             $request->validate([
                 'email' => 'required',
                 'subject' => 'required',
                 'email_body' => 'required',
             ]);
-            $info=[
-                'to'=>$request->input('email'),
+            $info = [
+                'to' => $request->input('email'),
                 'subject' => $request->input('subject'),
                 'text_message' => $request->input('email_body'),
             ];
-            Mail::send('mail', $info, function ($messages) use ($info){
-//                $messages->from('you@mail.com', 'OSL-CRM');
+            Mail::send('mail', $info, function ($messages) use ($info) {
+                //                $messages->from('you@mail.com', 'OSL-CRM');
                 $messages->to($info['to'], 'OSL_CRM');
                 $messages->subject($info['subject']);
             });

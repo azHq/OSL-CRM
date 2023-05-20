@@ -7,6 +7,16 @@
     padding-bottom: 10px;
 }
 
+.floating-div {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    height: 200px;
+    background-color: #de1111;
+    z-index: 1;
+}
+
 .black-mode{
     background: #23272b;
 }
@@ -30,7 +40,7 @@
   height: auto;
   /*padding:40px;*/
   background: #fff;
-  
+
   box-sizing: border-box;
   transition: 0.5s;
   z-index: 9999;
@@ -53,7 +63,7 @@
 
 .scroll {
  height: 100vh;
- 
+
 }
 .right .modal-header .col-md-5{
 	display: none;
@@ -684,27 +694,27 @@ body  .theme-defaults{
 }
 .header-solid-pink .header, .sidebar-solid-pink .sidebar{
   background: #fa255e !important;
-  
+
 }
 .header-solid-black .header, .sidebar-solid-black .sidebar{
   background: #000 !important;
-  
+
 }
 .header-solid-orange .header, .sidebar-solid-orange .sidebar{
   background: #e05915 !important;
-  
+
 }
 .header-solid-purple .header, .sidebar-solid-purple .sidebar {
   background: #55ce63  !important;
-  
+
 }
 .header-solid-blue .header, .sidebar-solid-blue .sidebar{
   background: #3fb3ac !important;
-  
+
 }
 .header-solid-green .header, .sidebar-solid-green .sidebar {
   background: #16817a !important;
-  
+
 }
 
 .header-gradient-color1 .header, .sidebar-gradient-color1 .sidebar{
@@ -768,40 +778,40 @@ body  .theme-defaults{
 .sidebar-gradient-color3 .sidebar .sidebar-menu li a, .sidebar-gradient-color4 .sidebar .sidebar-menu li a,
 .sidebar-gradient-color5 .sidebar .sidebar-menu li a, .sidebar-gradient-color6 .sidebar .sidebar-menu li a,
 .sidebar-gradient-color7 .sidebar .sidebar-menu li a
- 
+
 {
 	color: #fff !important;
 }
-.sidebar-solid-pink .sidebar .nav-profile, .sidebar-solid-pink .sidebar .sidebar-menu li a:hover, 
+.sidebar-solid-pink .sidebar .nav-profile, .sidebar-solid-pink .sidebar .sidebar-menu li a:hover,
 .sidebar-solid-pink .sidebar .sidebar-menu li .active,
-.sidebar-solid-orange .sidebar .nav-profile, .sidebar-solid-orange .sidebar .sidebar-menu li a:hover, 
+.sidebar-solid-orange .sidebar .nav-profile, .sidebar-solid-orange .sidebar .sidebar-menu li a:hover,
 .sidebar-solid-orange .sidebar .sidebar-menu li .active,
-.sidebar-solid-purple .sidebar .nav-profile, .sidebar-solid-purple .sidebar .sidebar-menu li a:hover, 
+.sidebar-solid-purple .sidebar .nav-profile, .sidebar-solid-purple .sidebar .sidebar-menu li a:hover,
 .sidebar-solid-purple .sidebar .sidebar-menu li .active,
-.sidebar-solid-blue .sidebar .nav-profile, .sidebar-solid-blue .sidebar .sidebar-menu li a:hover, 
+.sidebar-solid-blue .sidebar .nav-profile, .sidebar-solid-blue .sidebar .sidebar-menu li a:hover,
 .sidebar-solid-blue .sidebar .sidebar-menu li .active,
-.sidebar-solid-green .sidebar .nav-profile, .sidebar-solid-green .sidebar .sidebar-menu li a:hover, 
+.sidebar-solid-green .sidebar .nav-profile, .sidebar-solid-green .sidebar .sidebar-menu li a:hover,
 .sidebar-solid-green .sidebar .sidebar-menu li .active,
-.sidebar-solid-black .sidebar .nav-profile, .sidebar-solid-black .sidebar .sidebar-menu li a:hover, 
+.sidebar-solid-black .sidebar .nav-profile, .sidebar-solid-black .sidebar .sidebar-menu li a:hover,
 .sidebar-solid-black .sidebar .sidebar-menu li .active,
 
 
-.sidebar-gradient-color1 .sidebar .nav-profile, .sidebar-gradient-color1 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color1 .sidebar .nav-profile, .sidebar-gradient-color1 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color1 .sidebar .sidebar-menu li .active,
-.sidebar-gradient-color2 .sidebar .nav-profile, .sidebar-gradient-color2 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color2 .sidebar .nav-profile, .sidebar-gradient-color2 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color2 .sidebar .sidebar-menu li .active,
-.sidebar-gradient-color3 .sidebar .nav-profile, .sidebar-gradient-color3 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color3 .sidebar .nav-profile, .sidebar-gradient-color3 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color3 .sidebar .sidebar-menu li .active,
-.sidebar-gradient-color4 .sidebar .nav-profile, .sidebar-gradient-color4 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color4 .sidebar .nav-profile, .sidebar-gradient-color4 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color4 .sidebar .sidebar-menu li .active,
-.sidebar-gradient-color5 .sidebar .nav-profile, .sidebar-gradient-color5 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color5 .sidebar .nav-profile, .sidebar-gradient-color5 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color5 .sidebar .sidebar-menu li .active,
-.sidebar-gradient-color6 .sidebar .nav-profile, .sidebar-gradient-color6 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color6 .sidebar .nav-profile, .sidebar-gradient-color6 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color6 .sidebar .sidebar-menu li .active,
-.sidebar-gradient-color7 .sidebar .nav-profile, .sidebar-gradient-color7 .sidebar .sidebar-menu li a:hover, 
+.sidebar-gradient-color7 .sidebar .nav-profile, .sidebar-gradient-color7 .sidebar .sidebar-menu li a:hover,
 .sidebar-gradient-color7 .sidebar .sidebar-menu li .active,
 
- 
+
 .sidebar-solid-pink .sidebar-menu li.active a,
 .sidebar-solid-orange  .sidebar-menu li.active a,
 .sidebar-solid-purple .sidebar-menu li.active a,
@@ -834,18 +844,18 @@ body  .theme-defaults{
 }
 
 .sidebar-solid-pink .sidebar .sidebar-menu li .label-icon:hover ,
-.sidebar-solid-orange .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-solid-purple .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-solid-blue .sidebar .sidebar-menu li .label-icon:hover, 
+.sidebar-solid-orange .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-solid-purple .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-solid-blue .sidebar .sidebar-menu li .label-icon:hover,
 .sidebar-solid-green .sidebar .sidebar-menu li .label-icon:hover,
-.sidebar-solid-black .sidebar .sidebar-menu li .label-icon:hover, 
+.sidebar-solid-black .sidebar .sidebar-menu li .label-icon:hover,
 
-.sidebar-gradient-color1 .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-gradient-color2 .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-gradient-color3 .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-gradient-color4 .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-gradient-color5 .sidebar .sidebar-menu li .label-icon:hover, 
-.sidebar-gradient-color6 .sidebar .sidebar-menu li .label-icon:hover, 
+.sidebar-gradient-color1 .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-gradient-color2 .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-gradient-color3 .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-gradient-color4 .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-gradient-color5 .sidebar .sidebar-menu li .label-icon:hover,
+.sidebar-gradient-color6 .sidebar .sidebar-menu li .label-icon:hover,
 .sidebar-gradient-color7 .sidebar .sidebar-menu li .label-icon:hover
 {
 	background: transparent !important;
@@ -903,10 +913,10 @@ body  .theme-defaults{
     box-shadow: unset;
 }
 .theme-dark .bg-white{
-	background: #16191c !important; 
+	background: #16191c !important;
 }
 .theme-dark .custom-select{
-	background: #16191c; 
+	background: #16191c;
 	border: 0;
 }
 .theme-dark .bg-gradient-primary, .theme-dark .btn-gradient-primary, .theme-dark .btn-primary {
@@ -929,7 +939,7 @@ body  .theme-defaults{
 	background-color: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.15);
 }
-.theme-dark .all-reports .nav-tabs .nav-link.active, .theme-dark .all-reports .nav-tabs .nav-link:hover, 
+.theme-dark .all-reports .nav-tabs .nav-link.active, .theme-dark .all-reports .nav-tabs .nav-link:hover,
 .theme-dark .form-control, .theme-dark .comp-section .card, .theme-dark .comp-section .list-group-item, .theme-dark .card-header,
 .theme-dark .accordion-header{
 	background-color: rgba(255, 255, 255, 0.15);
@@ -953,7 +963,7 @@ body  .theme-defaults{
 .theme-dark .comp-section .card-body{
 	padding: 1.25rem;
 }
-.theme-dark .page-header h4, .theme-dark .card-title, .theme-dark .comp-section .section-title, 
+.theme-dark .page-header h4, .theme-dark .card-title, .theme-dark .comp-section .section-title,
 .theme-dark .modal-title, .theme-dark .right .close, .theme-dark .modal-header .close, .theme-dark .badge{
 	color: #fff;
 }
@@ -1009,7 +1019,7 @@ body .bg-purple{
 }
 .bg-amy-crisps{
   background: linear-gradient(to right, #f43b48 0%, #453a94 100%);
-} 
+}
 .bg-mean-fruits{
   background: linear-gradient(90deg, rgba(241,176,69,1) 15%, rgba(128,156,246,1) 100%);
 }
@@ -1017,7 +1027,7 @@ body .bg-purple{
   background: linear-gradient(90deg, rgba(242,131,145,1) 15%, rgba(251,200,116,1) 100%);
 }
 
-.main-wrapper { 
+.main-wrapper {
   visibility:hidden;
  }
 
