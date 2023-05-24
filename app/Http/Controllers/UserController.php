@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskAssignedEvent;
+use App\Models\Lead;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -241,5 +242,45 @@ class UserController extends Controller
                 ->rawColumns(['name', 'status', 'start', 'end', 'created_at', 'action'])
                 ->make(true);
         }
+    }
+
+    public function appointments()
+    {
+        if (\request()->ajax()) {
+            return view('appointments.index');
+        }
+        return view('layout.mainlayout');
+    }
+
+    public function appointmentsList()
+    {
+        $email = Auth::user()->email;
+        $lead = Lead::where('email', '=', $email)->get()[0];
+        $counselor = User::where('id', '=', $lead->owner_id)->get();
+        return datatables()->of($counselor)
+            ->addColumn('name', function ($row) {
+                $data = '<a href="' . route('users.view', $row->id) . '">
+                                <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
+                            </a>
+                            <a href="' . route('users.view', $row->id) . '">' . $row->name . '</a>';
+                return $data;
+            })
+            ->editColumn('mobile', function ($row) {
+                return $row->mobile;
+            })
+            ->editColumn('email', function ($row) {
+                return $row->email;
+            })
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at;
+            })
+            ->addColumn('action', function ($row) {
+                $action = '';
+                $action .= '<a href="' . route('users.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-edit">Message</i></a>';
+                return $action;
+            })
+            ->addIndexColumn()
+            ->rawColumns(['name', 'email', 'mobile', 'created_at', 'action'])
+            ->make(true);
     }
 }

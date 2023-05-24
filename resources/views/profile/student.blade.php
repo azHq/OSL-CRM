@@ -41,16 +41,16 @@
                     <div class="btn-group ms-progressbar-dot">
 
                         @if($leadsClass != 'active' && $leadsClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
+                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        @else
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
+                            <a class="dropdown-item" href="#">Processing</a>
                             <!-- <a class="dropdown-item" href="#">Another action</a> -->
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-item">{{$lead->subCategory}}</div>
                         </div>
-                        @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
                     </div>
                     <!-- <a href="#" class="ms-progressbar-dot"></a> -->
@@ -65,16 +65,16 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($pendingClass != 'active' && $pendingClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
+                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup=" true" aria-expanded="false"></button>
+                        @else
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
+                            <a class="dropdown-item" href="#">Processing</a>
                             <!-- <a class="dropdown-item" href="#">Another action</a> -->
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-item">{{$lead->subCategory}}</div>
                         </div>
-                        @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
 
                     </div>
@@ -89,16 +89,16 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($admissionClass != 'active' && $admissionClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
+                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        @else
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
+                            <a class="dropdown-item" href="#">Processing</a>
                             <!-- <a class="dropdown-item" href="#">Another action</a> -->
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-item">{{$lead->subCategory}}</div>
                         </div>
-                        @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
                     </div>
 
@@ -112,16 +112,16 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($visaClass != 'active' && $visaClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
 
+                        @else
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
+                            <a class="dropdown-item" href="#">Processing</a>
                             <!-- <a class="dropdown-item" href="#">Another action</a> -->
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-item">{{$lead->subCategory}}</div>
                         </div>
-                        @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
                     </div>
 
@@ -277,7 +277,7 @@
     </div>
 
 
-    <div class="crms-title row bg-white mt-4">
+    <!-- <div class="crms-title row bg-white mt-4">
         <div class="col  p-0">
             <h3 class="page-title m-0">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
@@ -292,105 +292,16 @@
         </div>
     </div>
     <div>
-        @include('applications.applications')
-    </div>
+     
+    </div> -->
 
     </div>
     <!-- /Page Content -->
-    @component('leads.edit')
-    @endcomponent
 
-    @component('applications.create')
-    @endcomponent
-    <script type="text/javascript">
-        let lead = "<?= $lead ?>";
-        console.log({
-            lead
-        })
-    </script>
-    <script>
-        function showEditModal(id) {
-            getApplicationCreate();
-            getApplication(id);
-            var url = "{{ route('applications.update', 'id') }}";
-            url = url.replace('id', id);
-            $('#application-update').attr('action', url);
-        }
-
-        function showModal() {
-            $("#add_application").modal('show');
-        }
-
-        function deleteApplication(id) {
-            $.confirm({
-                title: 'Confirm',
-                content: 'Do you want to delete this Application ?',
-                buttons: {
-                    info: {
-                        text: 'Cancel',
-                        btnClass: 'btn-blue',
-                        action: function() {
-                            // canceled
-                        }
-                    },
-                    danger: {
-                        text: 'Delete',
-                        btnClass: 'btn-red',
-                        action: function() {
-                            var url = "{{ route('applications.delete','id') }}";
-                            url = url.replace('id', id);
-                            $.ajax({
-                                type: 'GET',
-                                url: url,
-                                success: function(data) {
-                                    window.location.reload();
-                                }
-                            });
-                        }
-                    },
-                }
-            });
-        }
-
-        function getApplication(id) {
-            var url = "{{ route('applications.edit', 'id') }}";
-            url = url.replace('id', id);
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function(data) {
-                    $('#application-edit-lead-name').val(data.lead.name);
-                    $('#application-edit-lead-email').val(data.lead.email);
-                    $('#application-edit-lead-mobile').val(data.lead.mobile);
-                    $('#application-edit-course').val(data.course);
-                    $('#application-edit-intake_year').val(data.intake_year);
-                    $('#application-edit-intake_month').val(data.intake_month);
-                    $('#application-edit-course_details').val(data.course_details);
-                    $('#application-edit-universities').val(data.university_id);
-                    $('#application-edit-compliance').val(data.compliance);
-                    $('#application-edit-status').val(data.status);
-                }
-            });
-        }
-
-        function getApplicationCreate() {
-            $.ajax({
-                type: 'GET',
-                url: "{{ route('applications.create') }}",
-                success: function(data) {
-                    var options = '';
-                    data.universities.forEach(function(university) {
-                        options += '<option value="' + university.id + '">' + university.name + '</option>';
-                    });
-                    $('#application-edit-universities').html(options);
-                }
-            });
-        }
-    </script>
 
     <script>
         $(function() {
-            $('[data-toggle="tooltip"]').tooltip()
+            // $('[data-toggle="tooltip"]').tooltip()
         });
     </script>
 

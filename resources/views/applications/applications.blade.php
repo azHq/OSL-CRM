@@ -195,6 +195,7 @@
 @else
 <script>
     function getApplications() {
+        console.log("hitted")
         $("#myApplicationTable").dataTable().fnDestroy();
         var table = $('#myApplicationTable').dataTable({
             responsive: true,

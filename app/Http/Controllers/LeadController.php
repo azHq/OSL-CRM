@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Models\Role;
+
 
 class LeadController extends Controller
 {
@@ -143,6 +145,10 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $lead = Lead::find($id);
+            $subCategory = Subcategory::find($lead->subcategory_id);
+            $category = Category::find($subCategory->category_id);
+            $lead->subCategory = $subCategory->name;
+            $lead->category = $category->name;
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
@@ -169,6 +175,7 @@ class LeadController extends Controller
 
     public function store(Request $request)
     {
+        $request['creator_id'] = Auth::id();
         try {
             Lead::create($request->except('_token', 'category_id'));
             return Redirect::back()->with('success', 'Lead created successfully.');
@@ -258,8 +265,17 @@ class LeadController extends Controller
             unset($data['created_at']);
             unset($data['updated_at']);
             unset($data['creator_id']);
-            $data['lead_id'] = $lead->id;
-            Student::create($data);
+            unset($data['subcategory_id']);
+            // $data['lead_id'] = $lead->id;
+            // $student = Student::create($data);
+            $student['email'] = $data->email;
+            $student['mobile'] = $data->mobile;
+            $student['password'] = $data->mobile;
+            $student['name'] = $data->name;
+            $student['status'] = 'Pending';
+            $user = User::create($student);
+            $role = Role::findByName('student');
+            $user->assignRole($role);
             NewLog::create('Lead Converted To Student', 'Lead "' . $lead->name . '" has been converted to student.');
             Session::flash('success', 'Lead converted successfully.');
             return response('Lead converted successfully.');
@@ -299,6 +315,7 @@ class LeadController extends Controller
 
     public function convertMultipleLeads(Request $request)
     {
+
         $request->validate([
             'lead_ids' => 'required|array|min:1'
         ]);
@@ -310,8 +327,18 @@ class LeadController extends Controller
                 unset($data['created_at']);
                 unset($data['updated_at']);
                 unset($data['creator_id']);
+                unset($data['subcategory_id']);
                 $data['lead_id'] = $lead->id;
                 $student = Student::create($data);
+                $userData['email'] = $student->email;
+                $userData['mobile'] = $student->mobile;
+                $userData['password'] = $student->mobile;
+                $userData['name'] = $student->name;
+                $userData['status'] = 'Pending';
+                $user = User::create($userData);
+                $role = Role::findByName('student');
+                $user->assignRole($role);
+
                 NewLog::create('Lead Converted To Student', 'Lead "' . $student->name . '" has been converted to student.');
             }
             NewLog::create('Multiple Leads Converted', 'Multiple Leads have been converted to students.');
@@ -348,20 +375,21 @@ class LeadController extends Controller
         }
     }
 
-    public function sendMail(Request $request){
+    public function sendMail(Request $request)
+    {
         try {
             $request->validate([
                 'email' => 'required',
                 'subject' => 'required',
                 'email_body' => 'required',
             ]);
-            $info=[
-                'to'=>$request->input('email'),
+            $info = [
+                'to' => $request->input('email'),
                 'subject' => $request->input('subject'),
                 'text_message' => $request->input('email_body'),
             ];
-            Mail::send('mail', $info, function ($messages) use ($info){
-//                $messages->from('you@mail.com', 'OSL-CRM');
+            Mail::send('mail', $info, function ($messages) use ($info) {
+                //                $messages->from('you@mail.com', 'OSL-CRM');
                 $messages->to($info['to'], 'OSL_CRM');
                 $messages->subject($info['subject']);
             });
@@ -370,5 +398,22 @@ class LeadController extends Controller
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
+    }
+
+
+    public function studentProfile()
+    {
+        // if (\request()->ajax()) {
+        abort_if((Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin')), 403);
+        $email = Auth::user()->email;
+        $lead = Lead::where('email', '=', $email)->get()[0];
+        $subCategory = Subcategory::find($lead->subcategory_id);
+        $category = Category::find($subCategory->category_id);
+        $lead->subCategory = $subCategory->name;
+        $lead->category = $category->name;
+        // $lead->load('applications');
+        // $lead->load('report');
+        // $lead->load("report.user");
+        return view('profile.student', compact('lead'));
     }
 }

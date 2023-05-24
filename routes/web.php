@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('profile', [AuthController::class, 'profile'])->name('profile.index');
     Route::get('profile/data', [AuthController::class, 'profileData'])->name('profile.data');
 
+
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('notifications/list', [NotificationController::class, 'list'])->name('notifications.list');
     Route::get('notifications/{id}/delete', [NotificationController::class, 'delete'])->name('notifications.delete');
@@ -67,6 +68,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('leads/{id}/convert', [LeadController::class, 'convert'])->name('leads.convert');
     Route::get('leads/{id}/delete', [LeadController::class, 'delete'])->name('leads.delete');
     Route::put('leads/{id}', [LeadController::class, 'update'])->name('leads.update');
+    Route::get('studentProfile', [LeadController::class, 'studentProfile'])->name('profile.student');
+
 
     Route::get('users/list', [UserController::class, 'list'])->name('users.list');
     Route::get('users/{id}/tasks', [UserController::class, 'tasks'])->name('users.tasks');
@@ -77,6 +80,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::get('users/{id}/delete', [UserController::class, 'delete'])->name('users.delete');
     Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('appointments', [UserController::class, 'appointments'])->name('appointments.index');
+    Route::get('appointments/list', [UserController::class, 'appointmentsList'])->name('appointments.list');
+
 
     Route::get('students/list', [StudentController::class, 'list'])->name('students.list');
     Route::get('students/create', [StudentController::class, 'create'])->name('students.create');
@@ -102,6 +108,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('applications/{id}', [ApplicationController::class, 'update'])->name('applications.update');
     Route::get('applications/{id}/edit', [ApplicationController::class, 'edit'])->name('applications.edit');
     Route::get('applications/{id}/delete', [ApplicationController::class, 'delete'])->name('applications.delete');
+    Route::get('applications/list/students', [ApplicationController::class, 'applicationsForStudents'])->name('applications.list.students');
 
     Route::get('calendar-events-pending', [TaskController::class, 'calendarEventsPending']);
     Route::get('calendar-events-resolved', [TaskController::class, 'calendarEventsResolved']);

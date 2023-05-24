@@ -25,7 +25,8 @@ class User extends Authenticatable
         'mobile',
         'email',
         'password',
-        'status'
+        'status',
+        'role_id'
     ];
 
     /**
@@ -72,6 +73,13 @@ class User extends Authenticatable
         });
     }
 
+    public function scopeStudents($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', 'student');
+        });
+    }
+
     public function scopeAdmins($query)
     {
         return $query->whereHas('roles', function ($query) {
@@ -93,6 +101,12 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
-        return $this->roles()->first()->name == 'super-admin' ? 'Manager' : 'Counsellor';
+        if ($this->roles()->first()->name == 'super-admin') {
+            return 'Manager';
+        } else if ($this->roles()->first()->name == 'admin') {
+            return 'Counsellor';
+        } else {
+            return 'Student';
+        }
     }
 }
