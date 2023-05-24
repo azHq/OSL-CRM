@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\Lead;
 use App\Models\Student;
 use App\Models\University;
 use DateTime;
@@ -26,10 +27,19 @@ class ApplicationController extends Controller
     public function list(Request $request)
     {
         if (\request()->ajax()) {
+            // dd(Auth::user()->hasRole('student'));
             $applications = Application::orderBy('created_at', 'desc');
-            if (\request('lead_id')) {
-                $applications->where('lead_id', \request('lead_id'));
+            $leadId = \request('lead_id');
+            if (Auth::user()->hasRole('student')) {
+                $email = Auth::user()->email;
+                $leadId = Lead::where('email', '=', $email)->get()[0]->id;
             }
+
+            if ($leadId) {
+                $applications->where('lead_id', $leadId);
+            }
+      
+
             $applications = $applications->get();
 
             return datatables()->of($applications)
@@ -68,8 +78,6 @@ class ApplicationController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    if (Auth::user()->hasRole('super-admin'))
-                        $action .= '<a href="javascript:;" onclick="applicationDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     return $action;
                 })
                 ->addIndexColumn()
@@ -130,8 +138,8 @@ class ApplicationController extends Controller
     {
         try {
             $application = Application::find($id);
-            $application->update($request->except('_token', '_method','name', 'email', 'mobile'));
-//            return Redirect::back()->with('success', 'Application updated successfully.');
+            $application->update($request->except('_token', '_method', 'name', 'email', 'mobile'));
+            //            return Redirect::back()->with('success', 'Application updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }
@@ -151,7 +159,8 @@ class ApplicationController extends Controller
         }
     }
 
-    public function listByLeadId($lead_id){
+    public function listByLeadId($lead_id)
+    {
         $applications = Application::where('lead_id', $lead_id)->get();
         $applications = $applications->map(function ($item) {
             return [
@@ -167,5 +176,58 @@ class ApplicationController extends Controller
             ];
         })->toArray();
         return response()->json(['applications' => $applications]);
+    }
+
+    public function applicationsForStudents(Request $request)
+    {
+        if (\request()->ajax()) {
+            echo 'hitted';
+            $email = Auth::user()->email;
+            $lead = Lead::where('email', '=', $email)->get()[0];
+            $applications = Application::orderBy('created_at', 'desc')->where('lead_id', $lead->id);
+            $applications = $applications->get();
+
+            return datatables()->of($applications)
+                ->addColumn('lead', function ($row) {
+                    return $row->lead->name;
+                })
+                ->addColumn('counsellor', function ($row) {
+                    return $row->lead->owner ? $row->lead->owner->name : 'Unassigned';
+                })
+                ->addColumn('course', function ($row) {
+                    return $row->course;
+                })
+                ->editColumn('intake_year', function ($row) {
+                    return $row->intake_year;
+                })
+                ->editColumn('intake_month', function ($row) {
+                    if (!$row->intake_month) return '';
+                    $monthNum  = $row->intake_month;
+                    $dateObj = DateTime::createFromFormat('!m', $monthNum);
+                    return $dateObj->format('F');
+                })
+                ->editColumn('university', function ($row) {
+                    return $row->university->name;
+                })
+                ->editColumn('applied', function ($row) {
+                    return $row->created_at;
+                })
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'Applied') {
+                        return '<label class="badge badge-success text-center">' . ucfirst($row->status) . '</label>';
+                    } elseif ($row->status == 'Offer Received') {
+                        return '<label class="badge badge-primary text-center">' . ucfirst($row->status) . '</label>';
+                    } else {
+                        return '<label class="badge badge-info text-center">' . ucfirst($row->status) . '</label>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    return $action;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['lead', 'counsellor', 'course', 'intake_month', 'intake_year', 'university', 'applied', 'status', 'action'])
+                ->make(true);
+        }
     }
 }

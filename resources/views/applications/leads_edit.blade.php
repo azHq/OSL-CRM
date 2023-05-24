@@ -126,7 +126,8 @@
 										<div class="col-sm-12">
 											<label class="col-form-label">English <span class="text-danger">*</span></label>
 											<select id="edit-lead-english" class=" form-control form-select" name="english" required>
-												<option value="IELTS">IELTS</option>
+												<option value="IELTS">IELTS (Academic)</option>
+												<option value="IELTS">IELTS (General)</option>
 												<option value="MOI">MOI</option>
 												<option value="OIETC">OIETC</option>
 												<option value="PTE">PTE</option>

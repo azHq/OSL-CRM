@@ -7,7 +7,7 @@
 			<button class="btn" type="button"><i class="fa fa-search"></i></button>
 		</form>
 		<div id="sidebar-menu" class="sidebar-menu">
-
+			@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
 			<ul>
 				<li id="dashboard" class="nav-li {{ Request::is('/') ? 'active' : '' }}">
 					<a data-nav="dashboard" data-href="{{url('/')}}" class="url"><i class="feather-home"></i> <span>Dashboard</span></a>
@@ -68,6 +68,24 @@
 				</li>
 				@endif
 			</ul>
+			@endif
+			@if (Auth::user()->hasRole('student'))
+			
+			<ul>
+				<li id="dashboard" class="nav-li {{ Request::is('studentProfile') ? 'active' : '' }}">
+					<a data-nav="dashboard" data-href="{{url('studentProfile')}}" class="url"><i class="feather-home"></i> <span>Profile</span></a>
+				</li>
+				<li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
+					<a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>
+				</li>
+				<li id="pending-docs" class="nav-li {{ Request::is('documents*') ? 'active' : '' }}">
+					<a data-nav="pending-docs" data-href="{{url('documents')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
+				</li>
+				<li id="appointments" class="nav-li {{ Request::is('appointments*') ? 'active' : '' }}">
+					<a data-nav="reports" data-href="{{url('appointments')}}" class="url"><i class="feather-bar-chart"></i> <span>Appointments</span></a>
+				</li>
+			</ul>
+			@endif
 		</div>
 	</div>
 </div>

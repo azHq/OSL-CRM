@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Lalit Kumar',
         //     'email' => 'admin@test.com',
         // ]);
-        $this->call(CategorySeeder::class);
-        $this->call(SubcategorySeeder::class);
+        // $this->call(CategorySeeder::class);
+        // $this->call(SubcategorySeeder::class);
+        $this->call(RolesAndPermissionsSeeder::class);
     }
 }

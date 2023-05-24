@@ -126,7 +126,8 @@
 										<div class="col-sm-12">
 											<label class="col-form-label">English <span class="text-danger">*</span></label>
 											<select id="edit-lead-english" class=" form-control form-select" name="english" required>
-												<option value="IELTS">IELTS</option>
+												<option value="IELTS (Academic)">IELTS (Academic)</option>
+												<option value="IELTS (General)">IELTS (General)</option>
 												<option value="MOI">MOI</option>
 												<option value="OIETC">OIETC</option>
 												<option value="PTE">PTE</option>
@@ -184,7 +185,8 @@
 								<div class="text-center py-3">
 									<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
 									<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
-                                </div></div>
+								</div>
+							</div>
 						</form>
 					</div>
 				</div>

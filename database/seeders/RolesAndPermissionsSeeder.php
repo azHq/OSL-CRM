@@ -27,6 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'edit_leads']);
         Permission::create(['name' => 'delete_leads']);
         Permission::create(['name' => 'edit_status_leads']);
+        Permission::create(['name' => 'view_student_dashboard']);
 
         // create roles and assign created permissions
 
@@ -42,5 +43,8 @@ class RolesAndPermissionsSeeder extends Seeder
         // or may be done by chaining
         $role = Role::create(['name' => 'admin'])
             ->givePermissionTo(['view_leads', 'create_leads']);
+        $role = Role::create(['name' => 'student'])
+            ->givePermissionTo(['view_student_dashboard']);
+        
     }
 }
