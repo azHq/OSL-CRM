@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class StudentController extends Controller
@@ -135,5 +136,20 @@ class StudentController extends Controller
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }
+    }
+
+    public function studentProfileView(Request $request)
+    {
+        if (\request()->ajax()) {
+            $student = Student::where('email', Auth::user()->email);
+            $student = $student->get();
+            if (count($student) == 0) {
+                return Redirect::route('applications.index')->with('error', "Student Don't have application to see pending docs");
+            } else {
+                return view('students.view', compact('student'));
+            }
+        }
+
+        return view('layout.mainlayout');
     }
 }

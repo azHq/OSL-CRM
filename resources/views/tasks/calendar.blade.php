@@ -1,6 +1,7 @@
 <div>
     <div id='calendar'></div>
     <div id='full_calendar_events'></div>
+    <input id="checkCounsellor" value="{{Auth::user()->hasRole('admin')}}" hidden />
 </div>
 
 @component('tasks.add')
@@ -157,6 +158,7 @@
                 }
             ],
             eventContent: function(info) {
+
                 let element = document.createElement('div')
                 var data = '<div> <span class="person-circle-a person-circle">' + info.event.extendedProps.counsellor_name.substring(0, 1) + '</span>'
                 data += info.event.extendedProps.counsellor_name + '</div>'
@@ -175,50 +177,54 @@
                 $("#add_task").modal('show');
             },
             eventClick: function(info) {
+                let buttons = {
+                    Edit: {
+                        text: 'Edit Task',
+                        btnClass: 'btn-blue',
+                        keys: ['enter', 'shift'],
+                        action: function() {
+                            var id = info.event.id;
+                            $("#edit_event").attr('data-counsellor-id', id);
+                            $("#edit_event").modal('show');
+                            getOwnersEventEdit();
+                            getEventEdit(id);
+                            var url = "{{ route('tasks.update', 'id') }}";
+                            url = url.replace('id', id);
+                            $('#event-update').attr('action', url);
+                        }
+                    },
+                    Delete: {
+                        text: 'Delete Task',
+                        btnClass: 'btn-red',
+                        keys: ['enter', 'shift'],
+                        action: function() {
+                            $.ajax({
+                                type: "POST",
+                                _token: "{{csrf_token()}}",
+                                url: SITEURL + '/calendar-crud-ajax',
+                                data: {
+                                    id: info.event.id,
+                                    type: 'delete'
+                                },
+                                success: function(response) {
+                                    displayMessage("Task deleted successfully");
+                                }
+                            });
+                            info.event.remove()
+                        }
+                    },
+                    cancel: function() {
+                        //
+                    },
+
+                }
+                if ($('#checkCounsellor').val() == '1') {
+                    delete buttons.Delete
+                }
                 $.confirm({
                     title: 'Choose Action!',
                     content: 'What you want to do?',
-                    buttons: {
-                        Edit: {
-                            text: 'Edit Task',
-                            btnClass: 'btn-blue',
-                            keys: ['enter', 'shift'],
-                            action: function() {
-                                var id = info.event.id;
-                                $("#edit_event").attr('data-counsellor-id', id);
-                                $("#edit_event").modal('show');
-                                getOwnersEventEdit();
-                                getEventEdit(id);
-                                var url = "{{ route('tasks.update', 'id') }}";
-                                url = url.replace('id', id);
-                                $('#event-update').attr('action', url);
-                            }
-                        },
-                        Delete: {
-                            text: 'Delete Task',
-                            btnClass: 'btn-red',
-                            keys: ['enter', 'shift'],
-                            action: function() {
-                                $.ajax({
-                                    type: "POST",
-                                    _token: "{{csrf_token()}}",
-                                    url: SITEURL + '/calendar-crud-ajax',
-                                    data: {
-                                        id: info.event.id,
-                                        type: 'delete'
-                                    },
-                                    success: function(response) {
-                                        displayMessage("Task deleted successfully");
-                                    }
-                                });
-                                info.event.remove()
-                            }
-                        },
-                        cancel: function() {
-                            //
-                        },
-
-                    }
+                    buttons: buttons
                 });
             },
             eventDrop: function(info) {

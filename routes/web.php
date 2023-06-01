@@ -8,6 +8,7 @@ use App\Http\Controllers\ParameterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StudentController;
@@ -68,7 +69,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('leads/{id}/convert', [LeadController::class, 'convert'])->name('leads.convert');
     Route::get('leads/{id}/delete', [LeadController::class, 'delete'])->name('leads.delete');
     Route::put('leads/{id}', [LeadController::class, 'update'])->name('leads.update');
-    Route::get('studentProfile', [LeadController::class, 'studentProfile'])->name('profile.student');
+    Route::get('student-profile', [LeadController::class, 'studentProfile'])->name('profile.student');
+    Route::get('getSubcategories', [LeadController::class, 'getSubcategoriesList'])->name('leads.info');
 
 
     Route::get('users/list', [UserController::class, 'list'])->name('users.list');
@@ -93,6 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
     Route::get('students/{id}/delete', [StudentController::class, 'delete'])->name('students.delete');
     Route::put('students/{id}', [StudentController::class, 'update'])->name('students.update');
+    Route::get('pending-docs', [StudentController::class, 'studentProfileView'])->name('students.view.nav');
 
     Route::get('documents/pending', [DocumentController::class, 'pendingDocuments'])->name('documents.pending');
     Route::post('documents/download/{leadId}', [DocumentController::class, 'downloadDocument'])->name('documents.download');
@@ -152,4 +155,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('metaforms', [MetaFormsController::class, 'store'])->name('metaforms.store');
 
     Route::get('cros', [UserController::class, 'croIndex'])->name('cros.index');
+
+    Route::get('chat/{id}', [MessageController::class, 'chatView'])->name('chat.index');
+    Route::get('messages/list/{id}', [MessageController::class, 'list'])->name('messages.list');
+    Route::post('messages/send', [MessageController::class, 'messageSend'])->name('message.send');
+
 });

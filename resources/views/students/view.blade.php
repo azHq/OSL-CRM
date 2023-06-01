@@ -655,8 +655,14 @@
         });
 
         function documentsInitialize(student_id) {
+            console.log({
+                student_id
+            })
             var url = "{{ route('documents.initialize','student_id') }}";
             url = url.replace("student_id", student_id);
+            console.log({
+                url
+            })
             $.ajax({
                 type: 'GET',
                 url: url,

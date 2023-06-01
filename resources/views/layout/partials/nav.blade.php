@@ -72,14 +72,14 @@
 			@if (Auth::user()->hasRole('student'))
 			
 			<ul>
-				<li id="dashboard" class="nav-li {{ Request::is('studentProfile') ? 'active' : '' }}">
-					<a data-nav="dashboard" data-href="{{url('studentProfile')}}" class="url"><i class="feather-home"></i> <span>Profile</span></a>
+				<li id="dashboard" class="nav-li {{ Request::is('student-profile') ? 'active' : '' }}">
+					<a data-nav="dashboard" data-href="{{url('student-profile')}}" class="url"><i class="feather-home"></i> <span>Profile</span></a>
 				</li>
 				<li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
 					<a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>
 				</li>
-				<li id="pending-docs" class="nav-li {{ Request::is('documents*') ? 'active' : '' }}">
-					<a data-nav="pending-docs" data-href="{{url('documents')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
+				<li id="pending-docs" class="nav-li {{ Request::is('pending-docs*') ? 'active' : '' }}">
+					<a data-nav="pending-docs" data-href="{{url('pending-docs')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
 				</li>
 				<li id="appointments" class="nav-li {{ Request::is('appointments*') ? 'active' : '' }}">
 					<a data-nav="reports" data-href="{{url('appointments')}}" class="url"><i class="feather-bar-chart"></i> <span>Appointments</span></a>

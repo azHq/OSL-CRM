@@ -10,6 +10,19 @@
 </style>
 @endpush
 
+<div class="row">
+    @if(Auth::user()->hasRole('super-admin'))
+    <ul class="list-inline-item pl-0">
+
+        <!-- <li class="list-inline-item">
+            <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-lead" data-bs-toggle="modal" data-bs-target="#add_lead">
+                <i class="fa fa-plus" aria-hidden="true"></i> New Application
+            </button>
+        </li> -->
+
+    </ul>
+    @endif
+</div>
 <!-- Content Starts -->
 <div class="row mt-2">
     <div class="col-md-12">

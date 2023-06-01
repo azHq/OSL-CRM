@@ -11,7 +11,7 @@
   @include('layout.partials.header')
   @include('layout.partials.nav')
   @endif
-  
+
   <!-- Page Wrapper -->
   <div class="page-wrapper">
 

@@ -276,7 +276,7 @@ class UserController extends Controller
             })
             ->addColumn('action', function ($row) {
                 $action = '';
-                $action .= '<a href="' . route('users.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-edit">Message</i></a>';
+                $action .= '<a href="' . route('chat.index', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-edit">Message</i></a>';
                 return $action;
             })
             ->addIndexColumn()

@@ -6,21 +6,21 @@
     $visaClass = '';
     if ($lead->category == 'Leads') {
         $leadsClass = 'complete';
-        $pendingClass = 'active';
+        // $pendingClass = 'active';
     } else if ($lead->category == 'Pending') {
         $leadsClass = 'complete';
-        $pendingClass = 'complete';
-        $admissionClass = 'active';
+        $pendingClass = 'active';
+        // $admissionClass = 'active';
     } else if ($lead->category == 'Addmission') {
         $leadsClass = 'complete';
         $pendingClass = 'complete';
-        $admissionClass = 'complete';
-        $visaClass = 'active';
+        $admissionClass = 'active';
+        // $visaClass = 'active';
     } else if ($lead->category == 'Visa Compliance') {
         $leadsClass = 'complete';
         $pendingClass = 'complete';
         $admissionClass = 'complete';
-        $visaClass = 'complete';
+        $visaClass = 'active';
     }
     ?>
     <div class="content container-fluid">
@@ -33,6 +33,7 @@
         @include('components.flash')
         <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
             <div class="row ms-progressbar" style="border-bottom:0;">
+                <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
                 <div class="col-md-3 ms-progressbar-step {{$leadsClass}}">
                     <div class="text-center ms-progressbar-step-number">Leads</div>
                     <div class="progress">
@@ -41,17 +42,13 @@
                     <div class="btn-group ms-progressbar-dot">
 
                         @if($leadsClass != 'active' && $leadsClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @else
                         <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Processing</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @endif
+                        <div class="dropdown-menu" id="leads_sub">
+
+                        </div>
                     </div>
                     <!-- <a href="#" class="ms-progressbar-dot"></a> -->
 
@@ -65,18 +62,13 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($pendingClass != 'active' && $pendingClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup=" true" aria-expanded="false"></button>
+                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup=" true" aria-expanded="false"></button>
                         @else
                         <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Processing</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @endif
+                        <div class="dropdown-menu" id="pending_sub">
 
+                        </div>
                     </div>
 
                 </div>
@@ -89,17 +81,12 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($admissionClass != 'active' && $admissionClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @else
                         <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Processing</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @endif
+                        <div class="dropdown-menu" id="admission_sub">
+                        </div>
                     </div>
 
                 </div>
@@ -112,17 +99,13 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($visaClass != 'active' && $visaClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
-
+                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @else
                         <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Processing</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @endif
+                        <div class="dropdown-menu" id="visa_sub">
+
+                        </div>
                     </div>
 
                 </div>
@@ -300,9 +283,95 @@
 
 
     <script>
-        $(function() {
-            // $('[data-toggle="tooltip"]').tooltip()
+        $(document).ready(function() {
+            getSubCategories();
         });
+        // function getSubmenuElem(submenu, data, key, currentSubcategory, foundIndex) {
+        //     for (let subcategory of data[key]) {
+        //         if (currentSubcategory == subcategory.name) {
+        //             foundIndex = true
+        //         }
+        //         submenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+        //     }
+        // }
+
+
+        function getSubCategories(id) {
+            var url = "{{ route('leads.info') }}";
+            url = url.replace('id', id);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(data) {
+
+
+                    // var lead = data.lead;
+                    // $('#edit-lead-name').val(lead.name);
+                    // $('#edit-lead-email').val(lead.email);
+                    // $('#edit-lead-mobile').val(lead.mobile);
+                    // $('#edit-lead-intake_month').val(lead.intake_month);
+                    // $('#edit-lead-status').val(lead.status);
+                    // $('#edit-lead-intake_year').val(lead.intake_year);
+                    // $('#edit-lead-last_education').val(lead.last_education);
+                    // $('#edit-lead-completion_date').val(lead.completion_date);
+                    // $('#edit-lead-education_details').val(lead.education_details);
+                    // $('#edit-lead-english').val(lead.english);
+                    // $('#edit-lead-english_result').val(lead.english_result);
+                    // $('#edit-lead-job_experience').val(lead.job_experience);
+                    // $('#edit-lead-owner_id').val(lead.owner_id);
+                    let foundIndex = false;
+                    let currentSubcategory = $('#leadSubcategory').val()
+                    let leadSubmenu = ''
+                    for (let subcategory of data['Leads']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        leadSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(leadSubmenu, data, 'Leads', currentSubcategory, foundIndex);
+                    $('#leads_sub').html(leadSubmenu);
+
+
+                    let pendingSubmenu = ''
+                    for (let subcategory of data['Pending']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        pendingSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(pendingSubmenu, data, 'Pending', currentSubcategory, foundIndex);
+                    $('#pending_sub').html(pendingSubmenu);
+
+
+                    let admissionSubmenu = ''
+                    for (let subcategory of data['Addmission']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        admissionSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(admissionSubmenu, data, 'Addmission', currentSubcategory, foundIndex);
+                    $('#admission_sub').html(admissionSubmenu);
+
+
+                    let visaSubmenu = ''
+                    for (let subcategory of data['Visa Compliance']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        visaSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(visaSubmenu, data, 'Visa Compliance', currentSubcategory, foundIndex);
+                    $('#visa_sub').html(visaSubmenu);
+
+                    // options = '';
+                    // data.subcategories.forEach(function(subcategory) {
+                    //     options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
+                    // });
+                    // $('#lead-edit-subcategory').html(options);
+                }
+            });
+        }
     </script>
 
     <script>

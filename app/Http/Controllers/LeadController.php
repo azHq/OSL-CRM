@@ -416,4 +416,17 @@ class LeadController extends Controller
         // $lead->load("report.user");
         return view('profile.student', compact('lead'));
     }
+
+    public function getSubcategoriesList()
+    {
+        if (\request()->ajax()) {
+            $data = [];
+            $categories = Category::all();
+            foreach ($categories as $category) {
+                $subcategories = Subcategory::where('category_id', $category->id)->get();
+                $data[$category->name] = $subcategories;
+            }
+            return response()->json($data);
+        }
+    }
 }

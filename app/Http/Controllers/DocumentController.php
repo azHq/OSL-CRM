@@ -73,17 +73,19 @@ class DocumentController extends Controller
         return view('documents.index');
     }
 
-    public function initializeDocument($leadId, Request $request)
+    public function initializeDocument($studentId, Request $request)
     {
-        Document::create(['lead_id' => $leadId]);
+        $document = [];
+        $document['student_id'] = $studentId;
+        Document::create($document);
         return Reply::success('Done', ['lead' => 'Amit']);
     }
 
-    public function uploadDocument($leadId, Request $request)
+    public function uploadDocument($studentId, Request $request)
     {
         try {
-            $path = $request->file('file')->storeAs('leads/' . $leadId, $request->name . '.' . $request->file('file')->extension());
-            $document = Document::where('lead_id', $leadId)->first();
+            $path = $request->file('file')->storeAs('students/' . $studentId, $request->name . '.' . $request->file('file')->extension());
+            $document = Document::where('student_id', $studentId)->first();
             $document->update([$request->name => $path]);
             return Redirect::back()->with('success', 'File Uploaded Successfully.');
         } catch (\Exception $e) {
@@ -91,34 +93,34 @@ class DocumentController extends Controller
         }
     }
 
-    public function downloadDocument($leadId, Request $request)
+    public function downloadDocument($studentId, Request $request)
     {
-        $lead = Lead::find($leadId);
+        $lead = Document::where('student_id', $studentId)->get()[0];
         $path = "";
         switch ($request->name) {
             case 'passport':
-                $path = $lead->document->passport;
+                $path = $lead->passport;
                 break;
             case 'academics':
-                $path = $lead->document->academics;
+                $path = $lead->academics;
                 break;
             case 'cv':
-                $path = $lead->document->cv;
+                $path = $lead->cv;
                 break;
             case 'moi':
-                $path = $lead->document->moi;
+                $path = $lead->moi;
                 break;
             case 'recommendation':
-                $path = $lead->document->recommendation;
+                $path = $lead->recommendation;
                 break;
             case 'job_experience':
-                $path = $lead->document->job_experience;
+                $path = $lead->job_experience;
                 break;
             case 'sop':
-                $path = $lead->document->sop;
+                $path = $lead->sop;
                 break;
             case 'others':
-                $path = $lead->document->recommendation_1;
+                $path = $lead->recommendation_1;
                 break;
         }
         NewLog::create('Document Downloaded', 'A Document ' . $request->name . ' has been downloaded of student "' . $lead->name . '".');

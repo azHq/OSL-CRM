@@ -111,6 +111,13 @@ class TaskController extends Controller
                 $event->save();
                 return response()->json($event);
                 break;
+            case 'close':
+                $event = Task::find($request->id);
+                $request->status ? $event->status = $request->status : null;
+                $request->details ? $event->details = $request->details : null;
+                $event->save();
+                return response()->json($event);
+                break;
 
             case 'delete':
                 $event = Task::find($request->id)->delete();
@@ -249,7 +256,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::find($id);
-//            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            //            abort_if((!Auth::user()->hasRole('super-admin')), 403);
             $task->update([
                 'status' => 'Resolved'
             ]);
@@ -306,7 +313,7 @@ class TaskController extends Controller
                 'name' => $request->name,
                 'task_type' => $request->task_type,
                 'start' => $request->start_date,
-                'end' => $request->end_date ,
+                'end' => $request->end_date,
                 'details' => $request->details,
                 'assignee_id' => $request->assignee_id,
             ]);
@@ -340,7 +347,8 @@ class TaskController extends Controller
         return response()->json(['tasks' => $todolist]);
     }
 
-    public function todoScheduledList(){
+    public function todoScheduledList()
+    {
         $todolist = Task::where('task_type', 'Scheduled')
             ->where('status', '!=', 'Resolved')
             ->where('start', '<=', Carbon::now())->where('end', '>=', Carbon::now())
@@ -381,9 +389,10 @@ class TaskController extends Controller
         return response()->json(['tasks' => $todolist]);
     }
 
-    public function todoListByDateRange($type){
-//        $type: 0 => weekly, 1=> monthly
-        if($type == 0)
+    public function todoListByDateRange($type)
+    {
+        //        $type: 0 => weekly, 1=> monthly
+        if ($type == 0)
             $date = Carbon::now()->subWeek();
         elseif ($type == 1)
             $date = Carbon::now()->subMonth();
