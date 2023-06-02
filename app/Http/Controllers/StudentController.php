@@ -142,8 +142,8 @@ class StudentController extends Controller
     {
         if (\request()->ajax()) {
             $student = Student::where('email', Auth::user()->email);
-            $student = $student->get();
-            if (count($student) == 0) {
+            $student = $student->first();
+            if (!$student) {
                 return Redirect::route('applications.index')->with('error', "Student Don't have application to see pending docs");
             } else {
                 return view('students.view', compact('student'));

@@ -76,9 +76,12 @@ class DocumentController extends Controller
     public function initializeDocument($studentId, Request $request)
     {
         $document = [];
-        $document['student_id'] = $studentId;
-        Document::create($document);
-        return Reply::success('Done', ['lead' => 'Amit']);
+        $hasDocument = Document::where('student_id', $studentId)->first();
+        if (!$hasDocument) {
+            $document['student_id'] = $studentId;
+            Document::create($document);
+        }
+        return Reply::success('Done', ['document' => $studentId]);
     }
 
     public function uploadDocument($studentId, Request $request)
@@ -95,7 +98,7 @@ class DocumentController extends Controller
 
     public function downloadDocument($studentId, Request $request)
     {
-        $lead = Document::where('student_id', $studentId)->get()[0];
+        $lead = Document::where('student_id', $studentId)->first();
         $path = "";
         switch ($request->name) {
             case 'passport':
@@ -110,8 +113,11 @@ class DocumentController extends Controller
             case 'moi':
                 $path = $lead->moi;
                 break;
-            case 'recommendation':
-                $path = $lead->recommendation;
+            case 'recommendation_1':
+                $path = $lead->recommendation_1;
+                break;
+            case 'recommendation_2':
+                $path = $lead->recommendation_2;
                 break;
             case 'job_experience':
                 $path = $lead->job_experience;

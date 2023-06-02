@@ -19,11 +19,11 @@ class Document extends Model
         parent::boot();
 
         static::addGlobalScope('rolewise', function ($query) {
-            if (!Auth::user()->hasRole('super-admin')) {
-                $query->whereHas('lead', function ($query) {
-                    $query->where('owner_id', Auth::user()->id);
-                });
-            }
+            // if (!Auth::user()->hasRole('super-admin')) {
+            //     $query->whereHas('lead', function ($query) {
+            //         $query->where('owner_id', Auth::user()->id);
+            //     });
+            // }
         });
 
         static::updated(function ($document) {
@@ -32,7 +32,8 @@ class Document extends Model
                 $document->academics &&
                 $document->cv &&
                 $document->moi &&
-                $document->recommendation &&
+                $document->recommendation_2 &&
+                $document->recommendation_1 &&
                 $document->job_experience &&
                 $document->sop &&
                 $document->others

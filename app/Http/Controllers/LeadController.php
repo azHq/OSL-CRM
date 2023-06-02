@@ -266,8 +266,8 @@ class LeadController extends Controller
             unset($data['updated_at']);
             unset($data['creator_id']);
             unset($data['subcategory_id']);
-            // $data['lead_id'] = $lead->id;
-            // $student = Student::create($data);
+            $data['lead_id'] = $lead->id;
+            $student = Student::create($data);
             $student['email'] = $data->email;
             $student['mobile'] = $data->mobile;
             $student['password'] = $data->mobile;
@@ -278,7 +278,7 @@ class LeadController extends Controller
             $user->assignRole($role);
             NewLog::create('Lead Converted To Student', 'Lead "' . $lead->name . '" has been converted to student.');
             Session::flash('success', 'Lead converted successfully.');
-            return response('Lead converted successfully.');
+            // return response('Lead converted successfully.');
         } catch (\Exception $e) {
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
@@ -343,8 +343,9 @@ class LeadController extends Controller
             }
             NewLog::create('Multiple Leads Converted', 'Multiple Leads have been converted to students.');
             Session::flash('success', 'All Leads converted successfully.');
-            return response('All Leads converted successfully.');
+            // return response('All Leads converted successfully.');
         } catch (\Exception $e) {
+            dd($e);
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
