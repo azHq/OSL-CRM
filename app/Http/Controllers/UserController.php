@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskAssignedEvent;
 use App\Models\Lead;
+use App\Models\Student;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -254,10 +255,16 @@ class UserController extends Controller
 
     public function appointmentsList()
     {
-        $email = Auth::user()->email;
-        $lead = Lead::where('email', '=', $email)->get()[0];
-        $counselor = User::where('id', '=', $lead->owner_id)->get();
-        return datatables()->of($counselor)
+        $data = [];
+        if (Auth::user()->hasRole('admin')) {
+            $data = Student::where('owner_id', '=', Auth::id());
+        }
+        else{
+            $email = Auth::user()->email;
+            $lead = Lead::where('email', '=', $email)->get()[0];
+            $data = User::where('id', '=', $lead->owner_id)->get();
+        }
+        return datatables()->of($data)
             ->addColumn('name', function ($row) {
                 $data = '<a href="' . route('users.view', $row->id) . '">
                                 <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>

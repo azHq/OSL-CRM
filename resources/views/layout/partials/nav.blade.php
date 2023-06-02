@@ -39,6 +39,12 @@
 				<li id="reports" class="nav-li {{ Request::is('reports*') ? 'active' : '' }}">
 					<a data-nav="reports" data-href="{{url('reports')}}" class="url"><i class="feather-bar-chart"></i> <span>Reports</span></a>
 				</li>
+				@if (Auth::user()->hasRole('admin'))
+				<li id="appointments" class="nav-li {{ Request::is('students*') ? 'active' : '' }}">
+					<a data-nav="reports" data-href="{{url('appointments')}}" class="url"><i class="feather-bar-chart"></i> <span>Students</span></a>
+				</li>
+				@endif
+
 				@if (Auth::user()->hasRole('super-admin'))
 				<li id="users" class="nav-li {{ Request::is('users*') ? 'active' : '' }}">
 					<a data-nav="users" data-href="{{url('users')}}" class="url"><i class="feather-users"></i> <span>Counsellors</span></a>
@@ -70,7 +76,7 @@
 			</ul>
 			@endif
 			@if (Auth::user()->hasRole('student'))
-			
+
 			<ul>
 				<li id="dashboard" class="nav-li {{ Request::is('student-profile') ? 'active' : '' }}">
 					<a data-nav="dashboard" data-href="{{url('student-profile')}}" class="url"><i class="feather-home"></i> <span>Profile</span></a>
