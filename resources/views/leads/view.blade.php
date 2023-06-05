@@ -5,22 +5,22 @@
     $admissionClass = '';
     $visaClass = '';
     if ($lead->category == 'Leads') {
-        $leadsClass = 'complete';
-        $pendingClass = 'active';
+        $leadsClass = 'active';
+        // $pendingClass = 'active';
     } else if ($lead->category == 'Pending') {
         $leadsClass = 'complete';
-        $pendingClass = 'complete';
-        $admissionClass = 'active';
+        $pendingClass = 'active';
+        // $admissionClass = 'active';
     } else if ($lead->category == 'Addmission') {
         $leadsClass = 'complete';
         $pendingClass = 'complete';
-        $admissionClass = 'complete';
-        $visaClass = 'active';
+        $admissionClass = 'active';
+        // $visaClass = 'active';
     } else if ($lead->category == 'Visa Compliance') {
         $leadsClass = 'complete';
         $pendingClass = 'complete';
         $admissionClass = 'complete';
-        $visaClass = 'complete';
+        $visaClass = 'active';
     }
     ?>
     <div class="content container-fluid">
@@ -32,6 +32,8 @@
         @endcomponent
         @include('components.flash')
         <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+        <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
+
             <div class="row ms-progressbar" style="border-bottom:0;">
                 <div class="col-md-3 ms-progressbar-step {{$leadsClass}}">
                     <div class="text-center ms-progressbar-step-number">Leads</div>
@@ -42,16 +44,12 @@
 
                         @if($leadsClass != 'active' && $leadsClass != '')
                         <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
+                        <div class="dropdown-menu" id="leads_sub">
+
+                        </div>
                     </div>
                     <!-- <a href="#" class="ms-progressbar-dot"></a> -->
 
@@ -65,18 +63,13 @@
                     </div>
                     <div class="btn-group ms-progressbar-dot">
                         @if($pendingClass != 'active' && $pendingClass != '')
-                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
+                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup=" true" aria-expanded="false"></button>
                         @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
+                        <div class="dropdown-menu" id="pending_sub">
 
+                        </div>
                     </div>
 
                 </div>
@@ -90,16 +83,11 @@
                     <div class="btn-group ms-progressbar-dot">
                         @if($admissionClass != 'active' && $admissionClass != '')
                         <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
+                        <div class="dropdown-menu" id="admission_sub">
+                        </div>
                     </div>
 
                 </div>
@@ -113,16 +101,12 @@
                     <div class="btn-group ms-progressbar-dot">
                         @if($visaClass != 'active' && $visaClass != '')
                         <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Subcategory</a>
-                            <!-- <a class="dropdown-item" href="#">Another action</a> -->
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-item">{{$lead->subCategory}}</div>
-                        </div>
                         @else
-                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="" aria-haspopup="true" aria-expanded="false"></button>
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         @endif
+                        <div class="dropdown-menu" id="visa_sub">
+
+                        </div>
                     </div>
 
                 </div>
@@ -302,11 +286,74 @@
 
     @component('applications.create')
     @endcomponent
-    <script type="text/javascript">
-        let lead = "<?= $lead ?>";
-        console.log({
-            lead
-        })
+    <script>
+        $(document).ready(function() {
+            getSubCategories();
+        });
+        // function getSubmenuElem(submenu, data, key, currentSubcategory, foundIndex) {
+        //     for (let subcategory of data[key]) {
+        //         if (currentSubcategory == subcategory.name) {
+        //             foundIndex = true
+        //         }
+        //         submenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+        //     }
+        // }
+
+
+        function getSubCategories(id) {
+            var url = "{{ route('leads.info') }}";
+            url = url.replace('id', id);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(data) {
+                    let foundIndex = false;
+                    let currentSubcategory = $('#leadSubcategory').val()
+                    let leadSubmenu = ''
+                    for (let subcategory of data['Leads']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        leadSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(leadSubmenu, data, 'Leads', currentSubcategory, foundIndex);
+                    $('#leads_sub').html(leadSubmenu);
+
+
+                    let pendingSubmenu = ''
+                    for (let subcategory of data['Pending']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        pendingSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(pendingSubmenu, data, 'Pending', currentSubcategory, foundIndex);
+                    $('#pending_sub').html(pendingSubmenu);
+
+
+                    let admissionSubmenu = ''
+                    for (let subcategory of data['Addmission']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        admissionSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(admissionSubmenu, data, 'Addmission', currentSubcategory, foundIndex);
+                    $('#admission_sub').html(admissionSubmenu);
+
+
+                    let visaSubmenu = ''
+                    for (let subcategory of data['Visa Compliance']) {
+                        if (currentSubcategory == subcategory.name) {
+                            foundIndex = true
+                        }
+                        visaSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                    }
+                    // getSubmenuElem(visaSubmenu, data, 'Visa Compliance', currentSubcategory, foundIndex);
+                    $('#visa_sub').html(visaSubmenu);
+                }
+            });
+        }
     </script>
     <script>
         function showEditModal(id) {

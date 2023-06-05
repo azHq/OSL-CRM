@@ -30,6 +30,8 @@ class TaskController extends Controller
                 'end' => $item->end,
                 'allDay' => true,
                 'counsellor_name' => $item->assignee ? $item->assignee->name : 'Unassigned',
+                'created_by' => $item->created_by ? $item->created_by : '1',
+                'status' => $item->status ? $item->status : '',
                 'start_time' =>  Carbon::createFromFormat('Y-m-d H:i:s', $item->start)->format('h:i A'),
             ];
         });
@@ -53,6 +55,8 @@ class TaskController extends Controller
                 'end' => $item->end,
                 'allDay' => true,
                 'counsellor_name' => $item->assignee ? $item->assignee->name : 'Unassigned',
+                'created_by' => $item->created_by ? $item->created_by : '1',
+                'status' => $item->status ? $item->status : '',
                 'start_time' =>  Carbon::createFromFormat('Y-m-d H:i:s', $item->start)->format('h:i A'),
             ];
         });
@@ -76,6 +80,8 @@ class TaskController extends Controller
                 'end' => $item->end,
                 'allDay' => true,
                 'counsellor_name' => $item->assignee ? $item->assignee->name : 'Unassigned',
+                'created_by' => $item->created_by ? $item->created_by : '1',
+                'status' => $item->status ? $item->status : '',
                 'start_time' =>  Carbon::createFromFormat('Y-m-d H:i:s', $item->start)->format('h:i A'),
             ];
         });
@@ -268,19 +274,19 @@ class TaskController extends Controller
         }
     }
 
-    public function cancel($id)
+    public function cancel($id, Request $request)
     {
         try {
             $task = Task::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            // abort_if((!Auth::user()->hasRole('super-admin')), 403);
             $task->update([
-                'status' => 'Canceled'
+                'status' => 'Canceled',
+                'case_cancel_info' =>$request->close_cause 
+
             ]);
-            Session::flash('success', 'Task canceled successfully.');
-            return response('Task canceled successfully.');
+            return Redirect::back()->with('success', 'Task updated successfully.');
         } catch (\Exception $e) {
-            Session::flash('error', $e->getMessage());
-            return response($e->getMessage());
+            return Redirect::back()->with('error', $e->getMessage());
         }
     }
 
@@ -316,12 +322,16 @@ class TaskController extends Controller
                 'end' => $request->end_date,
                 'details' => $request->details,
                 'assignee_id' => $request->assignee_id,
+                'created_by' => Auth::id(),
             ]);
+            dd($task);
             if ($task->assignee_id) {
                 TaskAssignedEvent::dispatch($task);
             }
             return Redirect::back()->with('success', 'Task assigned successfully.');
         } catch (\Exception $e) {
+            dd($e);
+
             return Redirect::back()->with('error', $e->getMessage());
         }
     }

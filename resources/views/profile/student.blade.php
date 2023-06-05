@@ -5,7 +5,7 @@
     $admissionClass = '';
     $visaClass = '';
     if ($lead->category == 'Leads') {
-        $leadsClass = 'complete';
+        $leadsClass = 'active';
         // $pendingClass = 'active';
     } else if ($lead->category == 'Pending') {
         $leadsClass = 'complete';
@@ -32,8 +32,8 @@
         @endcomponent
         @include('components.flash')
         <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+            <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
             <div class="row ms-progressbar" style="border-bottom:0;">
-                <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
                 <div class="col-md-3 ms-progressbar-step {{$leadsClass}}">
                     <div class="text-center ms-progressbar-step-number">Leads</div>
                     <div class="progress">
@@ -303,22 +303,6 @@
                 type: 'GET',
                 url: url,
                 success: function(data) {
-
-
-                    // var lead = data.lead;
-                    // $('#edit-lead-name').val(lead.name);
-                    // $('#edit-lead-email').val(lead.email);
-                    // $('#edit-lead-mobile').val(lead.mobile);
-                    // $('#edit-lead-intake_month').val(lead.intake_month);
-                    // $('#edit-lead-status').val(lead.status);
-                    // $('#edit-lead-intake_year').val(lead.intake_year);
-                    // $('#edit-lead-last_education').val(lead.last_education);
-                    // $('#edit-lead-completion_date').val(lead.completion_date);
-                    // $('#edit-lead-education_details').val(lead.education_details);
-                    // $('#edit-lead-english').val(lead.english);
-                    // $('#edit-lead-english_result').val(lead.english_result);
-                    // $('#edit-lead-job_experience').val(lead.job_experience);
-                    // $('#edit-lead-owner_id').val(lead.owner_id);
                     let foundIndex = false;
                     let currentSubcategory = $('#leadSubcategory').val()
                     let leadSubmenu = ''
@@ -363,12 +347,6 @@
                     }
                     // getSubmenuElem(visaSubmenu, data, 'Visa Compliance', currentSubcategory, foundIndex);
                     $('#visa_sub').html(visaSubmenu);
-
-                    // options = '';
-                    // data.subcategories.forEach(function(subcategory) {
-                    //     options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
-                    // });
-                    // $('#lead-edit-subcategory').html(options);
                 }
             });
         }

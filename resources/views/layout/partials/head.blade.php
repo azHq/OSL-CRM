@@ -13,45 +13,49 @@
 
 <title>Dashboard - CRMS admin laravel template</title>
 <!-- Favicon -->
-<link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/favicon.png')}}"/>
+<link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/favicon.png')}}" />
 <!-- Bootstrap CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}" />
 <!-- Fontawesome CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/fontawesome/css/all.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/fontawesome/css/all.min.css')}}" />
 <!--<link rel="stylesheet" href="{{url('assets/plugins/fontawesome/css/fontawesome.min.css')}}">-->
-<link rel="stylesheet" href="{{url('assets/css/font-awesome.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/font-awesome.min.css')}}" />
 <!-- Feathericon CSS -->
-<link rel="stylesheet" href="{{url('assets/css/feather.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/feather.css')}}" />
 <!--font style-->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
 <!-- Lineawesome CSS -->
-<link rel="stylesheet" href="{{url('assets/css/line-awesome.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/line-awesome.min.css')}}" />
 <!-- Select2 CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/select2/css/select2.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/select2/css/select2.min.css')}}" />
 <!-- Datetimepicker CSS -->
-<link rel="stylesheet" href="{{url('assets/css/bootstrap-datetimepicker.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/bootstrap-datetimepicker.min.css')}}" />
 <!-- Tagsinput CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css')}}" />
 <!-- Datatable CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/datatables/datatables.min.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/datatables/datatables.min.css')}}" />
 <!-- Chart CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/morris.js/morris.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/morris.js/morris.css')}}" />
 <!-- Ck Editor -->
-<link rel="stylesheet" href="{{url('assets/css/ckeditor.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/ckeditor.css')}}" />
 <!-- Summernote CSS -->
-<link rel="stylesheet" href="{{url('assets/plugins/summernote/dist/summernote-bs4.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/plugins/summernote/dist/summernote-bs4.css')}}" />
 <!-- Theme CSS -->
-<link rel="stylesheet" href="{{url('assets/css/theme-settings.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/theme-settings.css')}}" />
 <!-- Main CSS -->
-<link rel="stylesheet" href="{{url('assets/css/style.css')}}" class="themecls"/>
+<link rel="stylesheet" href="{{url('assets/css/style.css')}}" class="themecls" />
 <!-- Custom Nav CSS -->
-<link rel="stylesheet" href="{{url('assets/css/custom-nav.css')}}"/>
+<link rel="stylesheet" href="{{url('assets/css/custom-nav.css')}}" />
 <!-- jquery confirmation -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" />
 <!-- full calendar css -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.css" />
 <!-- toast css -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
 
 <style>
     .main-wrapper {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskAssignedEvent;
 use App\Models\Lead;
+use App\Models\Messages;
 use App\Models\Student;
 use App\Models\Task;
 use App\Models\User;
@@ -248,7 +249,28 @@ class UserController extends Controller
     public function appointments()
     {
         if (\request()->ajax()) {
-            return view('appointments.index');
+            $messages = Messages::where('message_by', '=', Auth::id())->orWhere('message_to', '=', Auth::id())->orderBy('created_at', 'desc')->get();
+            $ids = [];
+            $newMessageArray = [];
+            foreach ($messages as $message) {
+                if ($message->message_by == Auth::id()) {
+                    if(!in_array($message->message_to, $ids)){
+                        $user = User::find($message->message_to);
+                        $message->user = $user;
+                        array_push($ids, $message->message_to);
+                        array_push($newMessageArray, $message);
+                    }
+                }
+                else{
+                    if(!in_array($message->message_by, $ids)){
+                        $user = User::find($message->message_by);
+                        $message->user = $user;
+                        array_push($ids, $message->message_by);
+                        array_push($newMessageArray, $message);
+                    }
+                }
+            }
+            return view('appointments.index' , compact('newMessageArray'));
         }
         return view('layout.mainlayout');
     }
@@ -258,8 +280,7 @@ class UserController extends Controller
         $data = [];
         if (Auth::user()->hasRole('admin')) {
             $data = Student::where('owner_id', '=', Auth::id());
-        }
-        else{
+        } else {
             $email = Auth::user()->email;
             $lead = Lead::where('email', '=', $email)->get()[0];
             $data = User::where('id', '=', $lead->owner_id)->get();

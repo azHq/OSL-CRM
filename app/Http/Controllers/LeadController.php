@@ -6,6 +6,7 @@ use App\Events\LeadAssignedEvent;
 use App\Exports\LeadsExport;
 use App\Helper\NewLog;
 use App\Imports\LeadsImport;
+use App\Models\Application;
 use App\Models\Category;
 use App\Models\Lead;
 use App\Models\Student;
@@ -45,9 +46,17 @@ class LeadController extends Controller
     public function list()
     {
         if (\request()->ajax()) {
-            $leads = Lead::orderBy('created_at', 'desc');
-            $leads = $leads->get();
-            return datatables()->of($leads)
+            $data = [];
+            if (Auth::user()->hasRole('student')) {
+                $data = Lead::where('email', '=', Auth::user()->email)->get();
+                // $applications = Application::orderBy('created_at', 'desc')->where('lead_id', $leadId);
+                // $data = $applications->get();
+            } else {
+                $leads = Lead::orderBy('created_at', 'desc');
+                $data = $leads->get();
+            }
+
+            return datatables()->of($data)
                 ->addColumn('name', function ($row) {
                     $data = '<a data-id="' . $row->id . '" href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">
                                 <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>

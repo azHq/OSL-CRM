@@ -18,7 +18,8 @@ class Task extends Model
         'details',
         'assignee_id',
         'status',
-        'task_type'
+        'task_type',
+        'created_by'
     ];
 
     protected $append = ['color'];
@@ -26,8 +27,8 @@ class Task extends Model
     protected static function booted()
     {
         static::addGlobalScope('rolewise', function ($query) {
-            if (!Auth::user()->hasRole('super-admin'))
-                $query->where('assignee_id', Auth::user()->id);
+            // if (!Auth::user()->hasRole('super-admin'))
+            //     $query->where('assignee_id', Auth::user()->id);
         });
 
         self::created(function ($task) {

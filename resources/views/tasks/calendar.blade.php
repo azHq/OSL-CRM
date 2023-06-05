@@ -1,13 +1,17 @@
 <div>
     <div id='calendar'></div>
     <div id='full_calendar_events'></div>
-    <input id="checkCounsellor" value="{{Auth::user()->hasRole('admin')}}" hidden />
+    <input id="authId" value="{{Auth::id()}}" hidden />
+    <input id="isSuperAdmin" value="{{Auth::user()->hasRole('super-admin')}}" hidden />
 </div>
 
 @component('tasks.add')
 @endcomponent
 
 @component('tasks.editevent')
+@endcomponent
+
+@component('tasks.closeevent')
 @endcomponent
 
 <!-- Script -->
@@ -218,8 +222,24 @@
                     },
 
                 }
-                if ($('#checkCounsellor').val() == '1') {
-                    delete buttons.Delete
+                if ($('#authId').val() != info.event.extendedProps.created_by && $('#authId').val() != '1') {
+                    delete buttons.Delete;
+                    if (info.event.extendedProps.status != 'Canceled') {
+                        buttons.Close = {
+                            text: 'Close Task',
+                            btnClass: 'btn-red',
+                            keys: ['enter', 'shift'],
+                            action: function() {
+                                var id = info.event.id;
+                                $("#close_event").attr('data-counsellor-id', id);
+                                $("#close_event").modal('show');
+                                var url = "{{ route('tasks.cancel', 'id') }}";
+                                url = url.replace('id', id);
+                                $('#event-close').attr('action', url);
+                            }
+                        }
+                    }
+
                 }
                 $.confirm({
                     title: 'Choose Action!',

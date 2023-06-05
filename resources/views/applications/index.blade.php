@@ -7,7 +7,7 @@
     @push('list') <li class="breadcrumb-item active">Applications</li> @endpush
     @endcomponent
 
-    @include('applications.applications')
+    @include('applications.leads')
 {{--    @include('applications.edit')--}}
 
 </div>
