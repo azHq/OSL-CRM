@@ -413,18 +413,20 @@ class LeadController extends Controller
 
     public function studentProfile()
     {
-        // if (\request()->ajax()) {
-        abort_if((Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin')), 403);
-        $email = Auth::user()->email;
-        $lead = Lead::where('email', '=', $email)->get()[0];
-        $subCategory = Subcategory::find($lead->subcategory_id);
-        $category = Category::find($subCategory->category_id);
-        $lead->subCategory = $subCategory->name;
-        $lead->category = $category->name;
-        // $lead->load('applications');
-        // $lead->load('report');
-        // $lead->load("report.user");
-        return view('profile.student', compact('lead'));
+        if (\request()->ajax()) {
+            abort_if((Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin')), 403);
+            $email = Auth::user()->email;
+            $lead = Lead::where('email', '=', $email)->get()[0];
+            $subCategory = Subcategory::find($lead->subcategory_id);
+            $category = Category::find($subCategory->category_id);
+            $lead->subCategory = $subCategory->name;
+            $lead->category = $category->name;
+            // $lead->load('applications');
+            // $lead->load('report');
+            // $lead->load("report.user");
+            return view('profile.student', compact('lead'));
+        }
+        return view('layout.mainlayout');
     }
 
     public function getSubcategoriesList()

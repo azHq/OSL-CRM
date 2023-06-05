@@ -72,7 +72,7 @@ class AuthController extends Controller
                 return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
             } else {
                 NewLog::create('Login', 'User logged-in successfully.');
-                return redirect()->intended('/')
+                return redirect()->intended('/student-profile')
                     ->withSuccess('You have Successfully loggedin');
             }
         }
@@ -97,6 +97,9 @@ class AuthController extends Controller
     {
         if (!Auth::check()) {
             return redirect("login")->withSuccess('Opps! You do not have access');
+        }
+        if (Auth::user()->hasRole('student')) {
+            return redirect("student-profile");
         }
 
         if (!\request()->ajax()) {
