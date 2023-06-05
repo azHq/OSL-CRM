@@ -2483,7 +2483,7 @@
 </div>
 <!-- modal -->
 <!-- Modal -->
-<div class="modal right fade" id="add_task" tabindex="-1" role="dialog" aria-modal="true">
+<div class="modal right fade" id="add_task_modal" tabindex="-1" role="dialog" aria-modal="true">
 	<div class="modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">

@@ -15,6 +15,7 @@ class Messages extends Model
         'message_to',
         'type',
         'meta',
+        'is_seen',
     ];
     protected static function booted()
     {

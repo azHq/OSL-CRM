@@ -46,23 +46,28 @@
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label class="col-form-label">Start Date and Time <span class="text-danger">*</span></label>
-											<input type="datetime-local" id="task-add-start-date" class="form-control" name="start_date" required>
+											<input type='text' class="form-control" id='task-add-start-date' name="start_date" required>
+											<!-- <input type="datetime-local" id="task-add-start-date" class="form-control" name="start_date" required> -->
+
 										</div>
 									</div>
+									<div class="col">
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<label class="col-form-label">End Date and Time<span class="text-danger">*</span></label>
+												<input type='text' class="form-control" id='task-add-end-date' name="end_date" required>
+
+												<!-- <input type="datetime-local" id="task-add-end-date" class="form-control" name="end_date" required> -->
+											</div>
+										</div>
+									</div>
+									<input type="hidden" id="task-type" class="form-control" name="task_type" required>
 								</div>
-                                <div class="col">
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-                                            <label class="col-form-label">End Date and Time<span class="text-danger">*</span></label>
-                                            <input type="datetime-local" id="task-add-end-date" class="form-control" name="end_date" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="task-type" class="form-control" name="task_type" required>
-							</div>
-							<div class="text-center py-3">
-								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
-								<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
+								<div class="text-center py-3">
+									<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
+									<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
+								</div>
+
 							</div>
 						</form>
 					</div>
@@ -76,16 +81,31 @@
 </div>
 
 @if(Route::current()->getName() == 'tasks.index')
-    <script>
-        $('#task-type').val('Scheduled');
-    </script>
+<script>
+	$('#task-type').val('Scheduled');
+</script>
 @endif
 @if(Route::current()->getName() == 'dashboard')
-    <script>
-        $('#task-type').val('Normal');
-    </script>
+<script>
+	$('#task-type').val('Normal');
+</script>
 @endif
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('#task-add-start-date').datetimepicker({
+			sideBySide : true,
+			format:'YYYY-MM-DD hh:mm:ss'
+		});
+		$('#task-add-end-date').datetimepicker({
+			sideBySide : true,
+			format:'YYYY-MM-DD hh:mm:ss'
+		});
+	});
+</script>
 @if(Auth::user()->hasRole('super-admin'))
 <script>
 	$(document).ready(function() {

@@ -33,15 +33,78 @@
     </div>
     <!-- Content Starts -->
     <div class="row">
+        <div>
+            <aside class="col-md-12">
+                <h3>
+                    Messages
+                </h3>
+                <ul>
+                    @foreach($newMessageArray as $message)
+                    <li style="
+                    display: flex;
+                    align-items: center;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    ">
+                        <a href="{{route('users.view', $message->user->id)}}">
+                            <span class="person-circle-a person-circle" style="   
+                            height: 48px;
+                            width: 50px;
+                            font-size: 25px;
+                            margin: 0 auto;">
+                                {{$message->user->name[0]}}
+                            </span>
+                        </a>
+                        <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""> -->
+                        <a href="{{route('chat.index', $message->user->id)}}">
+
+                            <div style="margin-left: 10px;">
+
+                                <!-- <a href="{{route('chat.index', $message->user->id)}}" > -->
+                                <h2>{{$message->user->name}}</h2>
+                                @if(!$message->is_seen && $message->message_by != Auth::id())
+                                <h3 style='font-weight:bold'>
+                                    <span class="status orange"></span>
+                                    {{$message->message}}
+                                </h3>
+                                @else
+                                <h3>
+                                    <!-- <span class="status orange"></span> -->
+                                    {{$message->message}}
+                                </h3>
+                                @endif
+                            </div>
+                        </a>
+                    </li>
+                    @endforeach
+
+                </ul>
+
+            </aside>
+        </div>
+
+    </div>
+    <div class="row">
+
         <div class="col-md-12">
             <div class="card mb-0">
                 <div class="card-body">
                     <div class="table-responsive">
+                        @if(Auth::user()->hasRole('admin'))
+                        <h2> Appointed Students</h2>
+                        @else
+                        <h2> Appointed Counsellor</h2>
+                        @endif
                         <table id="myTable" class="table mb-0 w-100">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Counsellor Name</th>
+                                    @if(Auth::user()->hasRole('admin'))
+                                    <th> Student Name</th>
+                                    @else
+                                    <th> Counsellor Name</th>
+                                    @endif
+                                    <!-- <th>Counsellor Name</th> -->
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Created At</th>

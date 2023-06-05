@@ -25,9 +25,36 @@ class AuthController extends Controller
         return view('login');
     }
 
+    public function studentLogin()
+    {
+        return view('studentlogin');
+    }
+
     public function registration()
     {
         return view('register');
+    }
+
+    public function studentPostLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+            if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin')) {
+                Session::flush();
+                Auth::logout();
+                return redirect("student-login")->withSuccess('Oppes! You have entered invalid credentials');
+            } else {
+                NewLog::create('Login', 'User logged-in successfully.');
+                return redirect()->intended('/')
+                    ->withSuccess('You have Successfully loggedin');
+            }
+        }
+        return redirect("student-login")->withSuccess('Oppes! You have entered invalid credentials');
     }
 
     public function postLogin(Request $request)
@@ -39,11 +66,16 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            NewLog::create('Login', 'User logged-in successfully.');
-            return redirect()->intended('/')
-                ->withSuccess('You have Successfully loggedin');
+            if (Auth::user()->hasRole('student')) {
+                Session::flush();
+                Auth::logout();
+                return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
+            } else {
+                NewLog::create('Login', 'User logged-in successfully.');
+                return redirect()->intended('/')
+                    ->withSuccess('You have Successfully loggedin');
+            }
         }
-
         return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
     }
 
@@ -113,8 +145,11 @@ class AuthController extends Controller
     {
         NewLog::create('Logout', 'User logged-out successfully.');
         Session::flush();
+        if (Auth::user()->hasRole('student')) {
+            Auth::logout();
+            return Redirect('student-login');
+        }
         Auth::logout();
-
         return Redirect('login');
     }
 

@@ -36,6 +36,17 @@ class MessageController extends Controller
     {
         if (\request()->ajax()) {
             $user = User::find($id);
+
+            $message = Messages::where([
+                ['message_to', '=', $id],
+                ['message_by', '=', Auth::id()],
+            ])->orWhere([
+                ['message_to', '=', Auth::id()],
+                ['message_by', '=', $id],
+            ])->orderBy('created_at', 'desc')->first();
+            if ($message->message_to == Auth::id()) {
+                Messages::where('id', $message->id)->update(['is_seen' => 1]);
+            }
             return view('chat.index', compact('user'));
         }
         return view('layout.mainlayout');
@@ -43,6 +54,9 @@ class MessageController extends Controller
 
     public function messageSend(Request $request)
     {
+        $request->validate([
+            'message' => 'required',
+        ]);
         try {
             $message['message'] = $request->message;
             $message['message_by'] = Auth::id();

@@ -9,11 +9,11 @@
 	}
     .floating-div {
         position: fixed;
-        top: 10px;
+        /* top: 10px; */
         right: 10px;
         width: 300px;
         height: 200px;
-        background-color: #de1111;
+        /* background-color: #de1111; */
         z-index: 1;
     }
 </style>

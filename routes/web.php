@@ -29,7 +29,9 @@ use App\Http\Controllers\UserController;
 
 Route::group(['middleware' => 'guest'], function () {
     Route::get('login', [AuthController::class, 'index'])->name('login');
+    Route::get('student-login', [AuthController::class, 'studentLogin'])->name('studentlogin');
     Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post');
+    Route::post('student-post-login', [AuthController::class, 'studentPostLogin'])->name('studentlogin.post');
     Route::get('registration', [AuthController::class, 'registration'])->name('register');
     Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
 });
@@ -129,7 +131,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::get('tasks/{id}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
-    Route::get('tasks/{id}/cancel', [TaskController::class, 'cancel'])->name('tasks.cancel');
+    Route::put('tasks/{id}/cancel', [TaskController::class, 'cancel'])->name('tasks.cancel');
     Route::get('tasks/{id}/delete', [TaskController::class, 'delete'])->name('tasks.delete');
     Route::put('tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
 

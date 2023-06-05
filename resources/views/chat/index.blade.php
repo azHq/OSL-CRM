@@ -20,15 +20,25 @@ $messages = Messages::where([
 
 ?>
 <!-- Page Header -->
-<div id="container">
-    <main>
+<div id="container" class="chat_container">
+    <main class="chat_main">
         <header>
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+            <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""> -->
+            <span class="person-circle-a person-circle" style="   
+                            height: 48px;
+                            width: 50px;
+                            font-size: 25px;
+                            margin: 0 auto;">
+                            {{$user->name[0]}}
+                        </span>
             <div>
-                <h2>Chat with {{$user->name}}</h2>
-                <h3>Counsellor</h3>
+                <h2>{{$user->name}}</h2>
+
+                <!-- <h3>Counsellor</h3>
+                <h3>Counsellor</h3> -->
+
             </div>
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_star.png" alt="">
+            <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_star.png" alt=""> -->
         </header>
         <ul id="chat">
             @foreach($messages as $message)
@@ -63,13 +73,13 @@ $messages = Messages::where([
 
         </ul>
         <footer>
-            <form action="{{ route('message.send') }}" method="POST">
+            <form action="{{ route('message.send') }}" method="POST" style="display:flex; justify-content:space-between">
                 @csrf
                 <input hidden name='id' value="{{$user->id}}">
-                <textarea placeholder="Type your message" name="message" class="form-control" type="text"></textarea>
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_picture.png" alt="">
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_file.png" alt="">
-                <button type="submit">Send</button>
+                <textarea placeholder="Type your message" name="message" class="form-control" type="text" style="margin-right:10px; border-radius:10px"></textarea>
+                <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_picture.png" alt="">
+                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_file.png" alt=""> -->
+                <button type="submit" id="send_message" class="btn btn-primary" style="border-radius: 15px;width: 80px;height: 50px;background-color:#4a0077;border-color:#4a0077"><i class="fa fa-send-o" style="font-size:25px"></i></button>
             </form>
 
         </footer>
