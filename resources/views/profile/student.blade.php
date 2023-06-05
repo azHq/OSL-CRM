@@ -311,7 +311,7 @@
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }
-                        leadSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                        leadSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;top:0px;right:0px"></span>':''}${subcategory.name}</div>`
                     }
                     // getSubmenuElem(leadSubmenu, data, 'Leads', currentSubcategory, foundIndex);
                     $('#leads_sub').html(leadSubmenu);
@@ -322,7 +322,7 @@
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }
-                        pendingSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                        pendingSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;top:0px;right:0px"></span>':''}${subcategory.name}</div>`
                     }
                     // getSubmenuElem(pendingSubmenu, data, 'Pending', currentSubcategory, foundIndex);
                     $('#pending_sub').html(pendingSubmenu);
@@ -333,7 +333,7 @@
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }
-                        admissionSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                        admissionSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;top:0px;right:0px"></span>':''}${subcategory.name}</div>`
                     }
                     // getSubmenuElem(admissionSubmenu, data, 'Addmission', currentSubcategory, foundIndex);
                     $('#admission_sub').html(admissionSubmenu);
@@ -344,7 +344,7 @@
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }
-                        visaSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
+                        visaSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;top:0px;right:0px"></span>':''}${subcategory.name}</div>`
                     }
                     // getSubmenuElem(visaSubmenu, data, 'Visa Compliance', currentSubcategory, foundIndex);
                     $('#visa_sub').html(visaSubmenu);
