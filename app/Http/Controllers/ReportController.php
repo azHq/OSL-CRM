@@ -30,7 +30,7 @@ class ReportController extends Controller
         if (\request()->ajax())
         {
             try{
-                $reports = Report::orderBy('created_at', 'desc')->where('mechanism','manual')->get();
+                $reports = Report::orderBy('created_at', 'desc')->get();
             }catch (\Exception $e){
                 dd($e->getMessage());
             }

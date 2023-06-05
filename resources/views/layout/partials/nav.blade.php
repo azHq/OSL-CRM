@@ -41,7 +41,7 @@
 				</li>
 				@if (Auth::user()->hasRole('admin'))
 				<li id="appointments" class="nav-li {{ Request::is('students*') ? 'active' : '' }}">
-					<a data-nav="reports" data-href="{{url('appointments')}}" class="url"><i class="feather-bar-chart"></i> <span>Students</span></a>
+					<a data-nav="appointments" data-href="{{url('appointments')}}" class="url"><i class="feather-bar-chart"></i> <span>Students</span></a>
 				</li>
 				@endif
 
