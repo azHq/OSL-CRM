@@ -7,7 +7,7 @@
 			<button class="btn" type="button"><i class="fa fa-search"></i></button>
 		</form>
 		<div id="sidebar-menu" class="sidebar-menu">
-			@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
+			@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro'))
 			<ul>
 				<li id="dashboard" class="nav-li {{ Request::is('/') ? 'active' : '' }}">
 					<a data-nav="dashboard" data-href="{{url('/')}}" class="url"><i class="feather-home"></i> <span>Dashboard</span></a>
@@ -16,6 +16,40 @@
 					<a data-nav="leads" data-href="{{url('leads')}}" class="url"><i class="feather-target"></i> <span>All Leads</span></a>
 				</li>
 				@foreach(App\Models\Category::all() as $category)
+				@if(Auth::user()->hasRole('cro'))
+				@if($category->name != 'Addmission')
+				<li class="submenu">
+					<a href="#">{!! $category->icon !!}<span> {{$category->name}} </span> <span class="menu-arrow"></span></a>
+					<ul class="sub-menus">
+						@if($category->name != 'Leads')
+						@foreach(App\Models\Subcategory::where('category_id', $category->id)->get() as $subcategory)
+						@if(($subcategory->name == 'Appointment Book')
+
+						|| ($subcategory->name == 'Waiting for CAS')
+						|| ($subcategory->name == 'CAS or Final Confirmation Letter Issued')
+						|| ($subcategory->name == 'Enrolled'))
+
+						<li id="{{$subcategory->slug}}" class="nav-li {{ Request::is('leads/status/'.$subcategory->slug) ? 'active' : '' }}">
+							<a data-nav="{{$subcategory->slug}}" data-href="{{url('leads/status/'.$subcategory->slug)}}" class="url"> {{$subcategory->name}} </a>
+						</li>
+
+						@endif
+
+						@endforeach
+						@else
+						@foreach(App\Models\Subcategory::where('category_id', $category->id)->get() as $subcategory)
+
+						<li id="{{$subcategory->slug}}" class="nav-li {{ Request::is('leads/status/'.$subcategory->slug) ? 'active' : '' }}">
+							<a data-nav="{{$subcategory->slug}}" data-href="{{url('leads/status/'.$subcategory->slug)}}" class="url"> {{$subcategory->name}} </a>
+						</li>
+
+						@endforeach
+						@endif
+
+					</ul>
+				</li>
+				@endif
+				@else
 				<li class="submenu">
 					<a href="#">{!! $category->icon !!}<span> {{$category->name}} </span> <span class="menu-arrow"></span></a>
 					<ul class="sub-menus">
@@ -23,10 +57,13 @@
 						<li id="{{$subcategory->slug}}" class="nav-li {{ Request::is('leads/status/'.$subcategory->slug) ? 'active' : '' }}">
 							<a data-nav="{{$subcategory->slug}}" data-href="{{url('leads/status/'.$subcategory->slug)}}" class="url"> {{$subcategory->name}} </a>
 						</li>
+
 						@endforeach
 					</ul>
 				</li>
+				@endif
 				@endforeach
+				@if(!Auth::user()->hasRole('cro'))
 				<li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
 					<a data-nav="applications" data-href="{{url('applications')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>
 				</li>
@@ -43,6 +80,7 @@
 				<li id="appointments" class="nav-li {{ Request::is('students*') ? 'active' : '' }}">
 					<a data-nav="appointments" data-href="{{url('appointments')}}" class="url"><i class="feather-bar-chart"></i> <span>Students</span></a>
 				</li>
+				@endif
 				@endif
 
 				@if (Auth::user()->hasRole('super-admin'))

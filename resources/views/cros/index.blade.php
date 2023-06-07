@@ -23,7 +23,7 @@
             <div class="col text-end">
                 <ul class="list-inline-item pl-0">
                     <li class="list-inline-item">
-                        <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-task" data-bs-toggle="modal" data-bs-target="#add_user">
+                        <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-task" data-bs-toggle="modal" data-bs-target="#add_CRO">
                             New CRO
                         </button>
                     </li>
@@ -41,7 +41,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Counsellor Name</th>
+                                    <th>CRO Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Created At</th>
@@ -62,13 +62,13 @@
 </div>
 <!-- /Page Content -->
 
-@component('users.create')
+@component('cros.create')
 @endcomponent
 
-@component('users.edit')
+@component('cros.edit')
 @endcomponent
 
-@component('users.task')
+@component('cros.task')
 @endcomponent
 
 
@@ -171,7 +171,7 @@
                     });
             },
             ajax: {
-                'url': '{{ route("users.list") }}',
+                'url': '{{ route("cro.list") }}',
                 data: function(data) {
                     data.filter_search = $('#filter-search').val();
                     data.filter_status = $('#filter-status').val();

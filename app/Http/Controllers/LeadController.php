@@ -179,6 +179,18 @@ class LeadController extends Controller
     public function subcategoriesList($category_id)
     {
         $subcategories = Subcategory::where('category_id', $category_id)->get();
+        if (Auth::user()->hasRole('cro')) {
+            $filteredSubcategories = [];
+            foreach ($subcategories as $subCategory) {
+                if (($subCategory->name == 'Appointment Book') || ($subCategory->name == 'Waiting for CAS') || ($subCategory->name == 'CAS or Final Confirmation Letter Issued')
+                    || ($subCategory->name == 'Enrolled')
+                ) {
+
+                    array_push($filteredSubcategories, $subCategory);
+                }
+            }
+            return response()->json($filteredSubcategories);
+        }
         return response()->json($subcategories);
     }
 
@@ -199,8 +211,25 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $lead = Lead::find($id);
-            $categories = Category::all();
-            $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+            $categories = [];
+            $subcategories = [];
+            if (Auth::user()->hasRole('cro')) {
+                $categories = Category::where('name', '!=', 'Addmission')->get();
+                $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+                $filteredSubcategories = [];
+                foreach ($subcategories as $subCategory) {
+                    if (($subCategory->name == 'Appointment Book') || ($subCategory->name == 'Waiting for CAS') || ($subCategory->name == 'CAS or Final Confirmation Letter Issued')
+                        || ($subCategory->name == 'Enrolled')
+                    ) {
+
+                        array_push($filteredSubcategories, $subCategory);
+                    }
+                }
+                $subcategories =   $filteredSubcategories;
+            } else {
+                $categories = Category::all();
+                $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+            }
             return response()->json([
                 'lead' => $lead,
                 'subcategories' => $subcategories,
@@ -282,6 +311,8 @@ class LeadController extends Controller
             $student['password'] = $data->mobile;
             $student['name'] = $data->name;
             $student['status'] = 'Pending';
+            $roleId = Role::where('name', 'student')->first()->id;
+            $student['role_id'] = $roleId;
             $user = User::create($student);
             $role = Role::findByName('student');
             $user->assignRole($role);
@@ -344,6 +375,8 @@ class LeadController extends Controller
                 $userData['password'] = $student->mobile;
                 $userData['name'] = $student->name;
                 $userData['status'] = 'Pending';
+                $roleId = Role::where('name', 'student')->first()->id;
+                $userData['role_id'] = $roleId;
                 $user = User::create($userData);
                 $role = Role::findByName('student');
                 $user->assignRole($role);
@@ -414,7 +447,7 @@ class LeadController extends Controller
     public function studentProfile()
     {
         if (\request()->ajax()) {
-            abort_if((Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin')), 403);
+            abort_if((Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro')), 403);
             $email = Auth::user()->email;
             $lead = Lead::where('email', '=', $email)->get()[0];
             $subCategory = Subcategory::find($lead->subcategory_id);

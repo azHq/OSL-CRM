@@ -16,6 +16,8 @@
 							<h4>Counsellor Information</h4>
 							<div class="row">
 								<div class="col">
+									<input hidden type="text" class="form-control" name="role" value="admin" required>
+
 									<div class="form-group row">
 										<div class="col-md-12"><label class="col-form-label">Name <span class="text-danger">*</span></label></div>
 										<div class="col-md-12">

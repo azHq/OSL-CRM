@@ -74,6 +74,65 @@ class UserController extends Controller
         }
     }
 
+    public function croList()
+    {
+        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        if (\request()->ajax()) {
+            $role = Role::findByName('cro');
+            $users = User::where('role_id', $role->id)->orderBy('created_at', 'desc');
+            if (\request('filter_search') != '') {
+                $users->where('name', 'like', '%' . \request('filter_search') . '%')
+                    ->orWhere('email', 'like', '%' . \request('filter_search') . '%')
+                    ->orWhere('mobile', 'like', '%' . \request('filter_search') . '%');
+            }
+            if (\request('filter_status') != '' || \request('filter_status') != null) {
+                $users->where('status', \request('filter_status'));
+            }
+            $users = $users->get();
+
+            return datatables()->of($users)
+                ->addColumn('name', function ($row) {
+                    $data = '<a href="' . route('users.view', $row->id) . '">
+                                <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
+                            </a>
+                            <a href="' . route('users.view', $row->id) . '">' . $row->name . '</a>';
+                    return $data;
+                })
+                ->editColumn('mobile', function ($row) {
+                    return $row->mobile;
+                })
+                ->editColumn('email', function ($row) {
+                    return $row->email;
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at;
+                })
+                ->editColumn('add_task', function ($row) {
+                    return '<a href="#" data-id="' . $row->id . '" data-name="' . $row->name . '" data-bs-toggle="modal" data-bs-target="#add_task" class="add-task lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
+                })
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'Active') {
+                        return '<label class="badge badge-success text-center">' . ucfirst($row->status) . '</label>';
+                    } elseif ($row->status == 'Inactive') {
+                        return '<label class="badge badge-warning text-center">' . ucfirst($row->status) . '</label>';
+                    } else {
+                        return '<label class="badge badge-danger text-center">' . ucfirst($row->status) . '</label>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    $action = '';
+                    $action .= '<a href="' . route('users.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
+                    $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_user" class="edit-user lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    $action .= '<a href="#" onclick="userDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
+                    return $action;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['name', 'email', 'mobile', 'status', 'created_at', 'add_task', 'action'])
+                ->make(true);
+        }
+    }
+
+
     public function index(Request $request)
     {
         abort_if(!Auth::user()->hasRole('super-admin'), 403);
@@ -114,8 +173,9 @@ class UserController extends Controller
             return response(['success' => false, 'message' => 'Password Not Matched!']);
         }
         try {
+            $role = Role::findByName($request->role);
+            $request['role_id'] = $role->id;
             $user = User::create($request->except('_token', 'cpassword'));
-            $role = Role::findByName('admin');
             $user->assignRole($role);
             return Redirect::back()->with('success', 'User created successfully.');
         } catch (\Exception $e) {
@@ -254,15 +314,14 @@ class UserController extends Controller
             $newMessageArray = [];
             foreach ($messages as $message) {
                 if ($message->message_by == Auth::id()) {
-                    if(!in_array($message->message_to, $ids)){
+                    if (!in_array($message->message_to, $ids)) {
                         $user = User::find($message->message_to);
                         $message->user = $user;
                         array_push($ids, $message->message_to);
                         array_push($newMessageArray, $message);
                     }
-                }
-                else{
-                    if(!in_array($message->message_by, $ids)){
+                } else {
+                    if (!in_array($message->message_by, $ids)) {
                         $user = User::find($message->message_by);
                         $message->user = $user;
                         array_push($ids, $message->message_by);
@@ -270,7 +329,7 @@ class UserController extends Controller
                     }
                 }
             }
-            return view('appointments.index' , compact('newMessageArray'));
+            return view('appointments.index', compact('newMessageArray'));
         }
         return view('layout.mainlayout');
     }

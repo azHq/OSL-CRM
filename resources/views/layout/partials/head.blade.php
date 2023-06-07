@@ -44,6 +44,9 @@
 <link rel="stylesheet" href="{{url('assets/css/theme-settings.css')}}" />
 <!-- Main CSS -->
 <link rel="stylesheet" href="{{url('assets/css/style.css')}}" class="themecls" />
+
+<link rel="stylesheet" href="{{url('assets/css/datetimepicker.css')}}"/>
+<!-- <link rel="stylesheet" href="{{url('assets/css/bootstrap.min.css')}}"/> -->
 <!-- Custom Nav CSS -->
 <link rel="stylesheet" href="{{url('assets/css/custom-nav.css')}}" />
 <!-- jquery confirmation -->
@@ -53,8 +56,7 @@
 <!-- toast css -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css"> -->
 
 
 <style>
