@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::get('users/list', [UserController::class, 'list'])->name('users.list');
+    Route::get('cro/list', [UserController::class, 'croList'])->name('cro.list');
     Route::get('users/{id}/tasks', [UserController::class, 'tasks'])->name('users.tasks');
     Route::get('users/{id}', [UserController::class, 'view'])->name('users.view');
     Route::get('users', [UserController::class, 'index'])->name('users.index');

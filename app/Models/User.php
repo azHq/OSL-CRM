@@ -94,6 +94,13 @@ class User extends Authenticatable
         });
     }
 
+    public function scopeCROS($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', 'cro');
+        });
+    }
+
     public function getRoleAttribute()
     {
         return $this->roles()->first()->name;
@@ -105,6 +112,8 @@ class User extends Authenticatable
             return 'Manager';
         } else if ($this->roles()->first()->name == 'admin') {
             return 'Counsellor';
+        } else if ($this->roles()->first()->name == 'cro') {
+            return 'CRO';
         } else {
             return 'Student';
         }

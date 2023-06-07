@@ -52,6 +52,7 @@ const folder = {
 
     mix.copy('resources/img', 'public/assets/img');
     mix.copy('resources/css/style.css', 'public/assets/css/style.css');
+    mix.copy('resources/css/datetimepicker.css', 'public/assets/css/datetimepicker.css');
     mix.copy('resources/css/theme-settings.css', 'public/assets/css/theme-settings.css');
     mix.copy('resources/js/app.js', 'public/assets/js/app.js');
     mix.copy('resources/js/theme-settings.js', 'public/assets/js/theme-settings.js');
@@ -68,7 +69,10 @@ const folder = {
     mix.copy('resources/js/pages/apex.min.js', 'public/assets/js/apex.min.js');
     mix.copy('resources/js/pages/mask.js', 'public/assets/js/mask.js');
     mix.copy('resources/js/pages/jquery.maskedinput.min.js', 'public/assets/js');
-
+    mix.copy('resources/js/datetimepicker.min.js', 'public/assets/js');
+    mix.copy('resources/js/moment.min.js', 'public/assets/js');
+    mix.copy('resources/js/bootstrap.min.js', 'public/assets/js');
+    mix.copy('resources/css/bootstrap.min.css', 'public/assets/css');
  
     mix.copy('node_modules/bootstrap/dist/css/bootstrap.css', 'public/assets/plugins/bootstrap/css');
     mix.copy('node_modules/bootstrap/dist/css/bootstrap.css.map', 'public/assets/plugins/bootstrap/css');

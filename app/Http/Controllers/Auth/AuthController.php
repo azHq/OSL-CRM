@@ -44,13 +44,13 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin')) {
+            if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro')) {
                 Session::flush();
                 Auth::logout();
                 return redirect("student-login")->withSuccess('Oppes! You have entered invalid credentials');
             } else {
                 NewLog::create('Login', 'User logged-in successfully.');
-                return redirect()->intended('/')
+                return redirect()->intended('/student-profile')
                     ->withSuccess('You have Successfully loggedin');
             }
         }
@@ -72,7 +72,7 @@ class AuthController extends Controller
                 return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
             } else {
                 NewLog::create('Login', 'User logged-in successfully.');
-                return redirect()->intended('/student-profile')
+                return redirect()->intended('/')
                     ->withSuccess('You have Successfully loggedin');
             }
         }

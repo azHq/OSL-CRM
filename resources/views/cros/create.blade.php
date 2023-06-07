@@ -1,10 +1,10 @@
-<div class="modal center fade" id="add_user" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="add_CRO" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
 	<div class="modal-dialog lkb-modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">
 
 			<div class="modal-header">
-				<h4 class="modal-title text-center">Add Counsellor</h4>
+				<h4 class="modal-title text-center">Add CRO</h4>
 				<button type="button" class="btn-close xs-close" data-bs-dismiss="modal"></button>
 			</div>
 
@@ -13,9 +13,10 @@
 					<div class="col-md-12">
 						<form action="{{ route('users.store') }}" method="POST">
 							@csrf
-							<h4>Counsellor Information</h4>
+							<h4>CRO Information</h4>
 							<div class="row">
 								<div class="col">
+									<input hidden type="text" class="form-control" name="role" value="cro" required>
 									<div class="form-group row">
 										<div class="col-md-12"><label class="col-form-label">Name <span class="text-danger">*</span></label></div>
 										<div class="col-md-12">
