@@ -22,9 +22,11 @@ class Lead extends Model
                 // $query->where('owner_id', Auth::user()->id);
         });
 
+      
         self::creating(function ($lead) {
-            $lead->creator_id = Auth::user()->id;
+            $lead->creator_id =Auth::user()? Auth::user()->id:0;
         });
+        
 
         self::created(function ($lead) {
             NewLog::create('New Lead Added', 'A new lead "' . $lead->name . '" has been added.');
