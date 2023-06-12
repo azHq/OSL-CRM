@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
+use App\Services\FacebookGraphService;
 
 class LeadController extends Controller
 {

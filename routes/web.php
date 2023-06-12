@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\MetaFormsController;
 use App\Http\Controllers\ParameterController;
 use Illuminate\Support\Facades\Route;
@@ -73,6 +74,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('leads/{id}', [LeadController::class, 'update'])->name('leads.update');
     Route::get('student-profile', [LeadController::class, 'studentProfile'])->name('profile.student');
     Route::get('getSubcategories', [LeadController::class, 'getSubcategoriesList'])->name('leads.info');
+    Route::get('getLeadsFromMeta', [CampaignController::class, 'getCampaigns'])->name('leads.from.meta');
+    Route::get('getPageName/{lead_id}', [CampaignController::class, 'getLeads'])->name('leads.getLeads.meta');
+    Route::post('mapFields', [CampaignController::class, 'mapFields'])->name('leads.map.fields');
+    Route::get('meta', [CampaignController::class, 'index'])->name('leads.meta');
+
 
 
     Route::get('users/list', [UserController::class, 'list'])->name('users.list');
