@@ -13,7 +13,8 @@
                     <h4 class="card-title mb-0">Credentials</h4>
                 </div>
                 <div class="card-body">
-                    <form action="#">
+                    <form method="POST" action="{{ route('meta.update') }}">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -34,7 +35,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>PAGE Access Token:</label>
-                                    <textarea rows="9" cols="5" class="form-control" placeholder="Enter Token"name="page_token" id="page_token"></textarea>
+                                    <textarea rows="9" cols="5" class="form-control" placeholder="Enter Token" name="page_token" id="page_token"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -48,3 +49,25 @@
     </div>
 
 </div>
+@if (Auth::user()->hasRole('super-admin'))
+<script>
+    $(document).ready(function() {
+        var url = "{{route('meta.get')}}";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(data) {
+                console.log({
+                    data
+                })
+                $('#app_id').val(data.app_id);
+                $('#app_secret').val(data.app_secret);
+                $('#page_id').val(data.page_id);
+                $('#page_token').val(data.page_token);
+            }
+        });
+
+
+    });
+</script>
+@endif

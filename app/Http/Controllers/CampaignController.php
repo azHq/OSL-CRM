@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\MetaCredential;
 use App\Models\MetaLeadgenForm;
 use App\Services\FacebookGraphService;
 use Illuminate\Http\Request;
@@ -93,8 +94,24 @@ class CampaignController extends Controller
             MetaLeadgenForm::create($metadata);
             return Redirect::back()->with('success', 'Lead created successfully.');
         } catch (\Exception $e) {
+            return Redirect::back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function metaCredentialUpdate(Request $request)
+    {
+        try {
+            MetaCredential::create($request->except('_token'));
+            return Redirect::back()->with('success', 'Meta Credential Updated successfully.');
+        } catch (\Exception $e) {
             dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
+    }
+
+    public function getCredential()
+    {
+        $meta = MetaCredential::first();
+        return $meta;
     }
 }
