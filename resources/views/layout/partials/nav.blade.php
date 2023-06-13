@@ -110,6 +110,9 @@
 				<li id="activities" class="nav-li {{ Request::is('activities*') ? 'active' : '' }}">
 					<a data-nav="activities" data-href="{{url('activities')}}" class="url"><i class="fa fa-history" aria-hidden="true"></i> <span>Activities</span></a>
 				</li>
+				<li id="meta" class="nav-li {{ Request::is('meta*') ? 'active' : '' }}">
+					<a data-nav="meta" data-href="{{url('meta')}}" class="url"><i class="fa fa-key" aria-hidden="true"></i> <span>Meta Credential</span></a>
+				</li>
 				@endif
 			</ul>
 			@endif
