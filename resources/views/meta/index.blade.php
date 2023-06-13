@@ -20,6 +20,7 @@
                                 <div class="form-group">
                                     <label>APP ID:</label>
                                     <input type="text" class="form-control" name="app_id" id="app_id">
+                                    <input type="text" class="form-control" name="id" id="id" hidden>
                                 </div>
                                 <div class="form-group">
                                     <label>APP Secret:</label>
@@ -61,6 +62,7 @@
                     data
                 })
                 $('#app_id').val(data.app_id);
+                $('#id').val(data.id);
                 $('#app_secret').val(data.app_secret);
                 $('#page_id').val(data.page_id);
                 $('#page_token').val(data.page_token);

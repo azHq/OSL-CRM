@@ -101,7 +101,12 @@ class CampaignController extends Controller
     public function metaCredentialUpdate(Request $request)
     {
         try {
-            MetaCredential::create($request->except('_token'));
+            $meta = MetaCredential::find($request->id);
+            if ($meta->app_id) {
+                MetaCredential::find($meta->id)->update($request->except('_token'));
+            } else {
+                MetaCredential::create($request->except('_token'));
+            }
             return Redirect::back()->with('success', 'Meta Credential Updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
