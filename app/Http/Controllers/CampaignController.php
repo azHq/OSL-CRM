@@ -104,7 +104,6 @@ class CampaignController extends Controller
             MetaCredential::create($request->except('_token'));
             return Redirect::back()->with('success', 'Meta Credential Updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
