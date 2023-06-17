@@ -44,7 +44,7 @@ class MessageController extends Controller
                 ['message_to', '=', Auth::id()],
                 ['message_by', '=', $id],
             ])->orderBy('created_at', 'desc')->first();
-            if ($message->message_to == Auth::id()) {
+            if ($message && $message->message_to == Auth::id()) {
                 Messages::where('id', $message->id)->update(['is_seen' => 1]);
             }
             return view('chat.index', compact('user'));

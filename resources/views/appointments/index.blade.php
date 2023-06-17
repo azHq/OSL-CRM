@@ -51,8 +51,11 @@
                             height: 48px;
                             width: 50px;
                             font-size: 25px;
-                            margin: 0 auto;">
-                                {{$message->user->name[0]}}
+                            margin: 0 auto;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center; ">
+                                <section>{{$message->user->name[0]}}</section>
                             </span>
                         </a>
                         <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""> -->
@@ -79,6 +82,11 @@
                     @endforeach
 
                 </ul>
+                @if(count($newMessageArray) == 0)
+                <div class="col-md-12 empty-message">
+                    No messages yet
+                </div>
+                @endif
 
             </aside>
         </div>

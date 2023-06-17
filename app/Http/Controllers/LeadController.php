@@ -30,6 +30,7 @@ class LeadController extends Controller
     public function index(Request $request)
     {
         if (\request()->ajax()) {
+
             return view('leads.index');
         }
         return view('layout.mainlayout');
@@ -199,8 +200,13 @@ class LeadController extends Controller
     {
         $request['creator_id'] = Auth::id();
         try {
-            Lead::create($request->except('_token', 'category_id'));
-            return Redirect::back()->with('success', 'Lead created successfully.');
+            $isLeadExist = Lead::where('mobile', $request['mobile'])->orWhere('email', $request['email'])->get();
+            if (count($isLeadExist) == 0) {
+                Lead::create($request->except('_token', 'category_id'));
+                return Redirect::back()->with('success', 'Lead created successfully.');
+            } else {
+                return Redirect::back()->with('error', 'Lead Already Exist with mobile or email.');
+            }
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
@@ -281,6 +287,9 @@ class LeadController extends Controller
             $lead = Lead::find($id);
             $leadCounsellorIdOld = $lead->owner_id;
             abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            if ($lead->owner_id) {
+                $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id','subcategory_id'));
+            }
             $lead->update($request->except('_token', '_method', 'category_id'));
             $lead = Lead::find($id);
             if ($leadCounsellorIdOld != $lead->owner_id && $lead->owner_id) {
@@ -289,6 +298,7 @@ class LeadController extends Controller
             }
             return Redirect::route('leads.index')->with('success', 'Lead updated successfully.');
         } catch (\Exception $e) {
+            dd($e);
             Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }

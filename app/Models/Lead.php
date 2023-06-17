@@ -18,8 +18,8 @@ class Lead extends Model
     protected static function booted()
     {
         static::addGlobalScope('rolewise', function ($query) {
-            // if (!Auth::user()->hasRole('super-admin'))
-                // $query->where('owner_id', Auth::user()->id);
+            if (Auth::user()->hasRole('admin'))
+                $query->where('owner_id', Auth::user()->id);
         });
 
       
