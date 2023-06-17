@@ -83,7 +83,10 @@ class CampaignController extends Controller
                         $lead_data[$request[$field['name']]] = $field['values'][0];
                     }
                 }
-                Lead::create($lead_data);
+                $isLeadExist = Lead::where('mobile', $lead_data['mobile'])->orWhere('email', $lead_data['email'])->get();
+                if(count($isLeadExist) == 0){
+                    Lead::create($lead_data);
+                }
             }
             $lead_info = $fbGraphService->getPageOrLeadInfo($request['lead_id']);
             $metadata = [];

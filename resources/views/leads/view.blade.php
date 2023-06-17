@@ -31,7 +31,7 @@
         @push('list') <li class="breadcrumb-item active">Lead</li> @endpush
         @endcomponent
         @include('components.flash')
-        <div class="card p-md-4 p-2 mt-2 mt-md-4 lkb-profile-board">
+        <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
         <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
 
             <div class="row ms-progressbar" style="border-bottom:0;">
@@ -219,6 +219,23 @@
             <h3 class="page-title m-0">
                 <span class="page-title-icon bg-gradient-primary text-white me-2">
                     <i class="fa fa-user" aria-hidden="true"></i>
+                </span> Applications
+            </h3>
+        </div>
+        <div class="col p-0 text-end">
+            <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-application" data-bs-toggle="modal" data-bs-target="#add_application">
+                <i class="fa fa-plus" aria-hidden="true"></i> Apply
+            </button>
+        </div>
+    </div>
+    <div>
+        @include('applications.applications')
+    </div>
+    <div class="crms-title row bg-white mt-4">
+        <div class="col  p-0">
+            <h3 class="page-title m-0">
+                <span class="page-title-icon bg-gradient-primary text-white me-2">
+                    <i class="fa fa-user" aria-hidden="true"></i>
                 </span> Reports
             </h3>
         </div>
@@ -260,24 +277,6 @@
         </div>
     </div>
 
-
-    <div class="crms-title row bg-white mt-4">
-        <div class="col  p-0">
-            <h3 class="page-title m-0">
-                <span class="page-title-icon bg-gradient-primary text-white me-2">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                </span> Applications
-            </h3>
-        </div>
-        <div class="col p-0 text-end">
-            <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-application" data-bs-toggle="modal" data-bs-target="#add_application">
-                <i class="fa fa-plus" aria-hidden="true"></i> Apply
-            </button>
-        </div>
-    </div>
-    <div>
-        @include('applications.applications')
-    </div>
 
     </div>
     <!-- /Page Content -->

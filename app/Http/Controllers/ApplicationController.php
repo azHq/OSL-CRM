@@ -162,20 +162,47 @@ class ApplicationController extends Controller
     public function listByLeadId($lead_id)
     {
         $applications = Application::where('lead_id', $lead_id)->get();
-        $applications = $applications->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'lead' => $item->lead->name,
-                'course' => $item->course,
-                'course_details' => $item->course_details,
-                'intake_year' => $item->intake_year,
-                'intake_month' => $item->intake_month,
-                'status' => $item->status,
-                'compliance' => $item->compliance,
-                'university' => $item->university->name,
-            ];
-        })->toArray();
-        return response()->json(['applications' => $applications]);
+        return datatables()->of($applications)
+                ->addColumn('lead', function ($row) {
+                    return $row->lead->name;
+                })
+                ->addColumn('counsellor', function ($row) {
+                    return $row->lead->owner ? $row->lead->owner->name : 'Unassigned';
+                })
+                ->addColumn('course', function ($row) {
+                    return $row->course;
+                })
+                ->editColumn('intake_year', function ($row) {
+                    return $row->intake_year;
+                })
+                ->editColumn('intake_month', function ($row) {
+                    if (!$row->intake_month) return '';
+                    $monthNum  = $row->intake_month;
+                    $dateObj = DateTime::createFromFormat('!m', $monthNum);
+                    return $dateObj->format('F');
+                })
+                ->editColumn('university', function ($row) {
+                    return $row->university->name;
+                })
+                ->editColumn('applied', function ($row) {
+                    return $row->created_at;
+                })
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'Applied') {
+                        return '<label class="badge badge-success text-center">' . ucfirst($row->status) . '</label>';
+                    } elseif ($row->status == 'Offer Received') {
+                        return '<label class="badge badge-primary text-center">' . ucfirst($row->status) . '</label>';
+                    } else {
+                        return '<label class="badge badge-info text-center">' . ucfirst($row->status) . '</label>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    $action = '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_application" class="edit-application lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    return $action;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['lead', 'counsellor', 'course', 'intake_month', 'intake_year', 'university', 'applied', 'status', 'action'])
+                ->make(true);
     }
 
     public function applicationsForStudents(Request $request)

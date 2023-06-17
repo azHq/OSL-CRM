@@ -24,20 +24,26 @@ $messages = Messages::where([
     <main class="chat_main">
         <header>
             <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt=""> -->
-            <span class="person-circle-a person-circle" style="   
+            <div style="display: flex;    align-items: center;">
+                <span class="person-circle-a person-circle" style="   
                             height: 48px;
                             width: 50px;
                             font-size: 25px;
-                            margin: 0 auto;">
-                            {{$user->name[0]}}
-                        </span>
-            <div>
-                <h2>{{$user->name}}</h2>
+                            /* margin: 0 auto; */
+                            display: flex;
+                            align-items: center;
+                            justify-content: center; ">
+                    <section>{{$user->name[0]}}</section>
+                </span>
+                <div>
+                    <h2>{{$user->name}}</h2>
 
-                <!-- <h3>Counsellor</h3>
+                    <!-- <h3>Counsellor</h3>
                 <h3>Counsellor</h3> -->
 
+                </div>
             </div>
+
             <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_star.png" alt=""> -->
         </header>
         <ul id="chat">
