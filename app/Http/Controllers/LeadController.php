@@ -9,6 +9,7 @@ use App\Imports\LeadsImport;
 use App\Models\Application;
 use App\Models\Category;
 use App\Models\Lead;
+use App\Models\Report;
 use App\Models\Student;
 use App\Models\Subcategory;
 use App\Models\University;
@@ -354,6 +355,10 @@ class LeadController extends Controller
     {
         try {
             $lead = Lead::find($id);
+            $reports = Report::where('leads_id', $id)->get();
+            foreach ($reports as $report) {
+                $report->delete();
+            }
             abort_if((!Auth::user()->hasRole('super-admin')), 403);
             $lead->delete();
             Session::flash('success', 'Lead deleted successfully.');

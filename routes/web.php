@@ -27,7 +27,8 @@ use App\Http\Controllers\UserController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::post('reset-password-by-id', [AuthController::class, 'resetPassword'])->name('reset.password');
+Route::get('reset-password/{id}', [AuthController::class, 'resetPasswordIndex'])->name('reset.index');
 Route::group(['middleware' => 'guest'], function () {
     Route::get('login', [AuthController::class, 'index'])->name('login');
     Route::get('student-login', [AuthController::class, 'studentLogin'])->name('studentlogin');
@@ -35,14 +36,11 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('student-post-login', [AuthController::class, 'studentPostLogin'])->name('studentlogin.post');
     Route::get('registration', [AuthController::class, 'registration'])->name('register');
     Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
-    Route::post('reset-password-by-id', [AuthController::class, 'resetPassword'])->name('reset.password');
-    Route::get('reset-password/{id}', [AuthController::class, 'resetPasswordIndex'])->name('reset.index');
+
 });
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
-    Route::get('reset-password/{id}', [AuthController::class, 'resetPasswordIndex'])->name('reset.index');
-    Route::post('reset-password-by-id', [AuthController::class, 'resetPassword'])->name('reset.password');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('profile.index');
     Route::get('profile/data', [AuthController::class, 'profileData'])->name('profile.data');

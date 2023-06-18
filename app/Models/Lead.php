@@ -45,7 +45,7 @@ class Lead extends Model
 
         self::deleted(function ($lead) {
             NewLog::create('Lead Deleted', 'Lead "' . $lead->name . '" has been deleted.');
-            NewReportEntry::create('Lead Deleted', 'Lead "' . $lead->name . '" has been deleted.','Lead_Delete', $lead->id, $lead->creator_id);
+            // NewReportEntry::create('Lead Deleted', 'Lead "' . $lead->name . '" has been deleted.','Lead_Delete', $lead->id, $lead->creator_id);
         });
     }
 
