@@ -346,10 +346,10 @@ class UserController extends Controller
         }
         return datatables()->of($data)
             ->addColumn('name', function ($row) {
-                $data = '<a href="">
+                $data = '
                                 <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
-                            </a>
-                            <a href="">' . $row->name . '</a>';
+                            
+                            <span href="">' . $row->name . '</span>';
                 return $data;
             })
             ->editColumn('mobile', function ($row) {

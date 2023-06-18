@@ -129,7 +129,7 @@
 					<a data-nav="pending-docs" data-href="{{route('students.view.nav')}}" class="url"><i class="feather-file-text"></i> <span>Pending Docs</span></a>
 				</li>
 				<li id="appointments" class="nav-li {{ Request::is('appointments*') ? 'active' : '' }}">
-					<a data-nav="reports" data-href="{{route('appointments.index')}}" class="url"><i class="feather-bar-chart"></i> <span>Appointments</span></a>
+					<a data-nav="reports" data-href="{{route('appointments.index')}}" class="url"><i class="feather-bar-chart"></i> <span>Messages</span></a>
 				</li>
 			</ul>
 			@endif
