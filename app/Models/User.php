@@ -56,11 +56,6 @@ class User extends Authenticatable
             $user->password = Hash::make($user->password);
         });
 
-        static::updating(function ($user) {
-            if ($user->password) {
-                $user->password = Hash::make($user->password);
-            }
-        });
 
         self::created(function ($user) {
             NewLog::create('New Counsellor added', 'A counsellor "' . $user->name . '" has been added.');

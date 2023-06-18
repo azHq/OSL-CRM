@@ -185,7 +185,7 @@ class AuthController extends Controller
         try {
             if ($request['confirm-password'] == $request['password']) {
                 $student = User::find($request['id'])->update([
-                    'password' => $request['password'],
+                    'password' => Hash::make($request['password']),
                     'status' => 'Active'
                 ]);
                 return Redirect('student-login');
