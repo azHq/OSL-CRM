@@ -12,10 +12,12 @@ use App\Models\Subcategory;
 use App\Models\Task;
 use App\Models\University;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -162,5 +164,36 @@ class AuthController extends Controller
             return view('profile.index');
         }
         return view('layout.mainlayout');
+    }
+
+    public function resetPasswordIndex($id)
+    {
+        $student = User::find($id);
+        if ($student && $student->status == 'Pending') {
+            return view('reset', compact('id'));
+        } else {
+            return Redirect('student-login');
+        }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'confirm-password' => 'required',
+            'password' => 'required',
+        ]);
+        try {
+            if ($request['confirm-password'] == $request['password']) {
+                $student = User::find($request['id'])->update([
+                    'password' => $request['password'],
+                    'status' => 'Active'
+                ]);
+                return Redirect('student-login');
+            } else {
+                return Redirect::back()->with('error', 'Password Mismatch');
+            }
+        } catch (Exception $e) {
+            Redirect::back()->with('error', $e->getMessage());
+        }
     }
 }

@@ -288,7 +288,7 @@ class LeadController extends Controller
             $leadCounsellorIdOld = $lead->owner_id;
             abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             if ($lead->owner_id) {
-                $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id','subcategory_id'));
+                $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id'));
             }
             $lead->update($request->except('_token', '_method', 'category_id'));
             $lead = Lead::find($id);
@@ -325,6 +325,14 @@ class LeadController extends Controller
             $roleId = Role::where('name', 'student')->first()->id;
             $student['role_id'] = $roleId;
             $user = User::create($student);
+            $request['name'] = $data->name;
+            $request['subject'] = 'Pass Reset Request for OSL_CRM';
+            $request['email'] = $student['email'];
+            $request['email_body'] = "
+            Please View the link & Reset
+            https://eschool.codes/reset-password/$user->id
+            ";
+            $this->sendMail($request);
             $role = Role::findByName('student');
             $user->assignRole($role);
             NewLog::create('Lead Converted To Student', 'Lead "' . $lead->name . '" has been converted to student.');
@@ -389,9 +397,17 @@ class LeadController extends Controller
                 $roleId = Role::where('name', 'student')->first()->id;
                 $userData['role_id'] = $roleId;
                 $user = User::create($userData);
+                $request['name'] = $student->name;
+                $request['subject'] = 'Pass Reset Request for OSL_CRM';
+                $request['email'] = $userData['email'];
+                $request['email_body'] = "
+                Please View the link & Reset
+                https://eschool.codes/reset-password/$user->id
+                ";
+                $this->sendMail($request);
                 $role = Role::findByName('student');
                 $user->assignRole($role);
-
+                Lead::find($lead->id)->update('status', 'Student');
                 NewLog::create('Lead Converted To Student', 'Lead "' . $student->name . '" has been converted to student.');
             }
             NewLog::create('Multiple Leads Converted', 'Multiple Leads have been converted to students.');
@@ -436,19 +452,22 @@ class LeadController extends Controller
                 'email' => 'required',
                 'subject' => 'required',
                 'email_body' => 'required',
+                'name' => 'required',
             ]);
             $info = [
                 'to' => $request->input('email'),
                 'subject' => $request->input('subject'),
                 'text_message' => $request->input('email_body'),
+                'name' => $request->input('name'),
             ];
             Mail::send('mail', $info, function ($messages) use ($info) {
-                //                $messages->from('you@mail.com', 'OSL-CRM');
-                $messages->to($info['to'], 'OSL_CRM');
+                $messages->from('rahatsaqib78@gmail.com', 'OSL_CRM');
+                $messages->to($info['to'], $info['name']);
                 $messages->subject($info['subject']);
             });
             return Redirect::back()->with('success', 'Email sent successfully.');
         } catch (\Exception $e) {
+            dd($e);
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
