@@ -81,6 +81,9 @@ class LeadController extends Controller
                 ->editColumn('created_by', function ($row) {
                     return $row->creator ? $row->creator->name : 'NA';
                 })
+                ->editColumn('lead_state', function ($row) {
+                    return '<label class="badge badge-success text-center">' . $row->status . '</label>';
+                })
                 ->editColumn('status', function ($row) {
                     return '<label class="badge badge-info text-center">' . ucfirst($row->subcategory->name) . '</label>';
                 })
@@ -94,7 +97,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'status', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'status', 'lead_state', 'owner', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -130,6 +133,9 @@ class LeadController extends Controller
                 ->editColumn('created_by', function ($row) {
                     return $row->creator ? $row->creator->name : 'NA';
                 })
+                ->editColumn('lead_state', function ($row) {
+                    return '<label class="badge badge-success text-center">' . $row->status . '</label>';
+                })
                 ->editColumn('status', function ($row) {
                     return '<label class="badge badge-info text-center">' . ucfirst($row->subcategory->name) . '</label>';
                 })
@@ -147,7 +153,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'status', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'status', 'lead_state', 'owner', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -407,7 +413,7 @@ class LeadController extends Controller
                 $this->sendMail($request);
                 $role = Role::findByName('student');
                 $user->assignRole($role);
-                Lead::find($lead->id)->update('status', 'Student');
+                Lead::find($lead->id)->update(['status' => 'Student']);
                 NewLog::create('Lead Converted To Student', 'Lead "' . $student->name . '" has been converted to student.');
             }
             NewLog::create('Multiple Leads Converted', 'Multiple Leads have been converted to students.');
