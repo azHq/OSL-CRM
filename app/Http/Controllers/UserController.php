@@ -341,7 +341,7 @@ class UserController extends Controller
             $data = Student::where('owner_id', '=', Auth::id());
         } else {
             $email = Auth::user()->email;
-            $student = Student::where('email', '=', $email)->get()[0];
+            $student = Student::where('email', '=', $email)->first();
             $data = User::where('id', '=', $student->owner_id)->get();
         }
         return datatables()->of($data)
