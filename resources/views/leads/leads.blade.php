@@ -255,6 +255,8 @@
                                 $(this).trigger('change');
                             });
                     });
+                getOwners();
+
             },
             ajax: {
                 'url': '{{ route("leads.list") }}',
@@ -584,7 +586,6 @@
 
 <script>
     $(document).ready(function() {
-        getOwners();
         getCounsellors();
     });
 
