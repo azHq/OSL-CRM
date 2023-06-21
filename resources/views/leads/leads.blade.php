@@ -593,29 +593,39 @@
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
+                console.log({
+                    data
+                })
                 if (data.users) {
-                    var options = '<option value="" selected>Filter Counsellor</option>';
+                    let options = '<option value="" selected>Filter Counsellor</option>';
                     options += '<option value="Unassigned">Unassigned</option>';
-                    data.users.forEach(function(user) {
+
+                    for (let user of data.users) {
                         options += '<option value="' + user.name + '">' + user.name + ' (Counsellor)</option>';
-                    });
-                    data.cros.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + ' (CRO)</option>';
-                    });
-                    $('.leads-list-owners').html(options);
+                    }
+
+                    for (let cro of data.cros) {
+                        options += '<option value="' + cro.name + '">' + cro.name + ' (CRO)</option>';
+                    }
+
+                    $('#filter-owner').html(options);
+                    console.log({
+                        options
+                    })
                 }
+
                 if (data.all_users) {
                     var options = '<option value="" selected>Filter Creator</option>';
-                    data.all_users.forEach(function(user) {
+                    for (let user of data.all_users) {
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
-                    });
-                    $('.leads-list-creators').html(options);
+                    }
+                    $('#filter-creator').html(options);
                 }
                 if (data.subcategories) {
                     var options = '<option value="" selected>Filter Status</option>';
-                    data.subcategories.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '</option>';
-                    });
+                    for (let subcategory of data.subcategories) {
+                        options += '<option value="' + subcategory.name + '">' + subcategory.name + '</option>';
+                    }
                     $('#filter-status').html(options);
                 }
             }
