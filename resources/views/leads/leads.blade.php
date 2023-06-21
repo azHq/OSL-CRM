@@ -86,7 +86,6 @@
                                 @if (Auth::user()->hasRole('super-admin'))
                                 <th>Created By</th>
                                 @endif
-                                <th>Status</th>
                                 <th>Lead Status</th>
                                 <th>Action</th>
                             </tr>
@@ -192,9 +191,6 @@
                             case 'Lead Status':
                                 $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Status</option>
-                                                <option value="Unknown">Unknown</option>
-                                                <option value="Potential">Potential</option>
-                                                <option value="Not Potential">Not Potential</option>
                                             </select>`);
                                 break;
                             case 'Counsellor':
@@ -297,9 +293,6 @@
                     data: 'created_by'
                 },
                 {
-                    data: 'lead_state'
-                },
-                {
                     data: 'status'
                 },
                 {
@@ -355,9 +348,6 @@
                             case 'Lead Status':
                                 $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Status</option>
-                                                <option value="Unknown">Unknown</option>
-                                                <option value="Potential">Potential</option>
-                                                <option value="Not Potential">Not Potential</option>
                                             </select>`);
                                 break;
                             case 'Counsellor':
@@ -447,9 +437,6 @@
                 },
                 {
                     data: 'created_at'
-                },
-                {
-                    data: 'lead_state'
                 },
                 {
                     data: 'status'
@@ -610,7 +597,10 @@
                     var options = '<option value="" selected>Filter Counsellor</option>';
                     options += '<option value="Unassigned">Unassigned</option>';
                     data.users.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '</option>';
+                        options += '<option value="' + user.name + '">' + user.name + ' (Counsellor)</option>';
+                    });
+                    data.cros.forEach(function(user) {
+                        options += '<option value="' + user.name + '">' + user.name + ' (CRO)</option>';
                     });
                     $('.leads-list-owners').html(options);
                 }
@@ -620,6 +610,13 @@
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
                     });
                     $('.leads-list-creators').html(options);
+                }
+                if (data.subcategories) {
+                    var options = '<option value="" selected>Filter Status</option>';
+                    data.subcategories.forEach(function(user) {
+                        options += '<option value="' + user.name + '">' + user.name + '</option>';
+                    });
+                    $('#filter-status').html(options);
                 }
             }
         });

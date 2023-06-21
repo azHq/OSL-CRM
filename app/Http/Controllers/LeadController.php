@@ -82,9 +82,6 @@ class LeadController extends Controller
                 ->editColumn('created_by', function ($row) {
                     return $row->creator ? $row->creator->name : 'NA';
                 })
-                ->editColumn('lead_state', function ($row) {
-                    return '<label class="badge badge-success text-center">' . $row->status . '</label>';
-                })
                 ->editColumn('status', function ($row) {
                     return '<label class="badge badge-info text-center">' . ucfirst($row->subcategory->name) . '</label>';
                 })
@@ -98,7 +95,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'status', 'lead_state', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'status', 'owner', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -134,9 +131,7 @@ class LeadController extends Controller
                 ->editColumn('created_by', function ($row) {
                     return $row->creator ? $row->creator->name : 'NA';
                 })
-                ->editColumn('lead_state', function ($row) {
-                    return '<label class="badge badge-success text-center">' . $row->status . '</label>';
-                })
+
                 ->editColumn('status', function ($row) {
                     return '<label class="badge badge-info text-center">' . ucfirst($row->subcategory->name) . '</label>';
                 })
@@ -154,7 +149,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'status', 'lead_state', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'status', 'owner', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -170,6 +165,7 @@ class LeadController extends Controller
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
+            $lead->id =$id;
             return view('leads.view', compact('lead'));
         }
 
@@ -179,10 +175,19 @@ class LeadController extends Controller
     public function create()
     {
         $users = User::admins()->select('id', 'name', 'email')->get();
+        $cros = User::cros()->select('id', 'name', 'email')->get();
+        $subcategories = Subcategory::select('id', 'name', 'slug', 'category_id')->get();
         $all_users = User::select('id', 'name')->get();
         $universities = University::select('id', 'name')->get();
         $me_and_sa = User::superAdmins()->orWhere('id', Auth::user()->id)->select('id', 'name')->get();
-        return response()->json(['users' => $users, 'all_users' => $all_users, 'universities' => $universities, 'me_and_sa' => $me_and_sa]);
+        return response()->json([
+            'users' => $users,
+            'cros' => $cros,
+            'all_users' => $all_users,
+            'universities' => $universities,
+            'me_and_sa' => $me_and_sa,
+            'subcategories' => $subcategories,
+        ]);
     }
 
     public function subcategoriesList($category_id)
@@ -223,6 +228,7 @@ class LeadController extends Controller
 
     public function edit($id)
     {
+        // dd($id);
         if (\request()->ajax()) {
             $lead = Lead::find($id);
             $categories = [];

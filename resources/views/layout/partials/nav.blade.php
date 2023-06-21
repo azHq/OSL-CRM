@@ -98,11 +98,11 @@
 					<a data-nav="universities" data-href="{{route('universities.index')}}" class="url"><i class="fa fa-university" aria-hidden="true"></i> <span>Universities</span></a>
 				</li>
 				@endif
-				@if (Auth::user()->hasRole('super-admin'))
+				<!-- @if (Auth::user()->hasRole('super-admin'))
 				<li id="parameters" class="nav-li {{ Request::is('parameters*') ? 'active' : '' }}">
 					<a data-nav="parameters" data-href="{{route('parameters.index')}}" class="url"><i class="fa fa-code" aria-hidden="true"></i> <span>Parameters</span></a>
 				</li>
-				@endif
+				@endif -->
 				<li id="notifications" class="nav-li {{ Request::is('notifications*') ? 'active' : '' }}">
 					<a data-nav="notifications" data-href="{{route('notifications.index')}}" class="url"><i class="fa fa-bell" aria-hidden="true"></i> <span>Notifications</span></a>
 				</li>

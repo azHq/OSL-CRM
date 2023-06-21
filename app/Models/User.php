@@ -95,7 +95,7 @@ class User extends Authenticatable
         });
     }
 
-    public function scopeCROS($query)
+    public function scopeCros($query)
     {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', 'cro');

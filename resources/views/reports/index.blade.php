@@ -43,43 +43,43 @@
     </div>
     @include('reports.list')
 
-    {{--    <div class="row graphs">--}}
-    {{--        <div class="col-md-6">--}}
-    {{--            <div class="card h-100">--}}
-    {{--                <div class="card-body">--}}
-    {{--                    <h3 class="card-title">Counselor Performance</h3>--}}
-    {{--                    <canvas id="bar-chart" width="800" height="550"></canvas>--}}
-    {{--                </div>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--        <div class="col-md-6">--}}
-    {{--            <div class="card h-100">--}}
-    {{--                <div class="card-body">--}}
-    {{--                    <h3 class="card-title">Lead Report</h3>--}}
-    {{--                    <canvas id="bar-chart-2" width="800" height="550"></canvas>--}}
-    {{--                </div>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
+     <div class="row graphs">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Counselor Performance</h3>
+                    <canvas id="bar-chart" width="800" height="550"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Lead Report</h3>
+                    <canvas id="bar-chart-2" width="800" height="550"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    {{--    <div class="row graphs">--}}
-    {{--        <div class="col-md-6">--}}
-    {{--            <div class="card h-100">--}}
-    {{--                <div class="card-body">--}}
-    {{--                    <h3 class="card-title">Application Performance</h3>--}}
-    {{--                    <canvas id="bar-chart-3" width="800" height="550"></canvas>--}}
-    {{--                </div>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--        <div class="col-md-6">--}}
-    {{--            <div class="card h-100">--}}
-    {{--                <div class="card-body">--}}
-    {{--                    <h3 class="card-title">Application Reports</h3>--}}
-    {{--                    <canvas id="pie-chart" width="800" height="550"></canvas>--}}
-    {{--                </div>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
+    <div class="row graphs">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Application Performance</h3>
+                    <canvas id="bar-chart-3" width="800" height="550"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">Application Reports</h3>
+                    <canvas id="pie-chart" width="800" height="550"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <!-- /Page Content -->

@@ -1,4 +1,4 @@
-<div class="modal center fade" id="edit_lead" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="edit_lead_v2" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
 	<div class="modal-dialog lkb-modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">
@@ -222,6 +222,7 @@
 				$('#edit-lead-status').val(lead.status);
 				$('#edit-lead-intake_year').val(lead.intake_year);
 				$('#edit-lead-last_education').val(lead.last_education);
+				$('#edit-lead-last_education').html(lead.last_education);
 				$('#edit-lead-completion_date').val(lead.completion_date);
 				$('#edit-lead-education_details').val(lead.education_details);
 				$('#edit-lead-english').val(lead.english);

@@ -45,7 +45,10 @@
 			success: function(data) {
 				var options = '<option value="">Unassigned</option>';
 				data.users.forEach(function(user) {
-					options += ('<option value="' + user.id + '">' + user.name + ' - ' + user.email + '</option>');
+					options += ('<option value="' + user.id + '">' + user.name + ' (Counsellor)</option>');
+				});
+				data.cros.forEach(function(user) {
+					options += ('<option value="' + user.id + '">' + user.name + ' (CRO)</option>');
 				});
 				$('#assign-lead-owners').html(options);
 			}

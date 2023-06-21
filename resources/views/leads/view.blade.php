@@ -32,7 +32,10 @@
         @endcomponent
         @include('components.flash')
         <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
-        <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
+            <div class="col text-end">
+                <a href="javascript:;" data-id="{{$lead->id}}" data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#edit_lead"  class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>
+            </div>
+            <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
 
             <div class="row ms-progressbar" style="border-bottom:0;">
                 <div class="col-md-3 ms-progressbar-step {{$leadsClass}}">
@@ -222,11 +225,13 @@
                 </span> Applications
             </h3>
         </div>
+        @if(!Auth::user()->hasRole('student'))
         <div class="col p-0 text-end">
             <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-application" data-bs-toggle="modal" data-bs-target="#add_application">
                 <i class="fa fa-plus" aria-hidden="true"></i> Apply
             </button>
         </div>
+        @endif
     </div>
     <div>
         @include('applications.applications')

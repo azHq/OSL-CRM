@@ -87,10 +87,15 @@ class DocumentController extends Controller
     public function uploadDocument($studentId, Request $request)
     {
         try {
-            $path = $request->file('file')->storeAs('students/' . $studentId, $request->name . '.' . $request->file('file')->extension());
-            $document = Document::where('student_id', $studentId)->first();
-            $document->update([$request->name => $path]);
-            return Redirect::back()->with('success', 'File Uploaded Successfully.');
+            $fileSize = $request->file('file')->getSize(); // in bytes
+            if ($fileSize <= 5 * 1024) {
+                $path = $request->file('file')->storeAs('students/' . $studentId, $request->name . '.' . $request->file('file')->extension());
+                $document = Document::where('student_id', $studentId)->first();
+                $document->update([$request->name => $path]);
+                return Redirect::back()->with('success', 'File Uploaded Successfully.');
+            } else {
+                return Redirect::back()->with('error', 'Fize Size exceeded');
+            }
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }

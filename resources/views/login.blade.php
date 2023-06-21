@@ -19,7 +19,7 @@
 						<h3 class="account-title">Login</h3>
 
 						<!-- Account Form -->
-						<form method="POST" action="{{ route('login.post') }}">
+						<form method="POST" action="{{ route('login.post') }}" id= "login-form">
 							@csrf
 							<div class="form-group">
 								<label>Email Address</label>
@@ -48,12 +48,22 @@
 									</div>
 								</div>
 							</div>
+
+							<!-- <div class="form-group{{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
+								<div class="col-md-6">
+									@if ($errors->has('g-recaptcha-response'))
+									<span class="help-block">
+										<strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+									</span>
+									@endif
+								</div>
+							</div> -->
 							<div class="form-group text-center">
 								<button class="btn btn-primary account-btn" type="submit">Login</button>
 							</div>
-							<div class="account-footer">
+							<!-- <div class="account-footer">
 								<p>Don't have an account yet? <a href="{{url('register')}}">Register</a></p>
-							</div>
+							</div> -->
 						</form>
 						<!-- /Account Form -->
 

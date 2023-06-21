@@ -20,7 +20,6 @@ class ActivityController extends Controller
         if (\request()->ajax()) {
             $activities = Activity::orderBy('created_at', 'desc');
             $activities = $activities->get();
-
             return datatables()->of($activities)
                 ->addColumn('user', function ($row) {
                     $data = '<a data-id="' . $row->user->id . '" href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->user->id) . '\');">
