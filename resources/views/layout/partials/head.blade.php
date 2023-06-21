@@ -10,7 +10,7 @@
 <meta property="og:url" content="http://localhost:8000/metaforms">
 <meta property="fb:app_id" content="CRMS_ADMIN">
 <meta property="og:form_id" content="CRMS-form-id">
-<!-- {!! RecaptchaV3::initJs() !!} -->
+
 <title>@yield('title')</title>
 <!-- Favicon -->
 <link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/favicon.png')}}" />
