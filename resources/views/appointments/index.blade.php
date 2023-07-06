@@ -11,8 +11,8 @@
 
     @component('components.custombreadcrumb')
     @slot('icon') <i class="fa fa-user" aria-hidden="true"></i> @endslot
-    @slot('title') Appointed Counsellor @endslot
-    @push('list') <li class="breadcrumb-item active">Appointed Counsellor</li> @endpush
+    @slot('title') Messages @endslot
+    @push('list') <li class="breadcrumb-item active">Messages</li> @endpush
     @endcomponent
     <div class="page-header pt-3 mb-0 ">
         @include('components.flash')

@@ -7,7 +7,7 @@
     if ($lead->category == 'Leads') {
         $leadsClass = 'active';
         // $pendingClass = 'active';
-    } else if ($lead->category == 'Pending') {
+    } else if ($lead->category == 'Student') {
         $leadsClass = 'complete';
         $pendingClass = 'active';
         // $admissionClass = 'active';
@@ -57,7 +57,7 @@
 
                 <div class="col-md-3 ms-progressbar-step {{$pendingClass}}">
                     <!-- complete -->
-                    <div class="text-center ms-progressbar-step-number">Pending</div>
+                    <div class="text-center ms-progressbar-step-number">Student</div>
                     <div class="progress">
                         <div class="progress-bar"></div>
                     </div>
@@ -318,7 +318,7 @@
 
 
                     let pendingSubmenu = ''
-                    for (let subcategory of data['Pending']) {
+                    for (let subcategory of data['Student']) {
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }

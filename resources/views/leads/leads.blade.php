@@ -79,12 +79,13 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Purpose</th>
                                 @if (Auth::user()->hasRole('super-admin'))
                                 <th>Counsellor</th>
                                 @endif
-                                <th>Lead Created</th>
+                                <!-- <th>Lead Created</th> -->
                                 @if (Auth::user()->hasRole('super-admin'))
-                                <th>Created By</th>
+                                <!-- <th>Created By</th> -->
                                 @endif
                                 <th>Lead Status</th>
                                 <th>Action</th>
@@ -198,14 +199,24 @@
                                                 <option value="" selected>Filter Counsellor</option>
                                             </select>`);
                                 break;
-                            case 'Created By':
-                                $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Creator</option>
+                            case 'Purpose':
+                                $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Purpose</option>
+												<option value="English Teaching">Unknown</option>
+												<option value="English Teaching">English Teaching</option>
+												<option value="Study Abroad">Study Abroad</option>
+												<!-- <option value="Not Potential">Not Potential</option> -->
+										
                                             </select>`);
                                 break;
-                            case 'Lead Created':
-                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
-                                break;
+                                // case 'Created By':
+                                //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                //                     <option value="" selected>Filter Creator</option>
+                                //                 </select>`);
+                                //     break;
+                                // case 'Lead Created':
+                                //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                //     break;
                             case '#':
                                 $(cell).html(title);
                                 break;
@@ -286,14 +297,17 @@
                     data: 'mobile'
                 },
                 {
+                    data: 'purpose'
+                },
+                {
                     data: 'owner'
                 },
-                {
-                    data: 'created_at'
-                },
-                {
-                    data: 'created_by'
-                },
+                // {
+                //     data: 'created_at'
+                // },
+                // {
+                //     data: 'created_by'
+                // },
                 {
                     data: 'status'
                 },
@@ -357,9 +371,19 @@
                                                 <option value="" selected>Filter Counsellor</option>
                                             </select>`);
                                 break;
-                            case 'Lead Created':
-                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                            case 'Purpose':
+                                $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Purpose</option>
+												<option value="English Teaching">Unknown</option>
+												<option value="English Teaching">English Teaching</option>
+												<option value="Study Abroad">Study Abroad</option>
+												<!-- <option value="Not Potential">Not Potential</option> -->
+										
+                                            </select>`);
                                 break;
+                                // case 'Lead Created':
+                                //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                //     break;
                             case '#':
                                 $(cell).html(title);
                                 break;
@@ -438,8 +462,11 @@
                     data: 'mobile'
                 },
                 {
-                    data: 'created_at'
+                    data: 'purpose'
                 },
+                // {
+                //     data: 'created_at'
+                // },
                 {
                     data: 'status'
                 },
@@ -585,9 +612,9 @@
 </script>
 
 <script>
-    $(document).ready(function() {
-        getCounsellors();
-    });
+    // $(document).ready(function() {
+    //     getCounsellors();
+    // });
 
     function getOwners() {
         $.ajax({

@@ -19,4 +19,8 @@ class Report extends Model
     {
         return $this->belongsTo(User::class,'counselor_id');
     }
+    public function remark()
+    {
+        return $this->belongsTo(Remarks::class,'remarks_id');
+    }
 }

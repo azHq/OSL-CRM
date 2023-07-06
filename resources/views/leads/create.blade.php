@@ -77,11 +77,11 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Student Status</label>
+											<label class="col-form-label">Purpose</label>
 											<select class=" form-control form-select" name="status">
-												<option value="Unknown">Unknown</option>
-												<option value="Potential">Potential</option>
-												<option value="Not Potential">Not Potential</option>
+												<option value="English Teaching">English Teaching</option>
+												<option value="Study Abroad">Study Abroad</option>
+												<!-- <option value="Not Potential">Not Potential</option> -->
 											</select>
 										</div>
 									</div>
@@ -193,6 +193,15 @@
 									</div>
 								</div>
 							</div>
+							<div class="col">
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<label class="col-form-label">Remarks</label>
+											<textarea  id="edit-remarks" rows="2" class="form-control" name="remarks" placeholder="Add Remarks">
+											</textarea>
+										</div>
+									</div>
+								</div>
 							<div class="text-center py-3">
 								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
 								<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>

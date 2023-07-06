@@ -62,7 +62,7 @@
 								</div>
 							</div>
 						</div>
-						<p class="inovices-all"> Pendings <span></span></p>
+						<p class="inovices-all"> Students <span></span></p>
 					</div>
 				</div>
 			</a>

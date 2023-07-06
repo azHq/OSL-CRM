@@ -110,7 +110,7 @@
 								</div>
 							</div>
 
-                            <input type="hidden" id="lead-id" class="form-control" name="lead_id" required>
+                            <input type="hidden" id="lead-id" class="form-control" name="lead_id" required value="{{Route::current()->parameter('id')}}">
 
 							<div class="text-center py-3">
 								<button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Save</button>&nbsp;&nbsp;
@@ -130,7 +130,7 @@
 @if (Route::current()->hasParameter('id'))
     <script>
         $(document).ready(function(){
-            getLead({{Route::current()->parameter('id')}});
+            getLead($('#lead_id').val());
         });
     </script>
 @endif

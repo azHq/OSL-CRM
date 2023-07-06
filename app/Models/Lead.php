@@ -40,7 +40,7 @@ class Lead extends Model
                 $updatedFields .= (' ' . $key . ',');
             }
             NewLog::create('Lead Updated', 'Lead "' . $lead->name . '" has been updated. Changed fields are' . $updatedFields . '.');
-            NewReportEntry::create('Lead Created','Lead "' . $lead->name . '" has been updated. Changed fields are' . $updatedFields . '.', 'Lead_Update', $lead->id, $lead->creator_id);
+            NewReportEntry::create('Lead Updated','Lead "' . $lead->name . '" has been updated. Changed fields are' . $updatedFields . '.', 'Lead_Update', $lead->id, $lead->creator_id);
         });
 
         self::deleted(function ($lead) {
@@ -71,7 +71,7 @@ class Lead extends Model
 
     public function report()
     {
-        return $this->hasMany(Report::class,'leads_id');
+        return $this->hasMany(Report::class,'leads_id')->orderBy('created_at', 'desc');
     }
 
     public function applications()

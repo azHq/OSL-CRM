@@ -12,51 +12,112 @@
 
 @include('components.flash')
 
-<div class="page-header pt-3 mb-0 ">
+<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+    <li class="nav-item"><a class="nav-link active" href="#bottom-justified-tab1" data-bs-toggle="tab">Universities</a></li>
+    <li class="nav-item"><a class="nav-link" href="#bottom-justified-tab2" data-bs-toggle="tab">Countries</a></li>
+</ul>
 
-    <div class="row">
-        <div class="col-5">
-            <ul class="list-inline-item pl-0">
+<div class="tab-content">
+    <div class="tab-pane show active" id="bottom-justified-tab1">
+        <div class="page-header pt-3 mb-0 ">
 
-            </ul>
-        </div>
-        <div class="col-1">
+            <div class="row">
+                <div class="col-5">
+                    <ul class="list-inline-item pl-0">
 
-        </div>
-        <div class="col text-end">
-            <ul class="list-inline-item pl-0">
-                <li class="list-inline-item">
-                    <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-university" data-bs-toggle="modal" data-bs-target="#add_university">
-                        <i class="fa fa-plus" aria-hidden="true"></i> New University
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-<!-- Content Starts -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mb-0">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Created At</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                    </ul>
+                </div>
+                <div class="col-1">
 
-                    </table>
+                </div>
+                <div class="col text-end">
+                    <ul class="list-inline-item pl-0">
+                        <li class="list-inline-item">
+                            <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-university" data-bs-toggle="modal" data-bs-target="#add_university">
+                                <i class="fa fa-plus" aria-hidden="true"></i> New University
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+        <!-- Content Starts -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Created At</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Content End -->
     </div>
+    <div class="tab-pane" id="bottom-justified-tab2">
+        <div class="page-header pt-3 mb-0 ">
+
+            <div class="row">
+                <div class="col-5">
+                    <ul class="list-inline-item pl-0">
+
+                    </ul>
+                </div>
+                <div class="col-1">
+
+                </div>
+                <div class="col text-end">
+                    <ul class="list-inline-item pl-0">
+                        <li class="list-inline-item">
+                            <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-country" data-bs-toggle="modal" data-bs-target="#add_university">
+                                <i class="fa fa-plus" aria-hidden="true"></i> New Country
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Content Starts -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="myTable-2" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Created At</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Content End -->
+    </div>
+
 </div>
-<!-- /Content End -->
+
+
+
+
 
 
 @component('universities.create')

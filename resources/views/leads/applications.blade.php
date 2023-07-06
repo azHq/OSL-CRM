@@ -29,7 +29,7 @@
         <div class="card mb-0">
             <div class="card-body">
                 <div class="table-responsive">
-                    <input hidden id="lead_id" value="{{$leadId}}">
+                    <input hidden id="lead_id" value="{{$lead->id}}">
                     <table id="myApplicationTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
                         <thead>
                             <tr>
@@ -68,8 +68,9 @@
 @if(Auth::user()->hasRole('super-admin'))
 <script>
     function getApplications() {
-        let url = "{{ route('applications.list') }}"
-
+        let url = "{{ route('applications.listByLeadId' ,'lead_id') }}"
+        let lead_id = $('#lead_id').val()
+        url = url.replace('lead_id', lead_id)
         $("#myApplicationTable").dataTable().fnDestroy();
         $('#myApplicationTable thead tr').clone(true).addClass('filters').appendTo('#myApplicationTable thead');
         var table = $('#myApplicationTable').dataTable({

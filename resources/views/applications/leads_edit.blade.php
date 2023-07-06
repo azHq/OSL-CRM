@@ -74,11 +74,11 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Student Status</label>
-											<select id="edit-lead-status" class=" form-control form-select" name="status">
-												<option value="Unknown">Unknown</option>
-												<option value="Potential">Potential</option>
-												<option value="Not Potential">Not Potential</option>
+											<label class="col-form-label">Purpose</label>
+											<select class=" form-control form-select" name="status">
+												<option value="English Teaching">English Teaching</option>
+												<option value="Study Abroad">Study Abroad</option>
+												<!-- <option value="Not Potential">Not Potential</option> -->
 											</select>
 										</div>
 									</div>
@@ -166,7 +166,7 @@
 											<div class="col-sm-12">
 												<label class="col-form-label">Category</label>
 												<select id="lead-edit-category" class=" form-control form-select" name="category_id">
-													
+
 												</select>
 											</div>
 										</div>

@@ -34,10 +34,10 @@
             console.error('Error:', error)
         }
     </script>
-  {!! htmlScriptTagJsApi([
+  <!-- {!! htmlScriptTagJsApi([
     'callback_then' => 'callbackThen',
     'callback_catch' => 'callbackCatch',
-]) !!}
+]) !!} -->
 </head>
 
 <body class="">

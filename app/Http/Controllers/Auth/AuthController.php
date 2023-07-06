@@ -188,6 +188,9 @@ class AuthController extends Controller
                     'password' => Hash::make($request['password']),
                     'status' => 'Active'
                 ]);
+                if (Auth::user()) {
+                    Auth::logout();
+                }
                 return Redirect('student-login');
             } else {
                 return Redirect::back()->with('error', 'Password Mismatch');

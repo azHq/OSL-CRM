@@ -31,7 +31,7 @@
                     <p class="font-weight-bold">{{$student->email}}</p>
                 </div>
                 <div class="col">
-                    <span>Student Status</span>
+                    <span>Purpose</span>
                     <p class="font-weight-bold">{{$student->status}}</p>
                 </div>
                 <div class="col-1">

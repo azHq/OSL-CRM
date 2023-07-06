@@ -7,7 +7,7 @@
     if ($lead->category == 'Leads') {
         $leadsClass = 'active';
         // $pendingClass = 'active';
-    } else if ($lead->category == 'Pending') {
+    } else if ($lead->category == 'Student') {
         $leadsClass = 'complete';
         $pendingClass = 'active';
         // $admissionClass = 'active';
@@ -60,7 +60,7 @@
 
                 <div class="col-md-3 ms-progressbar-step {{$pendingClass}}">
                     <!-- complete -->
-                    <div class="text-center ms-progressbar-step-number">Pending</div>
+                    <div class="text-center ms-progressbar-step-number">Student</div>
                     <div class="progress">
                         <div class="progress-bar"></div>
                     </div>
@@ -234,7 +234,7 @@
         @endif
     </div>
     <div>
-        @include('applications.applications')
+        @include('leads.applications')
     </div>
     <div class="crms-title row bg-white mt-4">
         <div class="col  p-0">
@@ -257,6 +257,7 @@
                                         <th>Title</th>
                                         <th>Type</th>
                                         <th>Description</th>
+                                        <th>Remarks</th>
                                         <th>Time</th>
                                         <th>Lead</th>
                                         <th>Counselor</th>
@@ -268,6 +269,12 @@
                                         <td>{{ $report->title }}</td>
                                         <td>{{ $report->type }}</td>
                                         <td>{{ $report->description }}</td>
+
+                                        @if($report->remarks)
+                                        <td>{{ $report->remarks->value }}</td>
+                                        @else
+                                        <td></td>
+                                        @endif
                                         <td>{{ $report->created_at }}</td>
                                         <td>{{ $lead->name }}</td>
                                         <td>{{ $report->user->name }}</td>
@@ -325,7 +332,7 @@
 
 
                     let pendingSubmenu = ''
-                    for (let subcategory of data['Pending']) {
+                    for (let subcategory of data['Student']) {
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }

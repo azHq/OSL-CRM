@@ -8,6 +8,7 @@ use App\Helper\NewLog;
 use App\Imports\LeadsImport;
 use App\Models\Application;
 use App\Models\Category;
+use App\Models\Remarks;
 use App\Models\Lead;
 use App\Models\Report;
 use App\Models\Student;
@@ -70,6 +71,14 @@ class LeadController extends Controller
                 ->editColumn('mobile', function ($row) {
                     return $row->mobile;
                 })
+                ->editColumn('purpose', function ($row) {
+                    $value = $row->status;
+                    if ($value == 'Potential' || $value == 'Not Potential') {
+                        return '';
+                    } else {
+                        return '<label class="badge badge-success text-center">' . $row->status . '</label>';
+                    }
+                })
                 ->editColumn('email', function ($row) {
                     return $row->email;
                 })
@@ -95,7 +104,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'status', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -118,6 +127,14 @@ class LeadController extends Controller
                 })
                 ->editColumn('mobile', function ($row) {
                     return $row->mobile;
+                })
+                ->editColumn('purpose', function ($row) {
+                    $value = $row->status;
+                    if ($value == 'Potential' || $value == 'Not Potential') {
+                        return '';
+                    } else {
+                        return '<label class="badge badge-success text-center">' . $row->status . '</label>';
+                    }
                 })
                 ->editColumn('email', function ($row) {
                     return $row->email;
@@ -149,7 +166,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'status', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -165,7 +182,12 @@ class LeadController extends Controller
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
-            $lead->id =$id;
+            foreach( $lead->report as $report){
+                if($report->remarks_id){
+                    $report['remarks'] = Remarks::find($report->remarks_id);
+                }
+            }
+            $lead->id = $id;
             return view('leads.view', compact('lead'));
         }
 
@@ -301,9 +323,14 @@ class LeadController extends Controller
             $leadCounsellorIdOld = $lead->owner_id;
             abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             if ($lead->owner_id) {
-                $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id'));
+                $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id', 'remarks'));
             }
-            $lead->update($request->except('_token', '_method', 'category_id'));
+
+            $lead->update($request->except('_token', '_method', 'category_id', 'remarks', 'remarks_id'));
+            $comment['value'] = $request->remarks;
+            $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
+            Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks_id' => $remarks->id]);
+
             $lead = Lead::find($id);
             if ($leadCounsellorIdOld != $lead->owner_id && $lead->owner_id) {
                 LeadAssignedEvent::dispatch($lead);
@@ -329,25 +356,34 @@ class LeadController extends Controller
             unset($data['creator_id']);
             unset($data['subcategory_id']);
             $data['lead_id'] = $lead->id;
-            $student = Student::create($data);
-            $student['email'] = $data->email;
-            $student['mobile'] = $data->mobile;
-            $student['password'] = $data->mobile;
-            $student['name'] = $data->name;
-            $student['status'] = 'Pending';
-            $roleId = Role::where('name', 'student')->first()->id;
-            $student['role_id'] = $roleId;
-            $user = User::create($student);
-            $request['name'] = $data->name;
-            $request['subject'] = 'Pass Reset Request for OSL_CRM';
-            $request['email'] = $student['email'];
-            $request['email_body'] = "
-            Please View the link & Reset
-            https://eschool.codes/reset-password/$user->id
-            ";
-            $this->sendMail($request);
-            $role = Role::findByName('student');
-            $user->assignRole($role);
+            $foundStudent = Student::where('lead_id', $lead->id)->first();
+            if (!$foundStudent->id) {
+                $student = Student::create($data);
+                $student['email'] = $data->email;
+                $student['mobile'] = $data->mobile;
+                $student['password'] = $data->mobile;
+                $student['name'] = $data->name;
+                $student['status'] = 'Pending';
+                $roleId = Role::where('name', 'student')->first()->id;
+                $student['role_id'] = $roleId;
+                $user = User::create($student);
+                $request['name'] = $data->name;
+                $request['subject'] = 'Pass Reset Request for OSL_CRM';
+                $request['email'] = $student['email'];
+                $request['email_body'] = "
+                Please View the link & Reset
+               http://127.0.0.1:8000/reset-password/$user->id
+                ";
+                $this->sendMail($request);
+                $role = Role::findByName('student');
+                $user->assignRole($role);
+                $subcat = Subcategory::where('name', 'Appointment Book')->first();
+                $comment['value'] = 'Lead Converted to Student';
+                $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
+                Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks' => $remarks->id]);
+            }
+
+
             NewLog::create('Lead Converted To Student', 'Lead "' . $lead->name . '" has been converted to student.');
             Session::flash('success', 'Lead converted successfully.');
             // return response('Lead converted successfully.');
@@ -405,26 +441,34 @@ class LeadController extends Controller
                 unset($data['creator_id']);
                 unset($data['subcategory_id']);
                 $data['lead_id'] = $lead->id;
-                $student = Student::create($data);
-                $userData['email'] = $student->email;
-                $userData['mobile'] = $student->mobile;
-                $userData['password'] = $student->mobile;
-                $userData['name'] = $student->name;
-                $userData['status'] = 'Pending';
-                $roleId = Role::where('name', 'student')->first()->id;
-                $userData['role_id'] = $roleId;
-                $user = User::create($userData);
-                $request['name'] = $student->name;
-                $request['subject'] = 'Pass Reset Request for OSL_CRM';
-                $request['email'] = $userData['email'];
-                $request['email_body'] = "
-                Please View the link & Reset
-                https://eschool.codes/reset-password/$user->id
-                ";
-                $this->sendMail($request);
-                $role = Role::findByName('student');
-                $user->assignRole($role);
-                Lead::find($lead->id)->update(['status' => 'Student']);
+                $foundStudent = Student::where('lead_id', $lead->id)->first();
+                if (!$foundStudent) {
+                    $student = Student::create($data);
+                    $userData['email'] = $student->email;
+                    $userData['mobile'] = $student->mobile;
+                    $userData['password'] = $student->mobile;
+                    $userData['name'] = $student->name;
+                    $userData['status'] = 'Pending';
+                    $roleId = Role::where('name', 'student')->first()->id;
+                    $userData['role_id'] = $roleId;
+                    $user = User::create($userData);
+                    $request['name'] = $student->name;
+                    $request['subject'] = 'Pass Reset Request for OSL_CRM';
+                    $request['email'] = $userData['email'];
+                    $request['email_body'] = "
+                    Please View the link & Reset
+                   http://127.0.0.1:8000/reset-password/$user->id
+                    ";
+                    $this->sendMail($request);
+                    $role = Role::findByName('student');
+                    $user->assignRole($role);
+                    $subcat = Subcategory::where('name', 'Appointment Book')->first();
+
+                    $comment['value'] = 'Lead Converted to Student';
+                    $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
+                    Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks' => $remarks->id]);
+                }
+
                 NewLog::create('Lead Converted To Student', 'Lead "' . $student->name . '" has been converted to student.');
             }
             NewLog::create('Multiple Leads Converted', 'Multiple Leads have been converted to students.');
@@ -445,10 +489,14 @@ class LeadController extends Controller
         ]);
         try {
             $leads = Lead::find($request->lead_ids);
+            $comment['value'] = 'Lead Owner Changed';
+            $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
+
             foreach ($leads as $lead) {
                 $lead->update([
                     'owner_id' => $request->counsellor_id
                 ]);
+                Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks' => $remarks->id]);
                 $lead = Lead::find($lead->id);
                 LeadAssignedEvent::dispatch($lead);
                 NewLog::create('Lead Assigned', 'Lead "' . $lead->name . '" has been assigned to ' . $lead->owner->name . '.');

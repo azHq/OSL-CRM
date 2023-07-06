@@ -16,6 +16,7 @@ class NewReportEntry
                 'type' => $type,
                 'leads_id' => $lead_id,
                 'counselor_id' => $counselor_id,
+                'remarks_id' => null,
                 'mechanism' => 'automatic',
                 'time' => date('d-m-y h:i:s')
             ]);

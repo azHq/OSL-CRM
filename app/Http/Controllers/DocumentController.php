@@ -46,7 +46,7 @@ class DocumentController extends Controller
                     return $row->email;
                 })
                 ->editColumn('owner', function ($row) {
-                    return $row->lead->owner ? $row->lead->owner->name : 'Unassigned';
+                    return $row->lead && $row->lead->owner ? $row->lead->owner->name : 'Unassigned';
                 })
                 ->editColumn('progress', function ($row) {
                     return '<span>' . $row->uploaded_documents_no . ' / 11 </span>
