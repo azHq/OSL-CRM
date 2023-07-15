@@ -678,8 +678,10 @@
     <script>
         function loadFile(e, btnId) {
             if (e.target.value != "") {
-                $('#' + btnId).removeClass('d-none');
-                file = e.target.files[0];
+                if (e.target.files[0].size <= 5 * 1000 * 1000) {
+                    $('#' + btnId).removeClass('d-none');
+                    file = e.target.files[0];
+                }
             }
         }
     </script>

@@ -22,6 +22,12 @@
 										<div class="col-md-12">
 											<input id="edit-university-name" class="form-control" type="text" name="name" required>
 										</div>
+										<div class="col-md-12">
+											<select id="edit-country" name="country_id" class=" form-select focus-none mt-2 d-inline-block" style="width:max-content;">
+												<option value="" selected>Select Country</option>
+											</select>
+										</div>
+
 									</div>
 								</div>
 							</div>
@@ -41,6 +47,23 @@
 </div>
 
 <script>
+	$(document).ready(function() {
+		$.ajax({
+			type: 'GET',
+			url: "{{ route('countries.info') }}",
+			success: function(countries) {
+				console.log({
+					countries
+				})
+				var options = '<option value="" selected>Select Country</option>';
+				countries.forEach(function(country) {
+					options += '<option value="' + country.id + '">' + country.name + '</option>';
+				});
+				$('#edit-country').html(options);
+
+			}
+		});
+	});
 	$('body').on('click', '.edit-university', function() {
 		var id = $(this).data('id');
 		getUniversity(id);
@@ -56,7 +79,11 @@
 			type: 'GET',
 			url: url,
 			success: function(data) {
+				console.log({
+					data
+				})
 				$('#edit-university-name').val(data.name);
+				$('#edit-country').val(data.country_id);
 			}
 		});
 	}

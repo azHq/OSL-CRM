@@ -11,13 +11,14 @@ class Country extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $table = 'countries';
 
     public static function boot()
     {
         parent::boot();
 
         self::created(function ($country) {
-            NewLog::create('New Univesity added', 'A university "' . $country->name . '" has been added.');
+            NewLog::create('New Country added', 'A university "' . $country->name . '" has been added.');
         });
 
         self::updated(function ($country) {
@@ -25,16 +26,13 @@ class Country extends Model
             foreach ($country->getDirty() as $key => $value) {
                 $updatedFields .= (' ' . $key . ',');
             }
-            NewLog::create('Univesity Updated', 'Univesity "' . $country->name . '" has been updated. Changed fields are' . $updatedFields . '.');
+            NewLog::create('Country Updated', 'Country "' . $country->name . '" has been updated. Changed fields are' . $updatedFields . '.');
         });
 
-        self::deleted(function ($university) {
-            NewLog::create('Univesity Deleted', 'Univesity "' . $university->name . '" has been deleted.');
+        self::deleted(function ($country) {
+            NewLog::create('Country Deleted', 'Country "' . $country->name . '" has been deleted.');
         });
     }
 
-    public function applications()
-    {
-        return $this->hasMany(Application::class);
-    }
+
 }

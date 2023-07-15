@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\University;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -12,23 +12,28 @@ class CountryController extends Controller
     public function index(Request $request)
     {
         if (\request()->ajax()) {
-            return view('universities.index');
+            return view('countries.index');
         }
         return view('layout.mainlayout');
+    }
+
+    public function getCountries(){
+        $countries = Country::orderBy('name', 'asc')->get();
+        return $countries;
     }
 
     public function list()
     {
         if (\request()->ajax()) {
-            $universities = University::orderBy('name', 'asc');
+            $countries = Country::orderBy('name', 'asc');
             if (\request('filter_search') != '') {
-                $universities->where(function ($query) {
+                $countries->where(function ($query) {
                     $query->where('name', 'like', '%' . \request('filter_search') . '%');
                 });
             }
-            $universities = $universities->get();
+            $countries = $countries->get();
 
-            return datatables()->of($universities)
+            return datatables()->of($countries)
                 ->addColumn('name', function ($row) {
                     return ucfirst($row->name);
                 })
@@ -37,8 +42,8 @@ class CountryController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '';
-                    $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_university" class="edit-university lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    $action .= '<a href="#" onclick="universityDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
+                    $action .= '<button  data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_university" class="edit-country lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></button>';
+                    $action .= '<button  onclick="countryDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></button>';
                     return $action;
                 })
                 ->addIndexColumn()
@@ -50,8 +55,8 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         try {
-            University::create($request->all());
-            return Redirect::back()->with('success', 'University created successfully.');
+            Country::create($request->all());
+            return Redirect::back()->with('success', 'Country created successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }
@@ -60,17 +65,17 @@ class CountryController extends Controller
     public function edit($id)
     {
         if (\request()->ajax()) {
-            $university = University::find($id);
-            return response()->json($university);
+            $country = Country::find($id);
+            return response()->json($country);
         }
     }
 
     public function update($id, Request $request)
     {
         try {
-            $university = University::find($id);
-            $university->update($request->except('_token', '_method'));
-            return Redirect::route('universities.index')->with('success', 'University updated successfully.');
+            $country = Country::find($id);
+            $country->update($request->except('_token', '_method'));
+            return Redirect::route('countries.index')->with('success', 'Country updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }
@@ -79,10 +84,10 @@ class CountryController extends Controller
     public function delete($id, Request $request)
     {
         try {
-            $university = University::find($id);
-            $university->delete();
-            Session::flash('success', 'University deleted successfully.');
-            return response('University deleted successfully.');
+            $country = Country::find($id);
+            $country->delete();
+            Session::flash('success', 'Country deleted successfully.');
+            return response('Country deleted successfully.');
         } catch (\Exception $e) {
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());

@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\MetaFormsController;
 use App\Http\Controllers\ParameterController;
 use Illuminate\Support\Facades\Route;
@@ -78,6 +79,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('student-profile', [LeadController::class, 'studentProfile'])->name('profile.student');
     Route::get('getSubcategories', [LeadController::class, 'getSubcategoriesList'])->name('leads.info');
     Route::get('getLeadsFromMeta', [CampaignController::class, 'getCampaigns'])->name('leads.from.meta');
+    Route::get('getDuplicateLeadsFromMeta/{lead_id}', [CampaignController::class, 'getDuplicateLeads'])->name('duplicate.leads.meta');
+    Route::post('getDuplicateLeadsValues', [CampaignController::class, 'getLeadsValues'])->name('leads.field.values');
+    Route::post('updateAllLeads', [CampaignController::class, 'updateAllLeads'])->name('leads.update.all');
+    Route::post('updateLeadsById', [CampaignController::class, 'updateLeadsById'])->name('leads.update.id');
+    Route::post('checkDuplicate', [LeadController::class, 'checkDuplicate'])->name('leads.check.duplicate');
     Route::get('getPageName/{lead_id}', [CampaignController::class, 'getLeads'])->name('leads.getLeads.meta');
     Route::post('mapFields', [CampaignController::class, 'mapFields'])->name('leads.map.fields');
     Route::get('meta', [CampaignController::class, 'index'])->name('leads.meta');
@@ -150,7 +156,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::post('reports', [ReportController::class, 'store'])->name('reports.store');
     Route::get('reports/list', [ReportController::class, 'list'])->name('reports.list');
+    Route::get('reports/count', [ReportController::class, 'reportList'])->name('reports.count');
     Route::get('reports/leads-statistics', [ReportController::class, 'leadsStatistics'])->name('reports.leads-statistics');
+
+    Route::get('countries/list', [CountryController::class, 'list'])->name('countries.list');
+    Route::get('countries', [CountryController::class, 'index'])->name('countries.index');
+    Route::post('countries', [CountryController::class, 'store'])->name('countries.store');
+    Route::get('countries/{id}/edit', [CountryController::class, 'edit'])->name('countries.edit');
+    Route::get('countries/{id}/delete', [CountryController::class, 'delete'])->name('countries.delete');
+    Route::put('countries/{id}', [CountryController::class, 'update'])->name('countries.update');
+    Route::get('getCountries', [CountryController::class, 'getCountries'])->name('countries.info');
 
     Route::get('universities/list', [UniversityController::class, 'list'])->name('universities.list');
     Route::get('universities', [UniversityController::class, 'index'])->name('universities.index');

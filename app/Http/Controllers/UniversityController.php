@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\University;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -37,8 +38,8 @@ class UniversityController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '';
-                    $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_university" class="edit-university lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    $action .= '<a href="#" onclick="universityDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
+                    $action .= '<button  data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_university" class="edit-university lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></button>';
+                    $action .= '<button onclick="universityDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></button>';
                     return $action;
                 })
                 ->addIndexColumn()

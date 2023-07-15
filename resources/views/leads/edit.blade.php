@@ -186,7 +186,7 @@
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label class="col-form-label">Remarks</label>
-											<textarea  id="edit-remarks" rows="2" class="form-control" name="remarks" placeholder="Add Remarks">
+											<textarea id="edit-remarks" rows="2" class="form-control" name="remarks" placeholder="Add Remarks">
 											</textarea>
 										</div>
 									</div>
@@ -225,19 +225,41 @@
 			url: url,
 			success: function(data) {
 				var lead = data.lead;
+				console.log({
+					lead
+				})
+
 				$('#edit-lead-name').val(lead.name);
 				$('#edit-lead-email').val(lead.email);
 				$('#edit-lead-mobile').val(lead.mobile);
 				$('#edit-lead-intake_month').val(lead.intake_month);
 				$('#edit-lead-status').val(lead.status);
 				$('#edit-lead-intake_year').val(lead.intake_year);
-				$('#edit-lead-last_education').val(lead.last_education);
 				$('#edit-lead-completion_date').val(lead.completion_date);
 				$('#edit-lead-education_details').val(lead.education_details);
 				$('#edit-lead-english').val(lead.english);
 				$('#edit-lead-english_result').val(lead.english_result);
 				$('#edit-lead-job_experience').val(lead.job_experience);
 				$('#edit-lead-owner_id').val(lead.owner_id);
+				let pre_html = $('#edit-lead-last_education').html()
+				let next_html = `
+					<option value="${lead.last_education}">${lead.last_education}</option>
+					${pre_html}
+				`
+				$('#edit-lead-last_education').html(next_html)
+
+				$('#edit-lead-name').html(next_html)
+
+				pre_html = $('#edit-lead-english').html()
+				next_html = `
+					<option value="${lead.english}">${lead.english}</option>
+					${pre_html}
+				`
+				$('#edit-lead-english').html(next_html)
+
+
+
+
 
 				var options = '';
 				data.categories.forEach(function(category) {

@@ -74,17 +74,31 @@ class CampaignController extends Controller
         try {
 
             $leads = $fbGraphService->getLeads($request['lead_id']);
-
+            $duplicateLeads = [];
             foreach ($leads as $lead) {
                 $lead_data = [];
-                $lead_data['creator_id'] = Auth::id();
+                $lead_data['insert_type'] = "from_meta";
+
                 foreach ($lead["field_data"] as $field) {
                     if ($request[$field['name']] && $request[$field['name']] != 'none') {
                         $lead_data[$request[$field['name']]] = $field['values'][0];
                     }
                 }
-                $isLeadExist = Lead::where('mobile', $lead_data['mobile'])->orWhere('email', $lead_data['email'])->get();
-                if(count($isLeadExist) == 0){
+
+                $foundLead = Lead::where('mobile', $lead_data['mobile'])->orWhere('email', $lead_data['email'])->first();
+
+                if ($foundLead) {
+                    foreach ($foundLead->toArray() as $key => $value) {
+                        if (isset($foundLead[$key]) && isset($lead_data[$key])) {
+                            $lead_data[$key] = str_replace("'", "", $lead_data[$key]);
+                            if ($foundLead[$key]  !== $lead_data[$key]) {
+                                array_push($duplicateLeads, $lead_data);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    $lead_data['creator_id'] = Auth::id();
                     Lead::create($lead_data);
                 }
             }
@@ -95,8 +109,9 @@ class CampaignController extends Controller
             $metadata['mapped'] = 1;
             $metadata['mapped_by'] = Auth::id();
             MetaLeadgenForm::create($metadata);
-            return Redirect::back()->with('success', 'Lead created successfully.');
+            return $duplicateLeads;
         } catch (\Exception $e) {
+            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
@@ -120,5 +135,83 @@ class CampaignController extends Controller
     {
         $meta = MetaCredential::first();
         return $meta;
+    }
+
+    public function getDuplicateLeads(Request $request, FacebookGraphService $fbGraphService)
+    {
+        $leads = $fbGraphService->getLeads($request['lead_id']);
+        $duplicateLeads = [];
+        foreach ($leads as $lead) {
+            $lead_data = [];
+            foreach ($lead["field_data"] as $field) {
+                $lead_data[$field['name']] = $field['values'][0];
+            }
+            $foundLead = Lead::where('mobile', $lead_data['mobile'])->orWhere('email', $lead_data['email'])->first();
+            if ($foundLead) {
+                if (
+                    $foundLead['english'] !== $lead_data['english_proficiency?'] ||
+                    $foundLead['name'] !== $lead_data['full_name'] ||
+                    $foundLead['last_education'] !== $lead_data['last_education?'] ||
+                    $foundLead['email'] !== $lead_data['email'] ||
+                    $foundLead['mobile'] !== $lead_data['phone_number']
+
+                ) {
+                    array_push($duplicateLeads, $lead_data);
+                }
+            }
+        }
+        return $duplicateLeads;
+    }
+
+    public function getLeadsValues(Request $request)
+    {
+        $data = [];
+        $lead = Lead::where('mobile', $request['valueFromLead']['mobile'])->orWhere('email', $request['valueFromLead']['email'])->first();
+        if ($lead) {
+            $data['id'] = $lead->id;
+            $data['values'] = [];
+            foreach ($lead->toArray() as $key => $value) {
+                if ($key != 'id' && $key != 'created_at' && $key != 'updated_at' && $key != 'owner_id' && $key != 'subcategory_id' && $key != 'creator_id') {
+                    $lead_data = [];
+                    $lead_data['name'] = $key;
+                    $lead_data['value'] = $key;
+                    $lead_data['previous'] = $lead[$key];
+                    $lead_data['newest'] = $lead[$key];
+                    if (isset($request['valueFromLead'][$key])) {
+                        $lead_data['newest'] = $request['valueFromLead'][$key];
+                    }
+                    array_push($data['values'], $lead_data);
+                }
+            }
+        }
+        return response()->json($data);
+    }
+
+    public function updateLeadsById(Request $request)
+    {
+        try {
+            $data = [];
+            foreach ($request['valueFromLead']['values'] as $item) {
+                $data[$item['value']] = $item['newest'];
+            }
+            Lead::find($request['valueFromLead']['id'])->update($data);
+            return Redirect::back()->with('success', 'Lead Updated successfully.');
+        } catch (\Exception $e) {
+            return Redirect::back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateAllLeads(Request $request)
+    {
+        try {
+            foreach ($request['valueFromLead'] as $lead) {
+                Lead::where('email', $lead['email'])->orWhere('mobile', $lead['mobile'])->update($lead);
+            }
+            return Redirect::back()->with('success', 'Lead Updated successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+
+            return Redirect::back()->with('error', $e->getMessage());
+        }
     }
 }

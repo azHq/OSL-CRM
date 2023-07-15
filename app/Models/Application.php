@@ -43,6 +43,11 @@ class Application extends Model
     {
         return $this->belongsTo(Lead::class);
     }
+    
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
 
     public function university()
     {

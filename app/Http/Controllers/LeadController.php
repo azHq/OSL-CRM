@@ -46,7 +46,26 @@ class LeadController extends Controller
         return view('layout.mainlayout');
     }
 
-
+    /**
+     * Encode array from latin1 to utf8 recursively
+     * @param $dat
+     * @return array|string
+     */
+    public static function convert_from_latin1_to_utf8_recursively($dat)
+    {
+        if (is_string($dat)) {
+            return mb_convert_encoding($dat, 'ISO-8859-1', 'UTF-8');
+        } elseif (is_array($dat)) {
+            $ret = [];
+            foreach ($dat as $i => $d) $ret[$i] = self::convert_from_latin1_to_utf8_recursively($d);
+            return $ret;
+        } elseif (is_object($dat)) {
+            foreach ($dat as $i => $d) $dat->$i = self::convert_from_latin1_to_utf8_recursively($d);
+            return $dat;
+        } else {
+            return $dat;
+        }
+    }
     public function list()
     {
         if (\request()->ajax()) {
@@ -62,6 +81,7 @@ class LeadController extends Controller
 
             return datatables()->of($data)
                 ->addColumn('name', function ($row) {
+                    $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
                     $data = '<a data-id="' . $row->id . '" href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">
                                 <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
                             </a>
@@ -182,8 +202,8 @@ class LeadController extends Controller
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
-            foreach( $lead->report as $report){
-                if($report->remarks_id){
+            foreach ($lead->report as $report) {
+                if ($report->remarks_id) {
                     $report['remarks'] = Remarks::find($report->remarks_id);
                 }
             }
@@ -242,6 +262,7 @@ class LeadController extends Controller
                 return Redirect::back()->with('error', 'Lead Already Exist with mobile or email.');
             }
         } catch (\Exception $e) {
+            dd($e);
             Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }
@@ -372,7 +393,7 @@ class LeadController extends Controller
                 $request['email'] = $student['email'];
                 $request['email_body'] = "
                 Please View the link & Reset
-               http://127.0.0.1:8000/reset-password/$user->id
+               https://oslcrm.com/reset-password/$user->id
                 ";
                 $this->sendMail($request);
                 $role = Role::findByName('student');
@@ -457,7 +478,7 @@ class LeadController extends Controller
                     $request['email'] = $userData['email'];
                     $request['email_body'] = "
                     Please View the link & Reset
-                   http://127.0.0.1:8000/reset-password/$user->id
+                   https://oslcrm.com/reset-password/$user->id
                     ";
                     $this->sendMail($request);
                     $role = Role::findByName('student');
@@ -532,7 +553,6 @@ class LeadController extends Controller
             });
             return Redirect::back()->with('success', 'Email sent successfully.');
         } catch (\Exception $e) {
-            dd($e);
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
@@ -567,6 +587,16 @@ class LeadController extends Controller
                 $data[$category->name] = $subcategories;
             }
             return response()->json($data);
+        }
+    }
+
+    public function checkDuplicate(Request $request)
+    {
+        try {
+            $lead = Lead::where('email', $request['email'])->orWhere('mobile', $request['mobile'])->first();
+            return response()->json($lead);
+        } catch (\Exception $e) {
+            return response($e->getMessage());
         }
     }
 }

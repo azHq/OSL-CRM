@@ -43,16 +43,19 @@ class Document extends Model
                 Lead::where('id', $document->lead_id)->update(['documents_pending' => true]);
             }
 
-            if (count($document->getDirty()) > 0) {
-                $updatedFields = $document->getDirty()[0];
-                NewLog::create('Document Uploaded', 'A New Document ' . $updatedFields . ' has been uploaded for lead "' . $document->lead->name . '".');
-            }
+            // if (count($document->getDirty()) > 0) {
+                $updatedFields = '';
+                foreach ($document->getDirty() as $key => $value) {
+                    $updatedFields .= (' ' . $key.',');
+                }
+                NewLog::create('Document Uploaded', 'A New Document ' . $updatedFields . ' has been uploaded for lead "' . $document->student->name . '".');
+            // }
         });
     }
 
 
-    public function lead()
+    public function student()
     {
-        return $this->belongsTo(Lead::class, 'lead_id');
+        return $this->belongsTo(Student::class, 'student_id');
     }
 }

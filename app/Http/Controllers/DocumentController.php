@@ -24,15 +24,45 @@ class DocumentController extends Controller
         return view('layout.mainlayout');
     }
 
-
+    /**
+     * Encode array from latin1 to utf8 recursively
+     * @param $dat
+     * @return array|string
+     */
+    public static function convert_from_latin1_to_utf8_recursively($dat)
+    {
+        if (is_string($dat)) {
+            return mb_convert_encoding($dat, 'ISO-8859-1', 'UTF-8');
+        } elseif (is_array($dat)) {
+            $ret = [];
+            foreach ($dat as $i => $d) $ret[$i] = self::convert_from_latin1_to_utf8_recursively($d);
+            return $ret;
+        } elseif (is_object($dat)) {
+            foreach ($dat as $i => $d) $dat->$i = self::convert_from_latin1_to_utf8_recursively($d);
+            return $dat;
+        } else {
+            return $dat;
+        }
+    }
     public function pendingDocuments()
     {
         if (\request()->ajax()) {
             $students = Student::where('documents_pending', true)->orderBy('created_at', 'desc');
             $students = $students->get();
+            $filteredStudents = [];
+            foreach ($students as $student) {
+                if (
+                    $student->lead->subcategory->name == 'Waiting for Documents' ||
+                    $student->lead->subcategory->name == 'Partial Documnets' ||
+                    $student->lead->subcategory->name == 'Document Received'
+                ) {
+                    array_push($filteredStudents, $student);
+                }
+            }
 
-            return datatables()->of($students)
+            return datatables()->of($filteredStudents)
                 ->addColumn('name', function ($row) {
+                    $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
                     $data = '<a href="' . route('students.view', $row->id) . '">
                                 <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
                             </a>
@@ -87,54 +117,93 @@ class DocumentController extends Controller
     public function uploadDocument($studentId, Request $request)
     {
         try {
-            $fileSize = $request->file('file')->getSize(); // in bytes
-            if ($fileSize <= 5 * 1024) {
-                $path = $request->file('file')->storeAs('students/' . $studentId, $request->name . '.' . $request->file('file')->extension());
-                $document = Document::where('student_id', $studentId)->first();
-                $document->update([$request->name => $path]);
-                return Redirect::back()->with('success', 'File Uploaded Successfully.');
-            } else {
-                return Redirect::back()->with('error', 'Fize Size exceeded');
-            }
+
+            $path = $request->file('file')->storeAs('students/' . $studentId, $request->name . '.' . $request->file('file')->extension());
+            $document = Document::where('student_id', $studentId)->first();
+            $document->update([$request->name => $path]);
+            return Redirect::back()->with('success', 'File Uploaded Successfully.');
         } catch (\Exception $e) {
+            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
-
     public function downloadDocument($studentId, Request $request)
     {
-        $lead = Document::where('student_id', $studentId)->first();
+        $student = Student::find($studentId);
         $path = "";
         switch ($request->name) {
-            case 'passport':
-                $path = $lead->passport;
+            case 'masters':
+                $path = $student->document->masters;
                 break;
-            case 'academics':
-                $path = $lead->academics;
+            case 'bachelors':
+                $path = $student->document->bachelors;
+                break;
+            case 'hsc':
+                $path = $student->document->hsc;
+                break;
+            case 'ssc':
+                $path = $student->document->ssc;
                 break;
             case 'cv':
-                $path = $lead->cv;
+                $path = $student->document->cv;
                 break;
-            case 'moi':
-                $path = $lead->moi;
-                break;
-            case 'recommendation_1':
-                $path = $lead->recommendation_1;
-                break;
-            case 'recommendation_2':
-                $path = $lead->recommendation_2;
-                break;
-            case 'job_experience':
-                $path = $lead->job_experience;
+            case 'passport':
+                $path = $student->document->passport;
                 break;
             case 'sop':
-                $path = $lead->sop;
+                $path = $student->document->sop;
                 break;
-            case 'others':
-                $path = $lead->recommendation_1;
+            case 'job_experience':
+                $path = $student->document->job_experience;
+                break;
+            case 'recommendation_1':
+                $path = $student->document->recommendation_1;
+                break;
+            case 'recommendation_2':
+                $path = $student->document->recommendation_2;
+                break;
+            case 'visa_refused':
+                $path = $student->document->visa_refused;
                 break;
         }
-        NewLog::create('Document Downloaded', 'A Document ' . $request->name . ' has been downloaded of student "' . $lead->name . '".');
+        NewLog::create('Document Downloaded', 'A Document ' . $request->name . ' has been downloaded of student "' . $student->name . '".');
         return Storage::download($path);
     }
+    // public function downloadDocument($studentId, Request $request)
+    // {
+    //     $lead = Document::where('student_id', $studentId)->first();
+    //     dd($request->name);
+    //     $path = "";
+    //     switch ($request->name) {
+    //         case 'passport':
+    //             $path = $lead->passport;
+    //             break;
+    //         case 'academics':
+    //             $path = $lead->academics;
+    //             break;
+    //         case 'cv':
+    //             $path = $lead->cv;
+    //             break;
+    //         case 'moi':
+    //             $path = $lead->moi;
+    //             break;
+    //         case 'recommendation_1':
+    //             $path = $lead->recommendation_1;
+    //             break;
+    //         case 'recommendation_2':
+    //             $path = $lead->recommendation_2;
+    //             break;
+    //         case 'job_experience':
+    //             $path = $lead->job_experience;
+    //             break;
+    //         case 'sop':
+    //             $path = $lead->sop;
+    //             break;
+    //         case 'others':
+    //             $path = $lead->recommendation_1;
+    //             break;
+    //     }
+    //     NewLog::create('Document Downloaded', 'A Document ' . $request->name . ' has been downloaded of student "' . $lead->name . '".');
+    //     return Storage::download($path);
+    // }
 }

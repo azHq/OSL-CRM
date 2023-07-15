@@ -80,7 +80,7 @@
                 <div class="col text-end">
                     <ul class="list-inline-item pl-0">
                         <li class="list-inline-item">
-                            <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-country" data-bs-toggle="modal" data-bs-target="#add_university">
+                            <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-country" data-bs-toggle="modal" data-bs-target="#add_country">
                                 <i class="fa fa-plus" aria-hidden="true"></i> New Country
                             </button>
                         </li>
@@ -130,10 +130,13 @@
 <script>
     $(document).ready(function() {
         getUniversities();
+        getCountries()
     });
 
     $('#filter-search').keyup(function() {
         getUniversities();
+        getCountries()
+
     });
 </script>
 
@@ -248,6 +251,117 @@
         });
         return table;
     }
+
+    function getCountries() {
+        $("#myTable-2").dataTable().fnDestroy();
+        $('#myTable-2 thead tr')
+            .clone(true)
+            .addClass('filters')
+            .appendTo('#myTable-2 thead');
+
+        var table = $('#myTable-2').DataTable({
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            orderCellsTop: true,
+            fixedHeader: true,
+            'columnDefs': [{
+                'targets': [0, -1],
+                'orderable': false,
+            }],
+            initComplete: function() {
+                var api = this.api();
+                api.columns().eq(0)
+                    .each(function(colIdx) {
+                        var cell = $('.filters th').eq(
+                            $(api.column(colIdx).header()).index()
+                        );
+                        $(cell).removeClass('sorting_asc');
+                        var title = $(cell).text();
+                        switch (title) {
+                            case 'Created At':
+                                $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                break;
+                            case '#':
+                                $(cell).html(title);
+                                break;
+                            case 'Action':
+                                $(cell).html(title);
+                                break;
+                            default:
+                                $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
+                                break;
+                        }
+                        $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                            .off('keyup change')
+                            .on('change', function(e) {
+                                $(this).attr('title', $(this).val());
+                                var regexr = '({search})';
+                                var cursorPosition = this.selectionStart;
+                                api.column(colIdx)
+                                    .search(
+                                        this.value != '' ?
+                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                        this.value != '',
+                                        this.value == ''
+                                    ).draw();
+                            })
+                            .on('keyup', function(e) {
+                                e.stopPropagation();
+                                $(this).trigger('change');
+                            });
+
+                        $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                            .off('keyup change')
+                            .on('change', function(e) {
+                                $(this).attr('title', $(this).val());
+                                var regexr = '({search})';
+                                var cursorPosition = this.selectionStart;
+                                api.column(colIdx)
+                                    .search(
+                                        this.value != '' ?
+                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                        this.value != '',
+                                        this.value == ''
+                                    ).draw();
+                            })
+                            .on('keyup', function(e) {
+                                e.stopPropagation();
+                                $(this).trigger('change');
+                            });
+                    });
+            },
+            ajax: {
+                'url': '{{ route("countries.list") }}',
+                data: function(data) {
+                    data.filter_search = $('#filter-search').val();
+                }
+            },
+            "fnDrawCallback": function(oSettings) {
+                $("body").tooltip({
+                    selector: '[data-toggle="tooltip"]'
+                });
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    width: '2%'
+                },
+                {
+                    data: 'name'
+                },
+                {
+                    data: 'created_at',
+                    width: '1%'
+                },
+                {
+                    data: 'action',
+                    width: '1%'
+                },
+            ]
+
+        });
+        return table;
+    }
 </script>
 
 <script>
@@ -268,6 +382,37 @@
                     btnClass: 'btn-red',
                     action: function() {
                         var url = "{{ route('universities.delete','id') }}";
+                        url = url.replace('id', id);
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success: function(data) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+            }
+        });
+    }
+
+    function countryDelete(id) {
+        $.confirm({
+            title: 'Confirm',
+            content: 'Do you want to delete this Country ?',
+            buttons: {
+                info: {
+                    text: 'Cancel',
+                    btnClass: 'btn-blue',
+                    action: function() {
+                        // canceled
+                    }
+                },
+                danger: {
+                    text: 'Delete',
+                    btnClass: 'btn-red',
+                    action: function() {
+                        var url = "{{ route('countries.delete','id') }}";
                         url = url.replace('id', id);
                         $.ajax({
                             type: 'GET',
