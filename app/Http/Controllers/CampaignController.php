@@ -47,8 +47,8 @@ class CampaignController extends Controller
     public function getLeads($lead_id, FacebookGraphService $fbGraphService)
     {
         $leads = $fbGraphService->getLimitedLeads($lead_id, 1);
-        $T1 = Lead::first();
-        $table_columns = array_keys(json_decode($T1, true));
+        $lead = new Lead;
+        $table_columns = $lead->getTableColumns();
         $newColumns = [];
         foreach ($table_columns as $table_column) {
             if (
@@ -103,12 +103,15 @@ class CampaignController extends Controller
                 }
             }
             $lead_info = $fbGraphService->getPageOrLeadInfo($request['lead_id']);
-            $metadata = [];
-            $metadata['lead_id'] = $lead_info['id'];
-            $metadata['name'] = $lead_info['name'];
-            $metadata['mapped'] = 1;
-            $metadata['mapped_by'] = Auth::id();
-            MetaLeadgenForm::create($metadata);
+            $metaLead = MetaLeadgenForm::where("lead_id", $lead_info['id'])->first();
+            if (!$metaLead) {
+                $metadata = [];
+                $metadata['lead_id'] = $lead_info['id'];
+                $metadata['name'] = $lead_info['name'];
+                $metadata['mapped'] = 1;
+                $metadata['mapped_by'] = Auth::id();
+                MetaLeadgenForm::create($metadata);
+            }
             return $duplicateLeads;
         } catch (\Exception $e) {
             dd($e);

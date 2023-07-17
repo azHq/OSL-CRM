@@ -89,4 +89,10 @@ class Lead extends Model
         }
         return $uploaded;
     }
+
+    public function getTableColumns() {
+
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+
+    }
 }
