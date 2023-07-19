@@ -398,6 +398,15 @@ table.dataTable thead>tr>td.sorting {
     font-size: 1.2rem;
 }
 
+.toggle-change-password {
+    position: absolute;
+    right: 17px;
+    top: 14px;
+    color: #808080;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
 .label {
     display: inline-block;
     padding: 0.35em 0.65em;

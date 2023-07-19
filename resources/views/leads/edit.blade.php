@@ -208,70 +208,66 @@
 </div>
 
 <script>
-	$('body').on('click', '.edit-lead', function() {
+	$('body').on('click', '.edit-lead', async function() {
 		getLeadEditOwners();
-		var id = $(this).data('id');
-		getLead(id);
+		let id = $(this).data('id');
+		await getLead(id);
 		var url = "{{ route('leads.update', 'id') }}";
 		url = url.replace('id', id);
 		$('#lead-update').attr('action', url);
 	});
 
-	function getLead(id) {
+	async function getLead(id) {
 		var url = "{{ route('leads.edit', 'id') }}";
 		url = url.replace('id', id);
-		$.ajax({
+		await $.ajax({
 			type: 'GET',
 			url: url,
-			success: function(data) {
+			success: async function(data) {
 				var lead = data.lead;
 				console.log({
 					lead
 				})
-
-				$('#edit-lead-name').val(lead.name);
-				$('#edit-lead-email').val(lead.email);
-				$('#edit-lead-mobile').val(lead.mobile);
-				$('#edit-lead-intake_month').val(lead.intake_month);
-				$('#edit-lead-status').val(lead.status);
-				$('#edit-lead-intake_year').val(lead.intake_year);
-				$('#edit-lead-completion_date').val(lead.completion_date);
-				$('#edit-lead-education_details').val(lead.education_details);
-				$('#edit-lead-english').val(lead.english);
-				$('#edit-lead-english_result').val(lead.english_result);
-				$('#edit-lead-job_experience').val(lead.job_experience);
-				$('#edit-lead-owner_id').val(lead.owner_id);
+				await $('#edit-lead-name').val(lead.name);
+				await $('#edit-lead-email').val(lead.email);
+				await $('#edit-lead-mobile').val(lead.mobile);
+				await $('#edit-lead-intake_month').val(lead.intake_month);
+				await $('#edit-lead-status').val(lead.status);
+				await $('#edit-lead-intake_year').val(lead.intake_year);
+				await $('#edit-lead-completion_date').val(lead.completion_date);
+				await $('#edit-lead-education_details').val(lead.education_details);
+				await $('#edit-lead-english').val(lead.english);
+				await $('#edit-lead-english_result').val(lead.english_result);
+				await $('#edit-lead-job_experience').val(lead.job_experience);
+				await $('#edit-lead-owner_id').val(lead.owner_id);
 				let pre_html = $('#edit-lead-last_education').html()
 				let next_html = `
 					<option value="${lead.last_education}">${lead.last_education}</option>
 					${pre_html}
 				`
-				$('#edit-lead-last_education').html(next_html)
+				await $('#edit-lead-last_education').html(next_html)
 
-				$('#edit-lead-name').html(next_html)
+				// $('#edit-lead-name').html(next_html)
 
 				pre_html = $('#edit-lead-english').html()
 				next_html = `
 					<option value="${lead.english}">${lead.english}</option>
 					${pre_html}
 				`
-				$('#edit-lead-english').html(next_html)
-
-
-
+				await $('#edit-lead-english').html(next_html)
 
 
 				var options = '';
 				data.categories.forEach(function(category) {
 					options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
 				});
-				$('#lead-edit-category').html(options);
+				await $('#lead-edit-category').html(options);
 
 				options = '';
 				data.subcategories.forEach(function(subcategory) {
 					options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
 				});
-				$('#lead-edit-subcategory').html(options);
+				await $('#lead-edit-subcategory').html(options);
 			}
 		});
 	}

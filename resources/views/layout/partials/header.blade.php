@@ -2,11 +2,11 @@
 
 <div class="main-wrapper">
 
-    <head>
-        <script>
-            var isCleared = false;
-        </script>
-    </head>
+	<head>
+		<script>
+			var isCleared = false;
+		</script>
+	</head>
 
 	<!-- Header -->
 	<div class="header" id="heading">
@@ -39,41 +39,41 @@
 			<li class="nav-item dropdown">
 				<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
 					<i class="fa fa-bell-o"></i>
-                    @if(Auth::user()->unreadNotifications->count()>0)
-                    <span id="notification-count" class="badge rounded-pill">{{Auth::user()->unreadNotifications->count()}}</span>
-                    @endif
+					@if(Auth::user()->unreadNotifications->count()>0)
+					<span id="notification-count" class="badge rounded-pill">{{Auth::user()->unreadNotifications->count()}}</span>
+					@endif
 				</a>
 				<div class="dropdown-menu notifications">
-                    @php
-                        $user = auth()->user();
-                    @endphp
+					@php
+					$user = auth()->user();
+					@endphp
 					<div class="topnav-dropdown-header">
 						<span class="notification-title">Notifications</span>
 						<a onclick="clearNotification({{$user->id}})" href="javascript:;" id="notification-clear-btn" class="clear-noti"> Clear All </a>
 					</div>
-                    <input type="hidden" name="myVar" id="myVar" value="0">
-                    <div class="noti-content" id="notifications">
-                        <ul class="notification-list">
-                            @foreach (Auth::user()->unreadNotifications as $notification)
-                                <li class="notification-message">
-                                    <a href="#">
-                                        <div class="media d-flex">
-                                            <div class="media-body flex-grow-1">
-                                                <p class="noti-details"><span class="noti-title">{{$notification->data['title']}}</span> {{$notification->data['description']}}</p>
-                                                <p class="noti-time"><span class="notification-time">{{$notification->updated_at->diffForHumans()}}</span></p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="topnav-dropdown-footer">
-                        @php
-                            $route = route('notifications.index');
-                        @endphp
-                        <a onclick='gotoRoute("{{$route}}", "notifications");' href="javascript:;">View all Notifications</a>
-                    </div>
+					<input type="hidden" name="myVar" id="myVar" value="0">
+					<div class="noti-content" id="notifications">
+						<ul class="notification-list">
+							@foreach (Auth::user()->unreadNotifications as $notification)
+							<li class="notification-message">
+								<a href="#">
+									<div class="media d-flex">
+										<div class="media-body flex-grow-1">
+											<p class="noti-details"><span class="noti-title">{{$notification->data['title']}}</span> {{$notification->data['description']}}</p>
+											<p class="noti-time"><span class="notification-time">{{$notification->updated_at->diffForHumans()}}</span></p>
+										</div>
+									</div>
+								</a>
+							</li>
+							@endforeach
+						</ul>
+					</div>
+					<div class="topnav-dropdown-footer">
+						@php
+						$route = route('notifications.index');
+						@endphp
+						<a onclick='gotoRoute("{{$route}}", "notifications");' href="javascript:;">View all Notifications</a>
+					</div>
 
 				</div>
 			</li>
@@ -89,7 +89,7 @@
 
 				</a>
 				<div class="dropdown-menu">
-					<!-- <a class="dropdown-item" href="{{url('profile')}}">My Profile</a> -->
+					<a class="dropdown-item" href="{{url('change-password')}}">Change Password</a>
 					<a class="dropdown-item" href="{{url('logout')}}">Logout</a>
 				</div>
 			</li>
@@ -101,34 +101,35 @@
 			<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 			<div class="dropdown-menu dropdown-menu-right">
 				<!-- <a class="dropdown-item" href="{{url('profile')}}">My Profile</a> -->
+				<a class="dropdown-item" href="{{url('change-password')}}">Change Password</a>
 				<a class="dropdown-item" href="{{url('logout')}}">Logout</a>
 			</div>
 		</div>
 		<!-- /Mobile Menu -->
 
 	</div>
-    <script>
-        function clearNotification(userId){
-            // isCleared=true;
-            // var div = document.getElementById("notifications");
-            // var div2 = document.getElementById("notification-count");
-            // var div3= document.getElementById("notification-clear-btn");
-            // if (isCleared) {
-            //     div.style.display = "none";
-            //     div2.style.display = "none";
-            //     div3.style.display = "none";
-            // }
+	<script>
+		function clearNotification(userId) {
+			// isCleared=true;
+			// var div = document.getElementById("notifications");
+			// var div2 = document.getElementById("notification-count");
+			// var div3= document.getElementById("notification-clear-btn");
+			// if (isCleared) {
+			//     div.style.display = "none";
+			//     div2.style.display = "none";
+			//     div3.style.display = "none";
+			// }
 			console.log(userId)
-            var url = "{{ route('notifications.update', 'id') }}";
-            url = url.replace('id', userId);
-            $.ajax({
-                type: 'GET',
-                url: url,
-                data: {},
-                success: function(data) {
-                    window.location.reload();
-                }
-            });
-        }
-    </script>
+			var url = "{{ route('notifications.update', 'id') }}";
+			url = url.replace('id', userId);
+			$.ajax({
+				type: 'GET',
+				url: url,
+				data: {},
+				success: function(data) {
+					window.location.reload();
+				}
+			});
+		}
+	</script>
 	<!-- /Header -->

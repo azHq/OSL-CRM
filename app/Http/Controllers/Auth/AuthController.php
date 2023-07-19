@@ -166,6 +166,15 @@ class AuthController extends Controller
         return view('layout.mainlayout');
     }
 
+    public function changePassword()
+    {
+        if (\request()->ajax()) {
+            $id = Auth::id();
+            return view('changePassword', compact('id'));
+        }
+        return view('layout.mainlayout');
+    }
+
     public function resetPasswordIndex($id)
     {
         $student = User::find($id);
@@ -192,6 +201,36 @@ class AuthController extends Controller
                     Auth::logout();
                 }
                 return Redirect('student-login');
+            } else {
+                return Redirect::back()->with('error', 'Password Mismatch');
+            }
+        } catch (Exception $e) {
+            Redirect::back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function changePasswordById(Request $request)
+    {
+        $request->validate([
+            'confirm-password' => 'required',
+            'password' => 'required',
+        ]);
+        try {
+            if ($request['confirm-password'] == $request['password']) {
+                $student = User::find($request['id'])->update([
+                    'password' => Hash::make($request['password']),
+                    'status' => 'Active'
+                ]);
+                if ($request['id'] == Auth::id()) {
+                    Auth::logout();
+                    if (Auth::user()->hasRole('student')) {
+                        return Redirect('student-login');
+                    } else {
+
+                        return Redirect('login');
+                    }
+                }
+                return Redirect::back()->with('success', 'Password Changed');
             } else {
                 return Redirect::back()->with('error', 'Password Mismatch');
             }
