@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Lead;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class LeadsImport implements ToModel
@@ -19,6 +20,7 @@ class LeadsImport implements ToModel
             'name' => $row[1],
             'email' => $row[2],
             'mobile' => $row[3],
+            'creator_id' => Auth::id()
         ]);
     }
 }

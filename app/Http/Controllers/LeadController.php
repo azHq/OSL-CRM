@@ -99,6 +99,14 @@ class LeadController extends Controller
                         return '<label class="badge badge-success text-center">' . $row->status . '</label>';
                     }
                 })
+                ->editColumn('added_from', function ($row) {
+                    $value = $row->insert_type;
+                    if ($value == 'from_meta') {
+                        return '<label class="badge badge-info text-center">META</label>';
+                    } else {
+                        return '<label class="badge badge-success text-center">CRM</label>';
+                    }
+                })
                 ->editColumn('email', function ($row) {
                     return $row->email;
                 })
@@ -124,7 +132,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'added_from', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -139,6 +147,7 @@ class LeadController extends Controller
             $leads = $leads->get();
             return datatables()->of($leads)
                 ->addColumn('name', function ($row) {
+                    $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
                     $data = '<a data-id="' . $row->id . '" href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">
                                 <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
                             </a>
@@ -262,7 +271,6 @@ class LeadController extends Controller
                 return Redirect::back()->with('error', 'Lead Already Exist with mobile or email.');
             }
         } catch (\Exception $e) {
-            dd($e);
             Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }
@@ -343,6 +351,9 @@ class LeadController extends Controller
             $lead = Lead::find($id);
             $leadCounsellorIdOld = $lead->owner_id;
             abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            if(!$request['remarks']){
+                $request['remarks'] = ' ';
+            }
             if ($lead->owner_id) {
                 $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id', 'remarks'));
             }
@@ -359,7 +370,6 @@ class LeadController extends Controller
             }
             return Redirect::route('leads.index')->with('success', 'Lead updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }

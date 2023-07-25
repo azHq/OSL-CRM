@@ -177,11 +177,13 @@ class AuthController extends Controller
 
     public function resetPasswordIndex($id)
     {
-        $student = User::find($id);
-        if ($student && $student->status == 'Pending') {
+        $user = User::find($id);
+        if ($user && $user->status == 'Pending') {
             return view('reset', compact('id'));
-        } else {
+        } else if ($user->hasRole('student')) {
             return Redirect('student-login');
+        } else {
+            return Redirect('login');
         }
     }
 
@@ -193,14 +195,19 @@ class AuthController extends Controller
         ]);
         try {
             if ($request['confirm-password'] == $request['password']) {
-                $student = User::find($request['id'])->update([
+                User::find($request['id'])->update([
                     'password' => Hash::make($request['password']),
                     'status' => 'Active'
                 ]);
                 if (Auth::user()) {
                     Auth::logout();
                 }
-                return Redirect('student-login');
+                $user = User::find($request['id']);
+                if ($user->hasRole('student')) {
+                    return Redirect('student-login');
+                } else {
+                    return Redirect('login');
+                }
             } else {
                 return Redirect::back()->with('error', 'Password Mismatch');
             }

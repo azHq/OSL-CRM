@@ -1,4 +1,4 @@
-<div class="modal center fade" id="edit_lead" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="editview_lead" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
 	<div class="modal-dialog lkb-modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">
@@ -218,100 +218,7 @@
 </div>
 
 <script>
-	$('body').on('click', '.edit-lead', async function() {
-		getLeadEditOwners();
-		getCountries();
-		let id = $(this).data('id');
-		await getLead(id);
-		var url = "{{ route('leads.update', 'id') }}";
-		url = url.replace('id', id);
-		$('#lead-update').attr('action', url);
 
-		function getCountries() {
-			$.ajax({
-				type: 'GET',
-				url: "{{ route('countries.info') }}",
-				success: function(countries) {
-					console.log({
-						countries
-					})
-					var options = '<option value="" selected>Select Country</option>';
-					countries.forEach(function(country) {
-						options += '<option value="' + country.id + '">' + country.name + '</option>';
-					});
-					$('#edit-country-info').html(options);
-
-				}
-			});
-		}
-	});
-
-	async function getLead(id) {
-		var url = "{{ route('leads.edit', 'id') }}";
-		url = url.replace('id', id);
-		await $.ajax({
-			type: 'GET',
-			url: url,
-			success: async function(data) {
-				var lead = data.lead;
-				await $('#edit-lead-name').val(lead.name);
-				await $('#edit-lead-email').val(lead.email);
-				await $('#edit-lead-mobile').val(lead.mobile);
-				await $('#edit-lead-intake_month').val(lead.intake_month);
-				await $('#edit-lead-status').val(lead.status);
-				await $('#edit-lead-intake_year').val(lead.intake_year);
-				await $('#edit-lead-completion_date').val(lead.completion_date);
-				await $('#edit-lead-education_details').val(lead.education_details);
-				await $('#edit-lead-english').val(lead.english);
-				await $('#edit-lead-english_result').val(lead.english_result);
-				await $('#edit-lead-job_experience').val(lead.job_experience);
-				await $('#edit-lead-owner_id').val(lead.owner_id);
-				await $('#edit-country-info').val(lead.country);
-				let pre_html = $('#edit-lead-last_education').html()
-				let next_html = `
-					<option value="${lead.last_education}">${lead.last_education}</option>
-					${pre_html}
-				`
-				await $('#edit-lead-last_education').html(next_html)
-
-				// $('#edit-lead-name').html(next_html)
-
-				pre_html = $('#edit-lead-english').html()
-				next_html = `
-					<option value="${lead.english}">${lead.english}</option>
-					${pre_html}
-				`
-				await $('#edit-lead-english').html(next_html)
-
-
-				var options = '';
-				data.categories.forEach(function(category) {
-					options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
-				});
-				await $('#lead-edit-category').html(options);
-
-				options = '';
-				data.subcategories.forEach(function(subcategory) {
-					options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
-				});
-				await $('#lead-edit-subcategory').html(options);
-			}
-		});
-	}
-
-	function getLeadEditOwners() {
-		$.ajax({
-			type: 'GET',
-			url: "{{ route('leads.create') }}",
-			success: function(data) {
-				var options = '<option value="">Unassigned</option>';
-				data.users.forEach(function(user) {
-					options += '<option value="' + user.id + '">' + user.name + '</option>';
-				});
-				$('#edit-lead-owner_id').html(options);
-			}
-		});
-	}
 
 	$('#lead-edit-category').on('change', function() {
 		var category_id = $('#lead-edit-category').val();

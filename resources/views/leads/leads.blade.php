@@ -80,6 +80,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Purpose</th>
+                                <th>Added From</th>
                                 @if (Auth::user()->hasRole('super-admin'))
                                 <th>Counsellor</th>
                                 @endif
@@ -126,6 +127,7 @@
     $(document).ready(function() {
         localStorage.setItem('SelectedLeads', JSON.stringify([]));
         getTransactions();
+        getCountries()
 
         $('#myTable tbody').on('click', 'tr', function() {
             let SelectedLeads = JSON.parse(localStorage.getItem('SelectedLeads'));
@@ -202,7 +204,7 @@
                             case 'Purpose':
                                 $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Purpose</option>
-												<option value="English Teaching">Unknown</option>
+												<option value="">Unknown</option>
 												<option value="English Teaching">English Teaching</option>
 												<option value="Study Abroad">Study Abroad</option>
 												<!-- <option value="Not Potential">Not Potential</option> -->
@@ -217,6 +219,16 @@
                                 // case 'Lead Created':
                                 //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
                                 //     break;
+
+                            case 'Added From':
+                                $(cell).html(`<select id="filter-added_from" name="added_from" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Added From</option>
+												<option value="">Unknown</option>
+												<option value="from_crm">CRM</option>
+												<option value="from_meta">META</option>
+										
+                                            </select>`);
+                                break;
                             case '#':
                                 $(cell).html(title);
                                 break;
@@ -300,6 +312,9 @@
                     data: 'purpose'
                 },
                 {
+                    data: 'added_from'
+                },
+                {
                     data: 'owner'
                 },
                 // {
@@ -374,7 +389,7 @@
                             case 'Purpose':
                                 $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Purpose</option>
-												<option value="English Teaching">Unknown</option>
+												<option value="">Unknown</option>
 												<option value="English Teaching">English Teaching</option>
 												<option value="Study Abroad">Study Abroad</option>
 												<!-- <option value="Not Potential">Not Potential</option> -->
@@ -384,6 +399,15 @@
                                 // case 'Lead Created':
                                 //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
                                 //     break;
+                            case 'Added From':
+                                $(cell).html(`<select id="filter-added_from" name="added_from" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Added From</option>
+												<option value="">Unknown</option>
+												<option value="from_crm">CRM</option>
+												<option value="from_meta">META</option>
+										
+                                            </select>`);
+                                break;
                             case '#':
                                 $(cell).html(title);
                                 break;
@@ -467,6 +491,9 @@
                 // {
                 //     data: 'created_at'
                 // },
+                {
+                    data: 'added_from'
+                },
                 {
                     data: 'status'
                 },

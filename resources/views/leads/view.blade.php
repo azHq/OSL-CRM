@@ -33,7 +33,7 @@
         @include('components.flash')
         <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
             <div class="col text-end">
-                <button  data-id="{{$lead->id}}" data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></button>
+                <button data-id="{{$lead->id}}" data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#editview_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit" onclick="viewDetails('{{$lead->id}}')"><i class="feather-edit"></i></button>
             </div>
             <input hidden value="{{$lead->subCategory}}" id="leadSubcategory" />
 
@@ -288,7 +288,7 @@
             </div>
         </div>
         <!-- /Page Content -->
-        @component('leads.edit')
+        @component('leads.editView')
         @endcomponent
 
         @component('applications.create')
@@ -297,6 +297,100 @@
             $(document).ready(function() {
                 getSubCategories();
             });
+            async function viewDetails(id) {
+                await getLeadEditOwners();
+                await getCountries();
+                await getLead(id);
+                var url = "{{ route('leads.update', 'id') }}";
+                url = url.replace('id', id);
+                $('#lead-update').attr('action', url);
+                $('#editview_lead').modal('show');
+
+                async function getCountries() {
+                    await $.ajax({
+                        type: 'GET',
+                        url: "{{ route('countries.info') }}",
+                        success: function(countries) {
+                            console.log({
+                                countries
+                            })
+                            var options = '<option value="" selected>Select Country</option>';
+                            countries.forEach(function(country) {
+                                options += '<option value="' + country.id + '">' + country.name + '</option>';
+                            });
+                            $('#edit-country-info').html(options);
+
+                        }
+                    });
+                }
+
+                async function getLead(id) {
+                    var url = "{{ route('leads.edit', 'id') }}";
+                    url = url.replace('id', id);
+                    await $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: async function(data) {
+                            var lead = data.lead;
+                            await $('#edit-lead-name').val(lead.name);
+                            await $('#edit-lead-email').val(lead.email);
+                            await $('#edit-lead-mobile').val(lead.mobile);
+                            await $('#edit-lead-intake_month').val(lead.intake_month);
+                            await $('#edit-lead-status').val(lead.status);
+                            await $('#edit-lead-intake_year').val(lead.intake_year);
+                            await $('#edit-lead-completion_date').val(lead.completion_date);
+                            await $('#edit-lead-education_details').val(lead.education_details);
+                            await $('#edit-lead-english').val(lead.english);
+                            await $('#edit-lead-english_result').val(lead.english_result);
+                            await $('#edit-lead-job_experience').val(lead.job_experience);
+                            await $('#edit-lead-owner_id').val(lead.owner_id);
+                            await $('#edit-country-info').val(lead.country);
+                            let pre_html = $('#edit-lead-last_education').html()
+                            let next_html = `
+					<option value="${lead.last_education}">${lead.last_education}</option>
+					${pre_html}
+				`
+                            await $('#edit-lead-last_education').html(next_html)
+
+                            // $('#edit-lead-name').html(next_html)
+
+                            pre_html = $('#edit-lead-english').html()
+                            next_html = `
+					<option value="${lead.english}">${lead.english}</option>
+					${pre_html}
+				`
+                            await $('#edit-lead-english').html(next_html)
+
+
+                            var options = '';
+                            data.categories.forEach(function(category) {
+                                options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
+                            });
+                            await $('#lead-edit-category').html(options);
+
+                            options = '';
+                            data.subcategories.forEach(function(subcategory) {
+                                options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
+                            });
+                            await $('#lead-edit-subcategory').html(options);
+                        }
+                    });
+                }
+
+                async function getLeadEditOwners() {
+                    await $.ajax({
+                        type: 'GET',
+                        url: "{{ route('leads.create') }}",
+                        success: function(data) {
+                            var options = '<option value="">Unassigned</option>';
+                            data.users.forEach(function(user) {
+                                options += '<option value="' + user.id + '">' + user.name + '</option>';
+                            });
+                            $('#edit-lead-owner_id').html(options);
+                        }
+                    });
+                }
+            }
             // function getSubmenuElem(submenu, data, key, currentSubcategory, foundIndex) {
             //     for (let subcategory of data[key]) {
             //         if (currentSubcategory == subcategory.name) {

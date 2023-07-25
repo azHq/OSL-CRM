@@ -97,6 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('users/list', [UserController::class, 'list'])->name('users.list');
     Route::get('cro/list', [UserController::class, 'croList'])->name('cro.list');
+    Route::get('super-admin/list', [UserController::class, 'superAdminList'])->name('super-admin.list');
     Route::get('users/{id}/tasks', [UserController::class, 'tasks'])->name('users.tasks');
     Route::get('users/{id}', [UserController::class, 'view'])->name('users.view');
     Route::get('users', [UserController::class, 'index'])->name('users.index');
@@ -187,6 +188,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('metaforms', [MetaFormsController::class, 'store'])->name('metaforms.store');
 
     Route::get('cros', [UserController::class, 'croIndex'])->name('cros.index');
+    Route::get('super-admins', [UserController::class, 'superAdminIndex'])->name('super-admin.index');
 
     Route::get('chat/{id}', [MessageController::class, 'chatView'])->name('chat.index');
     Route::get('messages/list/{id}', [MessageController::class, 'list'])->name('messages.list');

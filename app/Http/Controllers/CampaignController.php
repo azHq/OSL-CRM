@@ -78,6 +78,7 @@ class CampaignController extends Controller
             foreach ($leads as $lead) {
                 $lead_data = [];
                 $lead_data['insert_type'] = "from_meta";
+                $lead_data['status'] = $request['status'];
 
                 foreach ($lead["field_data"] as $field) {
                     if ($request[$field['name']] && $request[$field['name']] != 'none') {

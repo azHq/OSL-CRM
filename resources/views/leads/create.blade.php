@@ -109,6 +109,15 @@
 							<div class="col">
 								<div class="form-group row">
 									<div class="col-sm-12">
+										<label class="col-form-label">Country <span class="text-danger">*</span></label>
+										<select class=" form-control form-select" name="country" id="country-info">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-group row">
+									<div class="col-sm-12">
 										<label class="col-form-label">Completion Date</label>
 										<input type="date" class="form-control" name="completion_date" placeholder="{{date('Y-m-d')}}">
 									</div>
@@ -129,6 +138,7 @@
 									<div class="col-sm-12">
 										<label class="col-form-label">English Proficiency Test <span class="text-danger">*</span></label>
 										<select class=" form-control form-select" name="english" required>
+											<option value="N/A">N/A</option>
 											<option value="IELTS (Academic)">IELTS (Academic)</option>
 											<option value="IELTS (General)">IELTS (General)</option>
 											<option value="Duolingo">Duolingo</option>
@@ -277,7 +287,25 @@
 @endif
 <script>
 	$(document).ready(function() {
+		getCountries()
 
+		function getCountries() {
+			$.ajax({
+				type: 'GET',
+				url: "{{ route('countries.info') }}",
+				success: function(countries) {
+					console.log({
+						countries
+					})
+					var options = '<option value="" selected>Select Country</option>';
+					countries.forEach(function(country) {
+						options += '<option value="' + country.id + '">' + country.name + '</option>';
+					});
+					$('#country-info').html(options);
+
+				}
+			});
+		}
 		if ($('.intake-year').length > 0) {
 			$('.intake-year').datetimepicker({
 				format: 'YYYY',

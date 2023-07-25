@@ -94,6 +94,11 @@
 				</li>
 				@endif
 				@if (Auth::user()->hasRole('super-admin'))
+				<li id="super-admins" class="nav-li {{ Request::is('super-admins*') ? 'active' : '' }}">
+					<a data-nav="super-admins" data-href="{{route('super-admin.index')}}" class="url"><i class="feather-users"></i> <span>Super Admins</span></a>
+				</li>
+				@endif
+				@if (Auth::user()->hasRole('super-admin'))
 				<li id="universities" class="nav-li {{ Request::is('universities*') ? 'active' : '' }}">
 					<a data-nav="universities" data-href="{{route('universities.index')}}" class="url"><i class="fa fa-university" aria-hidden="true"></i> <span>Universities</span></a>
 				</li>

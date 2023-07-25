@@ -132,6 +132,65 @@ class UserController extends Controller
         }
     }
 
+    public function superAdminList()
+    {
+        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        if (\request()->ajax()) {
+            $role = Role::findByName('super-admin');
+            $users = User::where('role_id', $role->id)->orderBy('created_at', 'desc');
+            if (\request('filter_search') != '') {
+                $users->where('name', 'like', '%' . \request('filter_search') . '%')
+                    ->orWhere('email', 'like', '%' . \request('filter_search') . '%')
+                    ->orWhere('mobile', 'like', '%' . \request('filter_search') . '%');
+            }
+            if (\request('filter_status') != '' || \request('filter_status') != null) {
+                $users->where('status', \request('filter_status'));
+            }
+            $users = $users->get();
+
+            return datatables()->of($users)
+                ->addColumn('name', function ($row) {
+                    $data = '<a href="' . route('users.view', $row->id) . '">
+                                <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
+                            </a>
+                            <a href="' . route('users.view', $row->id) . '">' . $row->name . '</a>';
+                    return $data;
+                })
+                ->editColumn('mobile', function ($row) {
+                    return $row->mobile;
+                })
+                ->editColumn('email', function ($row) {
+                    return $row->email;
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at;
+                })
+                ->editColumn('add_task', function ($row) {
+                    return '<a href="#" data-id="' . $row->id . '" data-name="' . $row->name . '" data-bs-toggle="modal" data-bs-target="#add_task" class="add-task lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
+                })
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'Active') {
+                        return '<label class="badge badge-success text-center">' . ucfirst($row->status) . '</label>';
+                    } elseif ($row->status == 'Inactive') {
+                        return '<label class="badge badge-warning text-center">' . ucfirst($row->status) . '</label>';
+                    } else {
+                        return '<label class="badge badge-danger text-center">' . ucfirst($row->status) . '</label>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    $action = '';
+                    $action .= '<a href="' . route('users.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
+                    $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_user" class="edit-user lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
+                    if(Auth::id() != $row->id){
+                        $action .= '<a href="#" onclick="userDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
+                    }
+                    return $action;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['name', 'email', 'mobile', 'status', 'created_at', 'add_task', 'action'])
+                ->make(true);
+        }
+    }
 
     public function index(Request $request)
     {
@@ -150,6 +209,17 @@ class UserController extends Controller
 
         if (\request()->ajax()) {
             return view('cros.index');
+        }
+
+        return view('layout.mainlayout');
+    }
+
+    public function superAdminIndex(Request $request)
+    {
+        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+
+        if (\request()->ajax()) {
+            return view('super-admin.index');
         }
 
         return view('layout.mainlayout');
@@ -175,10 +245,19 @@ class UserController extends Controller
         try {
             $role = Role::findByName($request->role);
             $request['role_id'] = $role->id;
+            $request['status'] = 'Pending';
             $user = User::create($request->except('_token', 'cpassword'));
+            $request['subject'] = 'Pass Reset Request for OSL_CRM';
+            $request['email_body'] = "
+            Please View the link & Reset
+           https://oslcrm.com/reset-password/$user->id
+            ";
+            $leadController = new LeadController;
+            $leadController->sendMail($request);
             $user->assignRole($role);
             return Redirect::back()->with('success', 'User created successfully.');
         } catch (\Exception $e) {
+            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }

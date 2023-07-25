@@ -386,9 +386,22 @@
 						`
 					})
 					subcats += `
-					<div class="form-group text-center">
+						<div class="row p-2" style="border-bottom: 1px solid #dee2e6">
+								<div class="col-3">
+									<span class="badge bg-primary-light">Purpose</span>
+								</div>
+								<div class="col-9">
+									<select class=" form-control form-select" name="status" readonly >
+										<option value="none">None</option>
+										<option value="Study Abroad">Study Abroad</option>
+										<option value="English Teaching">English Teaching</option>
+									</select>
+								</div>
+						</div>
+						<div class="form-group text-center">
 							<button class="btn btn-primary account-btn" type="submit" onclick="addAndGetDuplicates('${encodeURIComponent(JSON.stringify(data.leads[0].field_data))}')">Map</button>
-						</div>`
+						</div>
+						`
 					$('#mapMetaList').html(subcats);
 				}
 				// $("#lead_meta_fields").show()
@@ -455,8 +468,7 @@
 						`
 					})
 					$('#duplicateLeads').html(subcats);
-				}
-				else{
+				} else {
 					window.location.reload()
 				}
 			}
