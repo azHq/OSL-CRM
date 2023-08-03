@@ -12,17 +12,22 @@ class Remarks extends Model
     protected $table = 'remarks';
     protected $fillable = [
         'value',
+        'lead_id',
         'commented_by'
     ];
     protected static function booted()
     {
         static::addGlobalScope('rolewise', function ($query) {
-            // if (!Auth::user()->hasRole('super-admin'))
+            // if (!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'))
                 // $query->where('owner_id', Auth::user()->id);
         });
 
         self::creating(function ($meta) {
             $meta->commented_by = Auth::user()->id;
         });
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,'commented_by');
     }
 }

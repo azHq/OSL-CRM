@@ -7,7 +7,7 @@
 			<button class="btn" type="button"><i class="fa fa-search"></i></button>
 		</form>
 		<div id="sidebar-menu" class="sidebar-menu">
-			@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro'))
+			@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro'))
 			<ul>
 				<li id="dashboard" class="nav-li {{ Request::is('/') ? 'active' : '' }}">
 					<a data-nav="dashboard" data-href="{{route('dashboard')}}" class="url"><i class="feather-home"></i> <span>Dashboard</span></a>
@@ -83,27 +83,27 @@
 				@endif
 				@endif
 
-				@if (Auth::user()->hasRole('super-admin'))
+				@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 				<li id="users" class="nav-li {{ Request::is('users*') ? 'active' : '' }}">
 					<a data-nav="users" data-href="{{route('users.index')}}" class="url"><i class="feather-users"></i> <span>Counsellors</span></a>
 				</li>
 				@endif
-				@if (Auth::user()->hasRole('super-admin'))
+				@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 				<li id="cros" class="nav-li {{ Request::is('cros*') ? 'active' : '' }}">
 					<a data-nav="cros" data-href="{{route('cros.index')}}" class="url"><i class="feather-users"></i> <span>CROs</span></a>
 				</li>
 				@endif
-				@if (Auth::user()->hasRole('super-admin'))
+				@if (Auth::user()->hasRole('main-super-admin'))
 				<li id="super-admins" class="nav-li {{ Request::is('super-admins*') ? 'active' : '' }}">
-					<a data-nav="super-admins" data-href="{{route('super-admin.index')}}" class="url"><i class="feather-users"></i> <span>Super Admins</span></a>
+					<a data-nav="super-admins" data-href="{{route('super-admin.index')}}" class="url"><i class="feather-users"></i> <span>Admin Creation</span></a>
 				</li>
 				@endif
-				@if (Auth::user()->hasRole('super-admin'))
+				@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 				<li id="universities" class="nav-li {{ Request::is('universities*') ? 'active' : '' }}">
 					<a data-nav="universities" data-href="{{route('universities.index')}}" class="url"><i class="fa fa-university" aria-hidden="true"></i> <span>Universities</span></a>
 				</li>
 				@endif
-				<!-- @if (Auth::user()->hasRole('super-admin'))
+				<!-- @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 				<li id="parameters" class="nav-li {{ Request::is('parameters*') ? 'active' : '' }}">
 					<a data-nav="parameters" data-href="{{route('parameters.index')}}" class="url"><i class="fa fa-code" aria-hidden="true"></i> <span>Parameters</span></a>
 				</li>
@@ -111,7 +111,7 @@
 				<li id="notifications" class="nav-li {{ Request::is('notifications*') ? 'active' : '' }}">
 					<a data-nav="notifications" data-href="{{route('notifications.index')}}" class="url"><i class="fa fa-bell" aria-hidden="true"></i> <span>Notifications</span></a>
 				</li>
-				@if (Auth::user()->hasRole('super-admin'))
+				@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 				<li id="activities" class="nav-li {{ Request::is('activities*') ? 'active' : '' }}">
 					<a data-nav="activities" data-href="{{route('activities.index')}}" class="url"><i class="fa fa-history" aria-hidden="true"></i> <span>Activities</span></a>
 				</li>

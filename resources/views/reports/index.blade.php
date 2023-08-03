@@ -14,7 +14,7 @@
 
 
     <div class="row my-4">
-        @if (Auth::user()->hasRole('super-admin'))
+        @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
         <div class="col-2">
             <label>Select Counselor</label>
             <select id="filter-user" class="form-select focus-none" aria-label="Default select example" style="height:45px;">

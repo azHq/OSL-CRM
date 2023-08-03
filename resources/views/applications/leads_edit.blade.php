@@ -153,7 +153,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									@if (Auth::user()->hasRole('super-admin'))
+									@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 									<div class="col-md-4 col-sm-12">
 										<label class="col-form-label">Counsellor</label>
 										<select id="edit-lead-owner_id" class=" form-control form-select" name="owner_id">

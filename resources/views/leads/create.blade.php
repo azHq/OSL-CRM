@@ -264,7 +264,7 @@
 	<!-- modal-dialog -->
 </div>
 
-@if (Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 <script>
 	$('#add-lead').on('click', function() {
 		getOwners();

@@ -28,7 +28,7 @@
                             <th>Full Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            @if (Auth::user()->hasRole('super-admin'))
+                            @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                             @endif
                             <th>Lead Created</th>
@@ -76,7 +76,7 @@
     });
 </script>
 
-@if (Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
     <script>
         function getTransactions() {
             $("#myTable").dataTable().fnDestroy();

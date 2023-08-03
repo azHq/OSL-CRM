@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function list()
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
         if (\request()->ajax()) {
             $users = User::admins()->orderBy('created_at', 'desc');
             if (\request('filter_search') != '') {
@@ -76,7 +76,7 @@ class UserController extends Controller
 
     public function croList()
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
         if (\request()->ajax()) {
             $role = Role::findByName('cro');
             $users = User::where('role_id', $role->id)->orderBy('created_at', 'desc');
@@ -134,7 +134,7 @@ class UserController extends Controller
 
     public function superAdminList()
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin'), 403);
         if (\request()->ajax()) {
             $role = Role::findByName('super-admin');
             $users = User::where('role_id', $role->id)->orderBy('created_at', 'desc');
@@ -181,7 +181,7 @@ class UserController extends Controller
                     $action = '';
                     $action .= '<a href="' . route('users.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
                     $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_user" class="edit-user lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    if(Auth::id() != $row->id){
+                    if (Auth::id() != $row->id) {
                         $action .= '<a href="#" onclick="userDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     }
                     return $action;
@@ -194,7 +194,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
 
         if (\request()->ajax()) {
             return view('users.index');
@@ -205,7 +205,7 @@ class UserController extends Controller
 
     public function croIndex(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
 
         if (\request()->ajax()) {
             return view('cros.index');
@@ -216,7 +216,7 @@ class UserController extends Controller
 
     public function superAdminIndex(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
 
         if (\request()->ajax()) {
             return view('super-admin.index');
@@ -227,7 +227,7 @@ class UserController extends Controller
 
     public function view($id, Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
         if (\request()->ajax()) {
             $user = User::find($id);
             return view('users.view', compact('user'));
@@ -238,7 +238,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
         if ($request->password != $request->cpassword) {
             return response(['success' => false, 'message' => 'Password Not Matched!']);
         }
@@ -246,25 +246,29 @@ class UserController extends Controller
             $role = Role::findByName($request->role);
             $request['role_id'] = $role->id;
             $request['status'] = 'Pending';
-            $user = User::create($request->except('_token', 'cpassword'));
-            $request['subject'] = 'Pass Reset Request for OSL_CRM';
-            $request['email_body'] = "
-            Please View the link & Reset
-           https://oslcrm.com/reset-password/$user->id
-            ";
-            $leadController = new LeadController;
-            $leadController->sendMail($request);
-            $user->assignRole($role);
-            return Redirect::back()->with('success', 'User created successfully.');
+            $found = User::where('email', $request['email'])->first();
+            if (!$found) {
+                $user = User::create($request->except('_token', 'cpassword'));
+                $request['subject'] = 'Pass Reset Request for OSL_CRM';
+                $request['email_body'] = "
+                Please View the link & Reset
+               https://oslcrm.com/reset-password/$user->id
+                ";
+                $leadController = new LeadController;
+                $leadController->sendMail($request);
+                $user->assignRole($role);
+                return Redirect::back()->with('success', '"' . $role->name . '" created successfully.');
+            } else {
+                return Redirect::back()->with('error', 'Duplicate User.');
+            }
         } catch (\Exception $e) {
-            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
 
     public function edit($id)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
 
         if (\request()->ajax()) {
             $user = User::find($id);
@@ -281,7 +285,7 @@ class UserController extends Controller
 
     public function update($id, Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
         try {
             User::where('id', $id)->update($request->except('_token', '_method'));
             return Redirect::route('users.index')->with('success', 'Counsellor updated successfully.');
@@ -292,10 +296,10 @@ class UserController extends Controller
 
     public function delete($id, Request $request)
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
         try {
             $user = User::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $user->delete();
             Session::flash('success', 'Counsellor deleted successfully.');
             return response('Counsellor deleted successfully.');

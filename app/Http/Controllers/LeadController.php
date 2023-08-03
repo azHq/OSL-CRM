@@ -124,6 +124,7 @@ class LeadController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '';
+                    $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#add_remarks" class="add_remarks lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#mail_lead" class="mail-lead lkb-table-action-btn url badge-success btn-edit"><i class="feather-mail"></i></a>';
                     $action .= '<a href="' . route('leads.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
@@ -211,11 +212,7 @@ class LeadController extends Controller
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
-            foreach ($lead->report as $report) {
-                if ($report->remarks_id) {
-                    $report['remarks'] = Remarks::find($report->remarks_id);
-                }
-            }
+            $lead->load("remark");
             $lead->id = $id;
             return view('leads.view', compact('lead'));
         }
@@ -312,7 +309,7 @@ class LeadController extends Controller
 
         try {
             $lead = Lead::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             $users = User::admins()->select('id', 'name')->get();
             return view('leads.edit', compact('lead', 'users'));
         } catch (\Exception $e) {
@@ -337,11 +334,21 @@ class LeadController extends Controller
 
         try {
             $lead = Lead::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             $users = User::admins()->select('id', 'name')->get();
             return view('leads.mail', compact('lead', 'users'));
         } catch (\Exception $e) {
             return Redirect::back()->with('info', $e->getMessage());
+        }
+    }
+    public function addRemarks(Request $request)
+    {
+        try {
+            Remarks::create($request->except('_token', '_method'));
+            return Redirect::back()->with('success', 'Remarks Added Successfully.');
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return Redirect::back()->with('error', $e->getMessage());
         }
     }
 
@@ -350,19 +357,18 @@ class LeadController extends Controller
         try {
             $lead = Lead::find($id);
             $leadCounsellorIdOld = $lead->owner_id;
-            abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
-            if(!$request['remarks']){
-                $request['remarks'] = ' ';
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            if ($request['remarks']) {
+                $comment = [];
+                $comment['value'] = $request->remarks;
+                $comment['lead_id'] = $id;
+                Remarks::create($comment);
             }
             if ($lead->owner_id) {
                 $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id', 'remarks'));
             }
 
             $lead->update($request->except('_token', '_method', 'category_id', 'remarks', 'remarks_id'));
-            $comment['value'] = $request->remarks;
-            $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
-            Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks_id' => $remarks->id]);
-
             $lead = Lead::find($id);
             if ($leadCounsellorIdOld != $lead->owner_id && $lead->owner_id) {
                 LeadAssignedEvent::dispatch($lead);
@@ -379,7 +385,7 @@ class LeadController extends Controller
     {
         try {
             $lead = Lead::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             $data = $lead->toArray();
             unset($data['id']);
             unset($data['created_at']);
@@ -410,8 +416,8 @@ class LeadController extends Controller
                 $user->assignRole($role);
                 $subcat = Subcategory::where('name', 'Appointment Book')->first();
                 $comment['value'] = 'Lead Converted to Student';
-                $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
-                Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks' => $remarks->id]);
+                $comment['lead_id'] =  $lead->id;
+                Remarks::create($comment);
             }
 
 
@@ -432,7 +438,7 @@ class LeadController extends Controller
             foreach ($reports as $report) {
                 $report->delete();
             }
-            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $lead->delete();
             Session::flash('success', 'Lead deleted successfully.');
             return response('Lead deleted successfully.');
@@ -494,11 +500,10 @@ class LeadController extends Controller
                     $role = Role::findByName('student');
                     $user->assignRole($role);
                     $subcat = Subcategory::where('name', 'Appointment Book')->first();
-
                     $comment['value'] = 'Lead Converted to Student';
-                    $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
-                    Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks' => $remarks->id]);
-                }
+                    $comment['lead_id'] = $lead->id;
+                    Remarks::create($comment);
+                   }
 
                 NewLog::create('Lead Converted To Student', 'Lead "' . $student->name . '" has been converted to student.');
             }
@@ -511,7 +516,30 @@ class LeadController extends Controller
             return response($e->getMessage());
         }
     }
-
+    public function deleteMultipleLeads(Request $request)
+    {
+        $request->validate([
+            'lead_ids' => 'required|array|min:1'
+        ]);
+        try {
+            $leads = Lead::find($request->lead_ids);
+            foreach ($leads as $lead) {
+                $data = $lead->toArray();
+                $data['lead_id'] = $lead->id;
+                Remarks::where('lead_id', $lead->id)->delete();
+                Report::where('leads_id', $lead->id)->delete();
+                Lead::find($lead->id)->delete();
+                NewLog::create('Lead Deleted', 'Lead "' . $lead->name . '" has been deleted.');
+            }
+            NewLog::create('Multiple Leads Converted', 'Multiple Leads have been converted to students.');
+            Session::flash('success', 'All Leads deleted successfully.');
+            // return response('All Leads converted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+            Session::flash('error', $e->getMessage());
+            return response($e->getMessage());
+        }
+    }
     public function assignMultipleLeads(Request $request)
     {
         $request->validate([
@@ -520,14 +548,13 @@ class LeadController extends Controller
         ]);
         try {
             $leads = Lead::find($request->lead_ids);
-            $comment['value'] = 'Lead Owner Changed';
-            $remarks = Remarks::create($comment)->orderBy('created_at', 'desc')->first();
-
             foreach ($leads as $lead) {
+                $comment['value'] = 'Lead Owner Changed';
+                $comment['lead_id'] = $lead->id;
+                Remarks::create($comment);
                 $lead->update([
                     'owner_id' => $request->counsellor_id
                 ]);
-                Report::where('leads_id', $lead->id)->orderBy('created_at', 'desc')->first()->update(['remarks' => $remarks->id]);
                 $lead = Lead::find($lead->id);
                 LeadAssignedEvent::dispatch($lead);
                 NewLog::create('Lead Assigned', 'Lead "' . $lead->name . '" has been assigned to ' . $lead->owner->name . '.');

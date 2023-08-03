@@ -22,7 +22,7 @@
 
         </div>
         <div class="col text-end">
-            @if(Auth::user()->hasRole('super-admin'))
+            @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
             <ul class="list-inline-item pl-0">
 
                 <li class="list-inline-item">
@@ -51,11 +51,16 @@
             @endif
             <ul id="multiple-actions" class="list-inline-item pl-0 d-none">
                 <li class="list-inline-item">
+                    <button onclick="deleteMultipleLeads();" class="btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded">
+                        <i class="feather-navigation" aria-hidden="true"></i> Delete Leads
+                    </button>
+                </li>
+                <li class="list-inline-item">
                     <button onclick="convertMultipleLeads();" class="btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded">
                         <i class="feather-navigation" aria-hidden="true"></i> Convert Leads
                     </button>
                 </li>
-                @if (Auth::user()->hasRole('super-admin'))
+                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                 <li class="list-inline-item">
                     <button id="assign-lead" data-bs-toggle="modal" data-bs-target="#assign_lead" class="btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded">
                         Assign Leads To <i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -81,11 +86,11 @@
                                 <th>Phone</th>
                                 <th>Purpose</th>
                                 <th>Added From</th>
-                                @if (Auth::user()->hasRole('super-admin'))
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                                 @endif
                                 <!-- <th>Lead Created</th> -->
-                                @if (Auth::user()->hasRole('super-admin'))
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <!-- <th>Created By</th> -->
                                 @endif
                                 <th>Lead Status</th>
@@ -117,7 +122,8 @@
 @component('leads.edit')
 @endcomponent
 
-
+@component('leads.remarks')
+@endcomponent
 
 @component('leads.assign')
 @endcomponent
@@ -127,7 +133,6 @@
     $(document).ready(function() {
         localStorage.setItem('SelectedLeads', JSON.stringify([]));
         getTransactions();
-        getCountries()
 
         $('#myTable tbody').on('click', 'tr', function() {
             let SelectedLeads = JSON.parse(localStorage.getItem('SelectedLeads'));
@@ -162,7 +167,7 @@
     });
 </script>
 
-@if (Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 <script>
     function getTransactions() {
         $("#myTable").dataTable().fnDestroy();
@@ -618,6 +623,48 @@
         }
     }
 
+    function deleteMultipleLeads() {
+        let SelectedLeads = JSON.parse(localStorage.getItem('SelectedLeads'));
+        if (SelectedLeads.length <= 0) {
+            $.alert({
+                title: 'Alert!',
+                content: 'Please select at least 1 Lead to delete!',
+            });
+        } else {
+            $.confirm({
+                title: 'Confirm',
+                content: 'Do you want to delet all selected Leads ?',
+                buttons: {
+                    info: {
+                        text: 'Cancel',
+                        btnClass: 'btn-red',
+                        action: function() {
+                            // canceled
+                        }
+                    },
+                    danger: {
+                        text: 'Delete',
+                        btnClass: 'btn-blue',
+                        action: function() {
+                            var url = "{{ route('leads.multiple.delete') }}";
+                            $.ajax({
+                                type: 'POST',
+                                url: url,
+                                data: {
+                                    _token: '{{csrf_token()}}',
+                                    lead_ids: SelectedLeads
+                                },
+                                success: function(data) {
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                    },
+                }
+            });
+        }
+    }
+
     function assignMultipleLeads() {
         let counsellor_id = $('#assign-lead-owners').val();
         let counsellor_name = $("#select-counsellor option:selected").text();
@@ -648,9 +695,6 @@
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
-                console.log({
-                    data
-                })
                 if (data.users) {
                     let options = '<option value="" selected>Filter Counsellor</option>';
                     options += '<option value="Unassigned">Unassigned</option>';
@@ -664,9 +708,6 @@
                     }
 
                     $('#filter-owner').html(options);
-                    console.log({
-                        options
-                    })
                 }
 
                 if (data.all_users) {

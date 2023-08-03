@@ -262,7 +262,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::find($id);
-            //            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            //            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $task->update([
                 'status' => 'Resolved'
             ]);
@@ -278,7 +278,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::find($id);
-            // abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            // abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $task->update([
                 'status' => 'Canceled',
                 'case_cancel_info' =>$request->close_cause 
@@ -294,7 +294,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $task->delete();
             Session::flash('success', 'Task deleted successfully.');
             return response('Task deleted successfully.');

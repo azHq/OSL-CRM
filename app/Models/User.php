@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -58,7 +59,9 @@ class User extends Authenticatable
 
 
         self::created(function ($user) {
-            NewLog::create('New Counsellor added', 'A counsellor "' . $user->name . '" has been added.');
+            $newUser = new User();
+            $role = $newUser->getRoleByID($user->role_id);
+            NewLog::create('New "' . $role . '" added', 'A "' . $role . '" "' . $user->name . '" has been added.');
         });
 
         self::updated(function ($user) {
@@ -66,11 +69,16 @@ class User extends Authenticatable
             foreach ($user->getDirty() as $key => $value) {
                 $updatedFields .= (' ' . $key . ',');
             }
-            NewLog::create('Counsellor Updated', 'Counsellor "' . $user->name . '" has been updated. Changed fields are' . $updatedFields . '.');
+            $newUser = new User();
+            $role = $newUser->getRoleByID($user->role_id);
+
+            NewLog::create('"' . $role . '" Updated', '"' . $role . '" "' . $user->name . '" has been updated. Changed fields are' . $updatedFields . '.');
         });
 
         self::deleted(function ($user) {
-            NewLog::create('Counsellor Deleted', 'Task "' . $user->name . '" has been deleted.');
+            $newUser = new User();
+            $role = $newUser->getRoleByID($user->role_id);
+            NewLog::create('"' . $role . '" Deleted', 'Task "' . $user->name . '" has been deleted.');
         });
     }
 
@@ -78,6 +86,32 @@ class User extends Authenticatable
     {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', 'student');
+        });
+    }
+    public function getRoleByID($id)
+    {
+        $role = Role::find($id);
+
+        if ($role) {
+            if ($role['name'] == 'main-super-admin') {
+                return 'Manager';
+            }
+            if ($role['name'] == 'super-admin') {
+                return 'Admin';
+            } else if ($role['name'] == 'admin') {
+                return 'Counsellor';
+            } else if ($role['name'] == 'cro') {
+                return 'CRO';
+            } else {
+                return 'Student';
+            }
+        }
+        return '';
+    }
+    public function scopeMainSuperAdmin($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', 'main-super-admin');
         });
     }
 
@@ -109,8 +143,11 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
-        if ($this->roles()->first()->name == 'super-admin') {
+        if ($this->roles()->first()->name == 'main-super-admin') {
             return 'Manager';
+        }
+        if ($this->roles()->first()->name == 'super-admin') {
+            return 'Admin';
         } else if ($this->roles()->first()->name == 'admin') {
             return 'Counsellor';
         } else if ($this->roles()->first()->name == 'cro') {

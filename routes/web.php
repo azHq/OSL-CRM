@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('leads/multiple/convert', [LeadController::class, 'convertMultipleLeads'])->name('leads.multiple.convert');
     Route::post('leads/multiple/assign', [LeadController::class, 'assignMultipleLeads'])->name('leads.multiple.assign');
+    Route::post('leads/multiple/delete', [LeadController::class, 'deleteMultipleLeads'])->name('leads.multiple.delete');
 
 
     Route::get('leads/subcategories/{category_id}', [LeadController::class, 'subcategoriesList'])->name('leads.subcategories.list');
@@ -67,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('documents/initialize/{leadId}', [DocumentController::class, 'initializeDocument'])->name('documents.initialize');
     Route::post('leads/import', [LeadController::class, 'import'])->name('leads.import');
+    Route::post('leads/addRemarks', [LeadController::class, 'addRemarks'])->name('leads.addRemarks');
     Route::get('leads/export', [LeadController::class, 'export'])->name('leads.export');
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
     Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
@@ -188,7 +190,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('metaforms', [MetaFormsController::class, 'store'])->name('metaforms.store');
 
     Route::get('cros', [UserController::class, 'croIndex'])->name('cros.index');
-    Route::get('super-admins', [UserController::class, 'superAdminIndex'])->name('super-admin.index');
+    Route::get('admins', [UserController::class, 'superAdminIndex'])->name('super-admin.index');
 
     Route::get('chat/{id}', [MessageController::class, 'chatView'])->name('chat.index');
     Route::get('messages/list/{id}', [MessageController::class, 'list'])->name('messages.list');

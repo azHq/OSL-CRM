@@ -20,7 +20,7 @@ class Messages extends Model
     protected static function booted()
     {
         static::addGlobalScope('rolewise', function ($query) {
-            // if (!Auth::user()->hasRole('super-admin'))
+            // if (!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'))
                 // $query->where('owner_id', Auth::user()->id);
         });
 

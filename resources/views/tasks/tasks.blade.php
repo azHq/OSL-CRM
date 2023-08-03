@@ -29,7 +29,7 @@
                                 <th>Details</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
-                                @if (Auth::user()->hasRole('super-admin'))
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                                 @endif
                                 <th>Status</th>
@@ -64,7 +64,7 @@
     });
 </script>
 
-@if (Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 <script>
     function getTasks() {
         $("#myTable").dataTable().fnDestroy();

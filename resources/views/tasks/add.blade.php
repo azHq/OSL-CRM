@@ -106,7 +106,7 @@
 		});
 	});
 </script>
-@if(Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 <script>
 	$(document).ready(function() {
 		$.ajax({

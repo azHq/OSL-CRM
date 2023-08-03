@@ -155,7 +155,7 @@ class ApplicationController extends Controller
     {
         try {
             $application = Application::find($id);
-            abort_if((!Auth::user()->hasRole('super-admin')), 403);
+            abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $application->delete();
             Session::flash('success', 'Application deleted successfully.');
             return response('Application deleted successfully.');

@@ -22,7 +22,7 @@
 
         </div>
         <div class="col text-end">
-            @if(Auth::user()->hasRole('super-admin'))
+            @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                 <ul class="list-inline-item pl-0">
                     <li class="list-inline-item">
                         <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded"
@@ -52,7 +52,7 @@
                         <i class="feather-navigation" aria-hidden="true"></i> Convert Leads
                     </button>
                 </li>
-                @if (Auth::user()->hasRole('super-admin'))
+                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                     <li class="list-inline-item">
                         <button id="assign-lead" data-bs-toggle="modal" data-bs-target="#assign_lead"
                                 class="btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded">
@@ -77,11 +77,11 @@
                             <th>Full Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            @if (Auth::user()->hasRole('super-admin'))
+                            @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                             @endif
                             <th>Lead Created</th>
-                            @if (Auth::user()->hasRole('super-admin'))
+                            @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Created By</th>
                             @endif
                             <th>Lead Status</th>
@@ -144,7 +144,7 @@
     });
 </script>
 
-@if (Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
     <script>
         function getStatusLeadsList() {
             $("#myTable").dataTable().fnDestroy();

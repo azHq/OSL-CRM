@@ -11,7 +11,7 @@
 @endpush
 
 <div class="row">
-    @if(Auth::user()->hasRole('super-admin'))
+    @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
     <ul class="list-inline-item pl-0">
 
         <!-- <li class="list-inline-item">
@@ -39,7 +39,7 @@
                                 <th>Intake Month</th>
                                 <th>Intake Year</th>
                                 <th>University</th>
-                                @if(Auth::user()->hasRole('super-admin'))
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                                 @endif
                                 <th>Status</th>
@@ -65,7 +65,7 @@
         getApplications();
     });
 </script>
-@if(Auth::user()->hasRole('super-admin'))
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 <script>
     function getApplications() {
         let url = "{{ route('applications.listByLeadId' ,'lead_id') }}"

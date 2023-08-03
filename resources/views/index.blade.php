@@ -148,7 +148,7 @@
 							<h3 class="text-center my-3">To Do List</h3>
 							<div class="d-flex justify-content-between">
 								<div>
-                                    @if(Auth::user()->hasRole('super-admin'))
+                                    @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 									<select id="todo-filter-counsellor" onchange="filterByCounsellor()" class="task-filter-counsellors form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
 										<option value="" selected>Filter Counsellor</option>
 									</select>

@@ -19,7 +19,7 @@ class Document extends Model
         parent::boot();
 
         static::addGlobalScope('rolewise', function ($query) {
-            // if (!Auth::user()->hasRole('super-admin')) {
+            // if (!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')) {
             //     $query->whereHas('lead', function ($query) {
             //         $query->where('owner_id', Auth::user()->id);
             //     });

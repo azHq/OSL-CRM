@@ -216,6 +216,52 @@
             </div>
 
         </div>
+        @if(!Auth::user()->hasRole('student'))
+        <div class="crms-title row bg-white mt-4">
+            <div class="col  p-0">
+                <h3 class="page-title m-0">
+                    <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </span> Remarks
+                </h3>
+            </div>
+        
+            <div class="col p-0 text-end">
+                <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-remarks" data-bs-toggle="modal" data-bs-target="#add_remarks">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add remarks
+                </button>
+            </div>
+     
+        </div>
+        <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-striped table-nowrap custom-table mb-0 datatable w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>Remarks</th>
+                                            <th>Added By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($lead->remark as $remark)
+                                        <tr>
+                                            <td>{{ $remark->value }}</td>
+                                            <td>{{ $remark->user->name }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="crms-title row bg-white mt-4">
             <div class="col  p-0">
                 <h3 class="page-title m-0">
@@ -292,6 +338,9 @@
         @endcomponent
 
         @component('applications.create')
+        @endcomponent
+
+        @component('leads.remarks')
         @endcomponent
         <script>
             $(document).ready(function() {

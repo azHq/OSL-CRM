@@ -15,7 +15,7 @@ class CampaignController extends Controller
 {
     public function index()
     {
-        abort_if(!Auth::user()->hasRole('super-admin'), 403);
+        abort_if(!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin'), 403);
 
         if (\request()->ajax()) {
             return view('meta.index');

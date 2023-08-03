@@ -8,7 +8,7 @@
 
         </div>
         <div class="col text-end">
-            @if(Auth::user()->hasRole('super-admin'))
+            @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                 <ul class="list-inline-item pl-0">
                     <li class="list-inline-item">
                         <button
