@@ -75,6 +75,12 @@ class User extends Authenticatable
             NewLog::create('"' . $role . '" Updated', '"' . $role . '" "' . $user->name . '" has been updated. Changed fields are' . $updatedFields . '.');
         });
 
+        self::deleting(function ($user) {
+            Lead::where('owner_id', $user->id)->update([
+                'owner_id' =>null
+            ]);
+        });
+        
         self::deleted(function ($user) {
             $newUser = new User();
             $role = $newUser->getRoleByID($user->role_id);

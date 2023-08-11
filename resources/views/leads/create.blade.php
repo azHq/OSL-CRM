@@ -48,6 +48,17 @@
 							<div class="col">
 								<div class="form-group row">
 									<div class="col-sm-12">
+										<label class="col-form-label">Address</label>
+										<textarea id="edit-address" rows="2" class="form-control" name="address" placeholder="Add Address">
+											</textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div class="form-group row">
+									<div class="col-sm-12">
 										<label class="col-form-label">Intake Month </label>
 										<select class=" form-control form-select" name="intake_month">
 											<option value="1">January</option>
@@ -82,6 +93,17 @@
 											<option value="English Teaching">English Teaching</option>
 											<option value="Study Abroad">Study Abroad</option>
 											<!-- <option value="Not Potential">Not Potential</option> -->
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Passport <span class="text-danger">*</span></label>
+										<select id="edit-passport" class=" form-control form-select" name="passport" required>
+											<option value="1">Yes</option>
+											<option value="0" selected>No</option>
 										</select>
 									</div>
 								</div>
@@ -164,6 +186,43 @@
 									<div class="col-sm-12">
 										<label class="col-form-label">Job Experience </label>
 										<input type="text" class="form-control" name="job_experience" placeholder="Job Experience">
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="row">
+							<div class="col" id='destination_col'>
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Desired Destination</label>
+										<select id="lead-destination" class=" form-control form-select" name="destination" onchange="destinationChanged()">
+											<option value="N/A" selected>N/A</option>
+											<option value="Australia">Australia</option>
+											<option value="Canada">Canada</option>
+											<option value="Sweden">Sweden</option>
+											<option value="USA">USA</option>
+											<option value="UK">UK</option>
+											<option value="others">Others</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col" id='source_col'>
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Source</label>
+										<select id="lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+											<option value="Linkedin">Linkedin</option>
+											<option value="Twitter">Twitter</option>
+											<option value="Youtube">Youtube</option>
+											<option value="Google">Google</option>
+											<option value="Event">Event</option>
+											<option value="Offline">Offline</option>
+											<option value="Subagent">Subagent</option>
+											<option value="Other Social Platform">Other Social Platform</option>
+											<option value="others">Others</option>
+										</select>
 									</div>
 								</div>
 							</div>
@@ -294,12 +353,9 @@
 				type: 'GET',
 				url: "{{ route('countries.info') }}",
 				success: function(countries) {
-					console.log({
-						countries
-					})
 					var options = '<option value="" selected>Select Country</option>';
 					countries.forEach(function(country) {
-						options += '<option value="' + country.id + '">' + country.name + '</option>';
+						options += '<option value="' + country.name + '">' + country.name + '</option>';
 					});
 					$('#country-info').html(options);
 
@@ -318,6 +374,69 @@
 			});
 		}
 	});
+
+	function sourceChanged() {
+		let source = $("#lead-source").val();
+
+		if (source == 'others') {
+			let newHtml = `<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Source</label>
+										<select id="lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+											<option value="Linkedin">Linkedin</option>
+											<option value="Twitter">Twitter</option>
+											<option value="Youtube">Youtube</option>
+											<option value="Google">Google</option>
+											<option value="Event">Event</option>
+											<option value="Offline">Offline</option>
+											<option value="Subagent">Subagent</option>
+											<option value="Other Social Platform">Other Social Platform</option>
+											<option value="others" selected>Others</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" id="source_input">
+									<div class="col-sm-12">
+										<label class="col-form-label">Source </label>
+										<input type="text" class="form-control" name="insert_type" placeholder="Write a source">
+									</div>
+								</div>`
+			$("#source_col").html(newHtml)
+		} else {
+			$("#source_input").html('')
+		}
+
+	}
+
+	function destinationChanged() {
+		let destination = $("#lead-destination").val();
+		if (destination == 'others') {
+			let newHtml = `	<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Desired Destination</label>
+										<select id="lead-destination" class=" form-control form-select" name="destination" onchange="destinationChanged()">
+											<option value="N/A">N/A</option>
+											<option value="Australia">Australia</option>
+											<option value="Canada">Canada</option>
+											<option value="Sweden">Sweden</option>
+											<option value="USA">USA</option>
+											<option value="UK">UK</option>
+											<option value="others" selected>Others</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" id="destination_input">
+									<div class="col-sm-12">
+										<label class="col-form-label">Destination</label>
+										<input type="text" class="form-control" name="destination" placeholder="Write a destination">
+									</div>
+								</div>`
+			$("#destination_col").html(newHtml)
+		} else {
+			$("#destination_input").html('')
+		}
+
+	}
 
 	function checkUserExistOrNot() {
 		let email = $("input[name='email']").val();
@@ -350,7 +469,11 @@
 				newLead.owner_id = $("select[name='owner_id']").val();
 				newLead.category_id = $("select[name='category_id']").val();
 				newLead.subcategory_id = $("select[name='subcategory_id']").val();
-
+				newLead.insert_type = $("input[name='insert_type']").val() || $("select[name='insert_type']").val();
+				newLead.destination = $("input[name='destination']").val() || $("select[name='destination']").val();
+				console.log({
+					newLead
+				})
 				let url = "{{route('leads.field.values')}}"
 				$.ajax({
 					type: 'POST',

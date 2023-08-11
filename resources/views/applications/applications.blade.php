@@ -211,7 +211,6 @@
 @else
 <script>
     function getApplications() {
-        console.log("hitted")
         $("#myApplicationTable").dataTable().fnDestroy();
         let url = "{{ route('applications.listByLeadId' ,'lead_id') }}"
         let lead_id = $('#lead_id').val()

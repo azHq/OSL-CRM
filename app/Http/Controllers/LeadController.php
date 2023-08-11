@@ -26,6 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
 use App\Services\FacebookGraphService;
+use Symfony\Component\Console\Input\Input;
 
 class LeadController extends Controller
 {
@@ -99,14 +100,28 @@ class LeadController extends Controller
                         return '<label class="badge badge-success text-center">' . $row->status . '</label>';
                     }
                 })
-                ->editColumn('added_from', function ($row) {
+                ->editColumn('source', function ($row) {
                     $value = $row->insert_type;
                     if ($value == 'from_meta') {
                         return '<label class="badge badge-info text-center">META</label>';
+                    } else if ($value == 'from_crm') {
+                        return '<label class="badge badge-info text-center">CRM</label>';
                     } else {
-                        return '<label class="badge badge-success text-center">CRM</label>';
+                        return '<label class="badge badge-success text-center">' . $value . '</label>';
                     }
                 })
+                ->editColumn('passport', function ($row) {
+                    $value = 'No';
+                    if ($row->passport == 1) {
+                        $value = 'Yes';
+                        return '<label class="badge badge-success text-center">' . $value . '</label>';
+                    }
+                    return '<label class="badge badge-info text-center">' . $value . '</label>';
+                })
+                ->editColumn('destination', function ($row) {
+                    return '<label class="badge badge-danger text-center">' . $row->destination . '</label>';
+                })
+
                 ->editColumn('email', function ($row) {
                     return $row->email;
                 })
@@ -128,12 +143,12 @@ class LeadController extends Controller
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#mail_lead" class="mail-lead lkb-table-action-btn url badge-success btn-edit"><i class="feather-mail"></i></a>';
                     $action .= '<a href="' . route('leads.view', $row->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
-                    if (Auth::user()->hasRole('super-admin'))
+                    if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                         $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'added_from', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'source', 'passport', 'destination', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -435,8 +450,12 @@ class LeadController extends Controller
         try {
             $lead = Lead::find($id);
             $reports = Report::where('leads_id', $id)->get();
+            $remarks = Remarks::where('lead_id', $id)->get();
             foreach ($reports as $report) {
                 $report->delete();
+            }
+            foreach ($remarks as $remark) {
+                $remark->delete();
             }
             abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin')), 403);
             $lead->delete();
@@ -448,9 +467,9 @@ class LeadController extends Controller
         }
     }
 
-    public function import()
+    public function import(Request $request)
     {
-        Excel::import(new LeadsImport, request()->file('file'));
+        Excel::import(new LeadsImport, $request->file('file'));
         NewLog::create('Leads Imported', 'Multiple leads have been imported.');
         Session::flash('success', 'Leads imported successfully.');
         return Redirect::back()->with('success', 'Lead Imported successfully.');
@@ -503,7 +522,7 @@ class LeadController extends Controller
                     $comment['value'] = 'Lead Converted to Student';
                     $comment['lead_id'] = $lead->id;
                     Remarks::create($comment);
-                   }
+                }
 
                 NewLog::create('Lead Converted To Student', 'Lead "' . $student->name . '" has been converted to student.');
             }

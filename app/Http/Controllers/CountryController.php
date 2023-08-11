@@ -18,7 +18,8 @@ class CountryController extends Controller
     }
 
     public function getCountries(){
-        $countries = Country::orderBy('name', 'asc')->get();
+        // $countries = Country::orderBy('name', 'asc')->get();
+        $countries = json_decode(file_get_contents(resource_path() . "/static/countries.json"), true);
         return $countries;
     }
 

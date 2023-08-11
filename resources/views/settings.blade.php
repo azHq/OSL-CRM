@@ -35,7 +35,7 @@
 												</div>
 												<h6 class="settings-size">Recommended image size is <span>150px x 150px</span></h6>
 												<div class="upload-images">
-													<img src="assets/img/logo.png" alt="Image">
+													<img src="assets/img/logo-login.png" alt="Image">
 													<a href="javascript:void(0);" class="btn-icon logo-hide-btn">
 														<i class="feather-x-circle"></i>
 													</a>

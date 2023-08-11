@@ -45,6 +45,17 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
+											<label class="col-form-label">Address</label>
+											<textarea id="edit-address" rows="2" class="form-control" name="address" placeholder="Add Address">
+											</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="form-group row">
+										<div class="col-sm-12">
 											<label class="col-form-label">Intake Month </label>
 											<select id="edit-lead-intake_month" class=" form-control form-select" name="intake_month">
 												<option value="1">January</option>
@@ -79,6 +90,17 @@
 												<option value="English Teaching">English Teaching</option>
 												<option value="Study Abroad">Study Abroad</option>
 												<!-- <option value="Not Potential">Not Potential</option> -->
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<label class="col-form-label">Passport <span class="text-danger">*</span></label>
+											<select id="edit-passport" class=" form-control form-select" name="passport" required>
+												<option value="1">Yes</option>
+												<option value="0" selected>No</option>
 											</select>
 										</div>
 									</div>
@@ -162,6 +184,43 @@
 										</div>
 									</div>
 								</div>
+								<div class="row">
+									<div class="col" id='edit_destination_col'>
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<label class="col-form-label">Desired Destination</label>
+												<select id="edit-lead-destination" class=" form-control form-select" name="destination" onchange="destinationChanged()">
+													<option value="N/A" selected>N/A</option>
+													<option value="Australia">Australia</option>
+													<option value="Canada">Canada</option>
+													<option value="Sweden">Sweden</option>
+													<option value="USA">USA</option>
+													<option value="UK">UK</option>
+													<option value="others">Others</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col" id='edit_source_col'>
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<label class="col-form-label">Source</label>
+												<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+													<option value="Linkedin">Linkedin</option>
+													<option value="Twitter">Twitter</option>
+													<option value="Youtube">Youtube</option>
+													<option value="Google">Google</option>
+													<option value="Event">Event</option>
+													<option value="Offline">Offline</option>
+													<option value="Subagent">Subagent</option>
+													<option value="Other Social Platform">Other Social Platform</option>
+													<option value="others">Others</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+
 								<div class="form-group row">
 									@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 									<div class="col-md-4 col-sm-12">
@@ -206,6 +265,7 @@
 									<button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
 								</div>
 							</div>
+
 						</form>
 					</div>
 				</div>
@@ -234,7 +294,7 @@
 				success: function(countries) {
 					var options = '<option value="" selected>Select Country</option>';
 					countries.forEach(function(country) {
-						options += '<option value="' + country.id + '">' + country.name + '</option>';
+						options += '<option value="' + country.name + '">' + country.name + '</option>';
 					});
 					$('#edit-country-info').html(options);
 
@@ -243,6 +303,81 @@
 		}
 	});
 
+	function sourceChanged() {
+		let source = $("#edit-lead-source").val();
+
+		if (source == 'others') {
+			let newHtml = `<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Source</label>
+										<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+											<option value="Linkedin">Linkedin</option>
+											<option value="Twitter">Twitter</option>
+											<option value="Youtube">Youtube</option>
+											<option value="Google">Google</option>
+											<option value="Event">Event</option>
+											<option value="Offline">Offline</option>
+											<option value="Subagent">Subagent</option>
+											<option value="Other Social Platform">Other Social Platform</option>
+											<option value="others" selected>Others</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" id="source_input">
+									<div class="col-sm-12">
+										<label class="col-form-label">Source </label>
+										<input type="text" class="form-control" name="insert_type" placeholder="Write a source">
+									</div>
+								</div>`
+			$("#edit_source_col").html(newHtml)
+		} else {
+			$("#source_input").html('')
+		}
+
+	}
+
+	function destinationChanged() {
+		let destination = $("#edit-lead-destination").val();
+
+		if (destination == 'others') {
+			let newHtml = `	<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Desired Destination</label>
+										<select id="edit-lead-destination" class=" form-control form-select" name="destination" onchange="destinationChanged()">
+											<option value="N/A">N/A</option>
+											<option value="Australia">Australia</option>
+											<option value="Canada">Canada</option>
+											<option value="Sweden">Sweden</option>
+											<option value="USA">USA</option>
+											<option value="UK">UK</option>
+											<option value="others" selected>Others</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" id="edit_destination_input">
+									<div class="col-sm-12">
+										<label class="col-form-label">Destination</label>
+										<input type="text" class="form-control" name="destination" placeholder="Write a destination">
+									</div>
+								</div>`
+			$("#edit_destination_col").html(newHtml)
+		} else {
+			$("#edit_destination_input").html('')
+		}
+
+	}
+
+	async function updateHtml(elementId, value) {
+		let pre_html = $(elementId).html()
+		if (value && !pre_html.includes(value)) {
+			let next_html = `
+					<option value="${value}">${value}</option>
+					${pre_html}
+				`
+			await $(elementId).html(next_html)
+		}
+		await $(elementId).val(value || 'N/A');
+	}
 	async function getLead(id) {
 		var url = "{{ route('leads.edit', 'id') }}";
 		url = url.replace('id', id);
@@ -264,21 +399,28 @@
 				await $('#edit-lead-job_experience').val(lead.job_experience);
 				await $('#edit-lead-owner_id').val(lead.owner_id);
 				await $('#edit-country-info').val(lead.country);
-				let pre_html = $('#edit-lead-last_education').html()
-				let next_html = `
-					<option value="${lead.last_education}">${lead.last_education}</option>
-					${pre_html}
-				`
-				await $('#edit-lead-last_education').html(next_html)
+				await $('#edit-passport').val(lead.passport);
+				await $('#edit-address').val(lead.address);
 
-				// $('#edit-lead-name').html(next_html)
+				await updateHtml('#edit-lead-last_education', lead.last_education)
+				await updateHtml('#edit-lead-english', lead.english)
+				await updateHtml('#edit-lead-source', lead.insert_type)
+				await updateHtml('#edit-lead-destination', lead.destination)
 
-				pre_html = $('#edit-lead-english').html()
-				next_html = `
-					<option value="${lead.english}">${lead.english}</option>
-					${pre_html}
-				`
-				await $('#edit-lead-english').html(next_html)
+				// let pre_html = $('#edit-lead-last_education').html()
+				// let next_html = `
+				// 	<option value="${lead.last_education}">${lead.last_education}</option>
+				// 	${pre_html}
+				// `
+				// await $('#edit-lead-last_education').html(next_html)
+
+
+				// pre_html = $('#edit-lead-english').html()
+				// next_html = `
+				// 	<option value="${lead.english}">${lead.english}</option>
+				// 	${pre_html}
+				// `
+				// await $('#edit-lead-english').html(next_html)
 
 
 				var options = '';

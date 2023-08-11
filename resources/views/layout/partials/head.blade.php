@@ -13,7 +13,7 @@
 
 <title>@yield('title')</title>
 <!-- Favicon -->
-<link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/favicon.png')}}" />
+<link rel="shortcut icon" type="image/x-icon" href="{{url('assets/img/logo-new.png')}}" />
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="{{url('assets/plugins/bootstrap/css/bootstrap.min.css')}}" />
 <!-- Fontawesome CSS -->

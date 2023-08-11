@@ -85,7 +85,9 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Purpose</th>
-                                <th>Added From</th>
+                                <th>Source</th>
+                                <th>Passport</th>
+                                <th>Destination</th>
                                 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                                 @endif
@@ -225,12 +227,45 @@
                                 //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
                                 //     break;
 
-                            case 'Added From':
-                                $(cell).html(`<select id="filter-added_from" name="added_from" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Added From</option>
+                            case 'Source':
+                                $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Source</option>
 												<option value="">Unknown</option>
 												<option value="from_crm">CRM</option>
 												<option value="from_meta">META</option>
+										
+                                            </select>`);
+                                break;
+                            case 'Source':
+                                $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Source</option>
+												<option value="">Unknown</option>
+                                                <option value="Linkedin">Linkedin</option>
+                                                <option value="Twitter">Twitter</option>
+                                                <option value="Youtube">Youtube</option>
+                                                <option value="Google">Google</option>
+                                                <option value="Event">Event</option>
+                                                <option value="Offline">Offline</option>
+                                                <option value="Subagent">Subagent</option>
+                                                <option value="Other Social Platform">Other Social Platform</option>
+                                            </select>`);
+                                break;
+                            case 'Passport':
+                                $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Passport</option>
+												<option value="Yes">Yes</option>
+												<option value="No">No</option>
+                                            </select>`);
+                                break;
+                            case 'Destination':
+                                $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Destination</option>
+													<option value="Australia">Australia</option>
+													<option value="Canada">Canada</option>
+													<option value="Sweden">Sweden</option>
+													<option value="USA">USA</option>
+													<option value="UK">UK</option>
+													<option value="others">Others</option>
 										
                                             </select>`);
                                 break;
@@ -317,7 +352,13 @@
                     data: 'purpose'
                 },
                 {
-                    data: 'added_from'
+                    data: 'source'
+                },
+                {
+                    data: 'passport'
+                },
+                {
+                    data: 'destination'
                 },
                 {
                     data: 'owner'
@@ -404,12 +445,37 @@
                                 // case 'Lead Created':
                                 //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
                                 //     break;
-                            case 'Added From':
-                                $(cell).html(`<select id="filter-added_from" name="added_from" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Added From</option>
+                            case 'Source':
+                                $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Source</option>
 												<option value="">Unknown</option>
-												<option value="from_crm">CRM</option>
-												<option value="from_meta">META</option>
+                                                <option value="Linkedin">Linkedin</option>
+                                                <option value="Twitter">Twitter</option>
+                                                <option value="Youtube">Youtube</option>
+                                                <option value="Google">Google</option>
+                                                <option value="Event">Event</option>
+                                                <option value="Offline">Offline</option>
+                                                <option value="Subagent">Subagent</option>
+                                                <option value="Other Social Platform">Other Social Platform</option>
+                                            </select>`);
+                                break;
+                            case 'Passport':
+                                $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                <option value="" selected>Filter Passport</option>
+												<option value="Yes">Yes</option>
+												<option value="No">No</option>
+                                            </select>`);
+                                break;
+                            case 'Destination':
+                                $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                 <option value="" selected>Filter Destination</option>
+
+													<option value="Australia">Australia</option>
+													<option value="Canada">Canada</option>
+													<option value="Sweden">Sweden</option>
+													<option value="USA">USA</option>
+													<option value="UK">UK</option>
+													<option value="others">Others</option>
 										
                                             </select>`);
                                 break;
@@ -497,7 +563,13 @@
                 //     data: 'created_at'
                 // },
                 {
-                    data: 'added_from'
+                    data: 'source'
+                },
+                {
+                    data: 'passport'
+                },
+                {
+                    data: 'destination'
                 },
                 {
                     data: 'status'

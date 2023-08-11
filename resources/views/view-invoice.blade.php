@@ -13,7 +13,7 @@
 									<div class="row">
 										<div class="col-md-6">
 											<div class="invoice-logo">
-												<img src="{{ URL::asset('/assets/img/logo.png')}}" alt="logo">
+												<img src="{{ URL::asset('/assets/img/logo-login.png')}}" alt="logo">
 											</div>
 											<div class="invoice-head">
 												<h2>Invoice</h2>

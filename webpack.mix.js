@@ -73,6 +73,7 @@ const folder = {
     mix.copy('resources/js/moment.min.js', 'public/assets/js');
     mix.copy('resources/js/bootstrap.min.js', 'public/assets/js');
     mix.copy('resources/css/bootstrap.min.css', 'public/assets/css');
+    mix.copy('resources/static/countries.json', 'public/assets/static');
  
     mix.copy('node_modules/bootstrap/dist/css/bootstrap.css', 'public/assets/plugins/bootstrap/css');
     mix.copy('node_modules/bootstrap/dist/css/bootstrap.css.map', 'public/assets/plugins/bootstrap/css');

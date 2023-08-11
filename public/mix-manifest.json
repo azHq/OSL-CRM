@@ -359,6 +359,7 @@
     "/assets/js/moment.min.js": "/assets/js/moment.min.js",
     "/assets/js/bootstrap.min.js": "/assets/js/bootstrap.min.js",
     "/assets/css/bootstrap.min.css": "/assets/css/bootstrap.min.css",
+    "/assets/static/countries.json": "/assets/static/countries.json",
     "/assets/plugins/bootstrap/css/bootstrap.css": "/assets/plugins/bootstrap/css/bootstrap.css",
     "/assets/plugins/bootstrap/css/bootstrap.css.map": "/assets/plugins/bootstrap/css/bootstrap.css.map",
     "/assets/plugins/bootstrap/css/bootstrap.min.css": "/assets/plugins/bootstrap/css/bootstrap.min.css",

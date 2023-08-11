@@ -225,13 +225,13 @@
                     </span> Remarks
                 </h3>
             </div>
-        
+
             <div class="col p-0 text-end">
                 <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-remarks" data-bs-toggle="modal" data-bs-target="#add_remarks">
                     <i class="fa fa-plus" aria-hidden="true"></i> Add remarks
                 </button>
             </div>
-     
+
         </div>
         <div class="card p-md-4 p-2 mt-2 lkb-profile-board">
             <div class="row">
@@ -334,7 +334,7 @@
             </div>
         </div>
         <!-- /Page Content -->
-        @component('leads.editView')
+        @component('leads.editview')
         @endcomponent
 
         @component('applications.create')
@@ -360,19 +360,26 @@
                         type: 'GET',
                         url: "{{ route('countries.info') }}",
                         success: function(countries) {
-                            console.log({
-                                countries
-                            })
                             var options = '<option value="" selected>Select Country</option>';
                             countries.forEach(function(country) {
-                                options += '<option value="' + country.id + '">' + country.name + '</option>';
+                                options += '<option value="' + country.name + '">' + country.name + '</option>';
                             });
                             $('#edit-country-info').html(options);
 
                         }
                     });
                 }
-
+                async function updateHtml(elementId, value) {
+                    let pre_html = $(elementId).html()
+                    if (value && !pre_html.includes(value)) {
+                        let next_html = `
+					<option value="${value}">${value}</option>
+					${pre_html}
+				`
+                        await $(elementId).html(next_html)
+                    }
+                    await $(elementId).val(value || 'N/A');
+                }
                 async function getLead(id) {
                     var url = "{{ route('leads.edit', 'id') }}";
                     url = url.replace('id', id);
@@ -394,21 +401,28 @@
                             await $('#edit-lead-job_experience').val(lead.job_experience);
                             await $('#edit-lead-owner_id').val(lead.owner_id);
                             await $('#edit-country-info').val(lead.country);
-                            let pre_html = $('#edit-lead-last_education').html()
-                            let next_html = `
-					<option value="${lead.last_education}">${lead.last_education}</option>
-					${pre_html}
-				`
-                            await $('#edit-lead-last_education').html(next_html)
+                            await $('#edit-passport').val(lead.passport);
+                            await $('#edit-address').val(lead.address);
 
-                            // $('#edit-lead-name').html(next_html)
+                            await updateHtml('#edit-lead-last_education', lead.last_education)
+                            await updateHtml('#edit-lead-english', lead.english)
+                            await updateHtml('#edit-lead-source', lead.insert_type)
+                            await updateHtml('#edit-lead-destination', lead.destination)
+                //             let pre_html = $('#edit-lead-last_education').html()
+                //             let next_html = `
+				// 	<option value="${lead.last_education}">${lead.last_education}</option>
+				// 	${pre_html}
+				// `
+                //             await $('#edit-lead-last_education').html(next_html)
 
-                            pre_html = $('#edit-lead-english').html()
-                            next_html = `
-					<option value="${lead.english}">${lead.english}</option>
-					${pre_html}
-				`
-                            await $('#edit-lead-english').html(next_html)
+                //             // $('#edit-lead-name').html(next_html)
+
+                //             pre_html = $('#edit-lead-english').html()
+                //             next_html = `
+				// 	<option value="${lead.english}">${lead.english}</option>
+				// 	${pre_html}
+				// `
+                //             await $('#edit-lead-english').html(next_html)
 
 
                             var options = '';
