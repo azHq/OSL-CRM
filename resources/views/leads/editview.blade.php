@@ -189,7 +189,7 @@
 										<div class="form-group row">
 											<div class="col-sm-12">
 												<label class="col-form-label">Desired Destination</label>
-												<select id="edit-lead-destination" class=" form-control form-select" name="destination" onchange="destinationChanged()">
+												<select id="edit-lead-destination" class=" form-control form-select" name="destination" onchange="editViewDestinationChanged()">
 													<option value="N/A" selected>N/A</option>
 													<option value="Australia">Australia</option>
 													<option value="Canada">Canada</option>
@@ -205,7 +205,7 @@
 										<div class="form-group row">
 											<div class="col-sm-12">
 												<label class="col-form-label">Source</label>
-												<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+												<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="editViewSourceChanged()">
 													<option value="Linkedin">Linkedin</option>
 													<option value="Twitter">Twitter</option>
 													<option value="Youtube">Youtube</option>
@@ -294,14 +294,14 @@
 		});
 	});
 
-	function sourceChanged() {
+	function editViewSourceChanged() {
 		let source = $("#edit-lead-source").val();
 
 		if (source == 'others') {
 			let newHtml = `<div class="form-group row">
 									<div class="col-sm-12">
 										<label class="col-form-label">Source</label>
-										<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+										<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="editViewSourceChanged()">
 											<option value="Linkedin">Linkedin</option>
 											<option value="Twitter">Twitter</option>
 											<option value="Youtube">Youtube</option>
@@ -327,14 +327,14 @@
 
 	}
 
-	function destinationChanged() {
+	function editViewDestinationChanged() {
 		let destination = $("#edit-lead-destination").val();
 
 		if (destination == 'others') {
 			let newHtml = `	<div class="form-group row">
 									<div class="col-sm-12">
 										<label class="col-form-label">Desired Destination</label>
-										<select id="edit-lead-destination" class=" form-control form-select" name="destination" onchange="destinationChanged()">
+										<select id="edit-lead-destination" class=" form-control form-select" name="destination" onchange="editViewDestinationChanged()">
 											<option value="N/A">N/A</option>
 											<option value="Australia">Australia</option>
 											<option value="Canada">Canada</option>
