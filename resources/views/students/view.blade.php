@@ -51,7 +51,7 @@
                     </p>
                 </div>
                 <div class="col">
-                    <span>Completion Date</span>
+                    <span>Last Education Year</span>
                     <p class="font-weight-bold">{{$student->completion_date??'N/A'}}</p>
                 </div>
                 <div class="col">

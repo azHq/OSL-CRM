@@ -230,9 +230,22 @@
                             case 'Source':
                                 $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Source</option>
-												<option value="">Unknown</option>
-												<option value="from_crm">CRM</option>
-												<option value="from_meta">META</option>
+                                                <option value="Linkedin">Linkedin</option>
+                                                <option value="Meta">Meta</option>
+                                                <option value="Website">Website</option>
+                                                <option value="Twitter">Twitter</option>
+                                                <option value="Youtube">Youtube</option>
+                                                <option value="Google">Google</option>
+                                                <option value="Event">Event</option>
+                                                <option value="Offline">Offline</option>
+                                                <option value="Subagent">Subagent</option>
+
+                                                <option value="Pinterest">Pinterest</option>
+                                                <option value="Referral">Referral</option>
+                                                <option value="Internal">Internal</option>
+
+                                                <option value="Other Social Platform">Other Social Platform</option>
+                                                <option value="others">Others</option>
 										
                                             </select>`);
                                 break;
@@ -247,7 +260,12 @@
                                                 <option value="Event">Event</option>
                                                 <option value="Offline">Offline</option>
                                                 <option value="Subagent">Subagent</option>
-                                                <option value="Other Social Platform">Other Social Platform</option>
+                                                
+<option value="Pinterest">Pinterest</option>
+											<option value="Referral">Referral</option>
+											<option value="Internal">Internal</option>
+										
+<option value="Other Social Platform">Other Social Platform</option>
                                             </select>`);
                                 break;
                             case 'Passport':
@@ -456,7 +474,12 @@
                                                 <option value="Event">Event</option>
                                                 <option value="Offline">Offline</option>
                                                 <option value="Subagent">Subagent</option>
-                                                <option value="Other Social Platform">Other Social Platform</option>
+                                                
+<option value="Pinterest">Pinterest</option>
+											<option value="Referral">Referral</option>
+											<option value="Internal">Internal</option>
+										
+<option value="Other Social Platform">Other Social Platform</option>
                                             </select>`);
                                 break;
                             case 'Passport':

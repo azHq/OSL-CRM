@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('tag')->nullable();
             $table->foreignId('owner_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('lead_id')->references('id')->on('leads')->onDelete('cascade');
-            $table->string('insert_type')->default('from_crm');
+            $table->string('insert_type')->default('Website');
             $table->timestamps();
         });
     }

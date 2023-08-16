@@ -53,7 +53,7 @@ class CampaignController extends Controller
         foreach ($table_columns as $table_column) {
             if (
                 $table_column != 'id' && $table_column != 'owner_id' && $table_column != 'creator_id' && $table_column != 'created_at' && $table_column != 'updated_at'
-                && $table_column != 'subcategory_id' && $table_column != 'documents_pending' && $table_column != 'tag' && $table_column != 'status'
+                && $table_column != 'subcategory_id' && $table_column != 'documents_pending' && $table_column != 'tag' && $table_column != 'status'  && $table_column != 'insert_type'
             ) {
                 array_push($newColumns, $table_column);
             }
@@ -77,7 +77,7 @@ class CampaignController extends Controller
             $duplicateLeads = [];
             foreach ($leads as $lead) {
                 $lead_data = [];
-                $lead_data['insert_type'] = "from_meta";
+                $lead_data['insert_type'] = "Meta";
                 $lead_data['status'] = $request['status'];
 
                 foreach ($lead["field_data"] as $field) {

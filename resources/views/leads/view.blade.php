@@ -156,7 +156,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group row">
-                        <div class="col-md-12"><label class="col-form-label">Counsellor</label></div>
+                        <div class="col-md-12"><label class="col-form-label">Assigned Person</label></div>
                         <div class="col-md-12">
                             <input id="view-edit-lead-counsellor" class="form-control font-weight-bold" type="text" name="name" value="{{$lead->owner?$lead->owner->name:'Unassigned'}}" required disabled>
                         </div>
@@ -182,9 +182,10 @@
                 </div>
                 <div class="col">
                     <div class="form-group row">
-                        <div class="col-md-12"><label class="col-form-label">Completion Date</label></div>
+                        <div class="col-md-12"><label class="col-form-label">Last Education Year</label></div>
                         <div class="col-md-12">
-                            <input id="view-edit-lead-date" class="form-control font-weight-bold" type="text" name="name" value="{{$lead->completion_date??'N/A'}}" required disabled>
+                            <input id="view-edit-lead-date" type="text" class="form-control" name="completion_date" placeholder="{{date('Y')}}">
+
                         </div>
                     </div>
                 </div>
@@ -408,21 +409,21 @@
                             await updateHtml('#edit-lead-english', lead.english)
                             await updateHtml('#edit-lead-source', lead.insert_type)
                             await updateHtml('#edit-lead-destination', lead.destination)
-                //             let pre_html = $('#edit-lead-last_education').html()
-                //             let next_html = `
-				// 	<option value="${lead.last_education}">${lead.last_education}</option>
-				// 	${pre_html}
-				// `
-                //             await $('#edit-lead-last_education').html(next_html)
+                            //             let pre_html = $('#edit-lead-last_education').html()
+                            //             let next_html = `
+                            // 	<option value="${lead.last_education}">${lead.last_education}</option>
+                            // 	${pre_html}
+                            // `
+                            //             await $('#edit-lead-last_education').html(next_html)
 
-                //             // $('#edit-lead-name').html(next_html)
+                            //             // $('#edit-lead-name').html(next_html)
 
-                //             pre_html = $('#edit-lead-english').html()
-                //             next_html = `
-				// 	<option value="${lead.english}">${lead.english}</option>
-				// 	${pre_html}
-				// `
-                //             await $('#edit-lead-english').html(next_html)
+                            //             pre_html = $('#edit-lead-english').html()
+                            //             next_html = `
+                            // 	<option value="${lead.english}">${lead.english}</option>
+                            // 	${pre_html}
+                            // `
+                            //             await $('#edit-lead-english').html(next_html)
 
 
                             var options = '';
@@ -447,7 +448,10 @@
                         success: function(data) {
                             var options = '<option value="">Unassigned</option>';
                             data.users.forEach(function(user) {
-                                options += '<option value="' + user.id + '">' + user.name + '</option>';
+                                options += '<option value="' + user.id + '">' + user.name + '(Counsellor)</option>';
+                            });
+                            data.cros.forEach(function(user) {
+                                options += '<option value="' + user.id + '">' + user.name + '(CRO)</option>';
                             });
                             $('#edit-lead-owner_id').html(options);
                         }

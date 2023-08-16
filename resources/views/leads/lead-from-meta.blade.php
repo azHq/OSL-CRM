@@ -366,8 +366,11 @@
 						//Join all the elements of the array back into a string 
 						//using a blankspace as a separator 
 						let str2 = arr.join(" ");
-						str2 = str2 == 'English' ? 'English Proficiency' : str2
-
+						if (str2 == 'English') {
+							str2 = 'English Proficiency'
+						} else if (str2 == 'Completion Date') {
+							str2 = 'Last Education Year'
+						}
 						tableColumnsHtml += `<option value="${item}">${str2}</option>`
 					})
 					data.leads[0].field_data.forEach(function(field) {
@@ -417,6 +420,7 @@
 		for (let item of values) {
 			request[item.name] = $(`select[name='${item.name}']`).val()
 		}
+		request['status'] = $(`select[name='status']`).val()
 		console.log({
 			request
 		})

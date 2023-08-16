@@ -179,9 +179,9 @@
                 </div>
                 <div class="col">
                     <div class="form-group row">
-                        <div class="col-md-12"><label class="col-form-label">Completion Date</label></div>
+                        <div class="col-md-12"><label class="col-form-label">Last Education Year</label></div>
                         <div class="col-md-12">
-                            <input id="edit-lead-name" class="form-control font-weight-bold" type="text" name="name" value="{{$lead->completion_date??'N/A'}}" required disabled>
+                            <input id="edit-lead-completion_date" type="text" class="form-control" name="completion_date" placeholder="{{date('Y')}}">
                         </div>
                     </div>
                 </div>

@@ -128,17 +128,18 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Country <span class="text-danger">*</span></label>
-											<select class=" form-control form-select" name="country" id="edit-country-info">
-											</select>
+											<label class="col-form-label">Last Education Year</label>
+											<input id="edit-lead-completion_date" type="text" class="form-control" name="completion_date" placeholder="{{date('Y')}}">
+
 										</div>
 									</div>
 								</div>
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Completion Date</label>
-											<input id="edit-lead-completion_date" type="date" class="form-control" name="completion_date" placeholder="{{date('Y-m-d')}}">
+											<label class="col-form-label">Country <span class="text-danger">*</span></label>
+											<select class=" form-control form-select" name="country" id="edit-country-info">
+											</select>
 										</div>
 									</div>
 								</div>
@@ -155,7 +156,7 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">English <span class="text-danger">*</span></label>
+											<label class="col-form-label">English Proficiency Test</label>
 											<select id="edit-lead-english" class=" form-control form-select" name="english" required>
 												<option value="N/A">N/A</option>
 												<option value="IELTS (Academic)">IELTS (Academic)</option>
@@ -184,6 +185,14 @@
 										</div>
 									</div>
 								</div>
+								<div class="col">
+									<div class="form-group row">
+										<div class="col-sm-12">
+											<label class="col-form-label">Desired Course </label>
+											<input type="text" class="form-control" name="desired_course" placeholder="Desired Course">
+										</div>
+									</div>
+								</div>
 								<div class="row">
 									<div class="col" id='edit_destination_col'>
 										<div class="form-group row">
@@ -206,13 +215,21 @@
 											<div class="col-sm-12">
 												<label class="col-form-label">Source</label>
 												<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="editSourceChanged()">
+
 													<option value="Linkedin">Linkedin</option>
+													<option value="Meta">Meta</option>
+													<option value="Website">Website</option>
 													<option value="Twitter">Twitter</option>
 													<option value="Youtube">Youtube</option>
 													<option value="Google">Google</option>
 													<option value="Event">Event</option>
 													<option value="Offline">Offline</option>
 													<option value="Subagent">Subagent</option>
+
+													<option value="Pinterest">Pinterest</option>
+													<option value="Referral">Referral</option>
+													<option value="Internal">Internal</option>
+
 													<option value="Other Social Platform">Other Social Platform</option>
 													<option value="others">Others</option>
 												</select>
@@ -224,7 +241,7 @@
 								<div class="form-group row">
 									@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 									<div class="col-md-4 col-sm-12">
-										<label class="col-form-label">Counsellor</label>
+										<label class="col-form-label">Assigned Person</label>
 										<select id="edit-lead-owner_id" class=" form-control form-select" name="owner_id">
 											<option value="">Unassigned</option>
 										</select>
@@ -279,16 +296,16 @@
 
 <script>
 	$('body').on('click', '.edit-lead', async function() {
-		getLeadEditOwners();
-		getCountries();
+		await getLeadEditOwners();
+		await getCountries();
 		let id = $(this).data('id');
 		await getLead(id);
 		var url = "{{ route('leads.update', 'id') }}";
 		url = url.replace('id', id);
 		$('#lead-update').attr('action', url);
 
-		function getCountries() {
-			$.ajax({
+		async function getCountries() {
+			await $.ajax({
 				type: 'GET',
 				url: "{{ route('countries.info') }}",
 				success: function(countries) {
@@ -311,14 +328,22 @@
 									<div class="col-sm-12">
 										<label class="col-form-label">Source</label>
 										<select id="edit-lead-source" class=" form-control form-select" name="insert_type" onchange="editSourceChanged()">
+											
 											<option value="Linkedin">Linkedin</option>
+											<option value="Meta">Meta</option>
+											<option value="Website">Website</option>
 											<option value="Twitter">Twitter</option>
 											<option value="Youtube">Youtube</option>
 											<option value="Google">Google</option>
 											<option value="Event">Event</option>
 											<option value="Offline">Offline</option>
 											<option value="Subagent">Subagent</option>
-											<option value="Other Social Platform">Other Social Platform</option>
+											
+<option value="Pinterest">Pinterest</option>
+											<option value="Referral">Referral</option>
+											<option value="Internal">Internal</option>
+										
+<option value="Other Social Platform">Other Social Platform</option>
 											<option value="others" selected>Others</option>
 										</select>
 									</div>
@@ -438,14 +463,17 @@
 		});
 	}
 
-	function getLeadEditOwners() {
-		$.ajax({
+	async function getLeadEditOwners() {
+		await $.ajax({
 			type: 'GET',
 			url: "{{ route('leads.create') }}",
 			success: function(data) {
 				var options = '<option value="">Unassigned</option>';
 				data.users.forEach(function(user) {
-					options += '<option value="' + user.id + '">' + user.name + '</option>';
+					options += '<option value="' + user.id + '">' + user.name + '(Counsellor)</option>';
+				});
+				data.cros.forEach(function(user) {
+					options += '<option value="' + user.id + '">' + user.name + '(CRO)</option>';
 				});
 				$('#edit-lead-owner_id').html(options);
 			}

@@ -106,8 +106,8 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Completion Date</label>
-											<input id="edit-lead-completion_date" type="date" class="form-control" name="completion_date" placeholder="{{date('Y-m-d')}}">
+											<label class="col-form-label">Last Education Year</label>
+											<input id="edit-lead-completion_date" type="text" class="form-control" name="completion_date" placeholder="{{date('Y')}}">
 										</div>
 									</div>
 								</div>

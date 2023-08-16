@@ -131,17 +131,17 @@
 							<div class="col">
 								<div class="form-group row">
 									<div class="col-sm-12">
-										<label class="col-form-label">Country <span class="text-danger">*</span></label>
-										<select class=" form-control form-select" name="country" id="country-info">
-										</select>
+										<label class="col-form-label">Last Education Year</label>
+										<input id="lead-completion_date" type="text" class="form-control" name="completion_date" placeholder="{{date('Y')}}">
 									</div>
 								</div>
 							</div>
 							<div class="col">
 								<div class="form-group row">
 									<div class="col-sm-12">
-										<label class="col-form-label">Completion Date</label>
-										<input type="date" class="form-control" name="completion_date" placeholder="{{date('Y-m-d')}}">
+										<label class="col-form-label">Country <span class="text-danger">*</span></label>
+										<select class=" form-control form-select" name="country" id="country-info">
+										</select>
 									</div>
 								</div>
 							</div>
@@ -158,7 +158,7 @@
 							<div class="col">
 								<div class="form-group row">
 									<div class="col-sm-12">
-										<label class="col-form-label">English Proficiency Test <span class="text-danger">*</span></label>
+										<label class="col-form-label">English Proficiency Test</label>
 										<select class=" form-control form-select" name="english" required>
 											<option value="N/A">N/A</option>
 											<option value="IELTS (Academic)">IELTS (Academic)</option>
@@ -189,6 +189,14 @@
 									</div>
 								</div>
 							</div>
+							<div class="col">
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Desired Course </label>
+										<input type="text" class="form-control" name="desired_course" placeholder="Desired Course">
+									</div>
+								</div>
+							</div>
 
 						</div>
 						<div class="row">
@@ -213,13 +221,21 @@
 									<div class="col-sm-12">
 										<label class="col-form-label">Source</label>
 										<select id="lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
+
 											<option value="Linkedin">Linkedin</option>
+											<option value="Meta">Meta</option>
+											<option value="Website">Website</option>
 											<option value="Twitter">Twitter</option>
 											<option value="Youtube">Youtube</option>
 											<option value="Google">Google</option>
 											<option value="Event">Event</option>
 											<option value="Offline">Offline</option>
 											<option value="Subagent">Subagent</option>
+
+											<option value="Pinterest">Pinterest</option>
+											<option value="Referral">Referral</option>
+											<option value="Internal">Internal</option>
+
 											<option value="Other Social Platform">Other Social Platform</option>
 											<option value="others">Others</option>
 										</select>
@@ -229,11 +245,14 @@
 						</div>
 						<div class="form-group row">
 							<div class="col-4 col-sm-12">
-								<label class="col-form-label">Counsellor</label>
+								<label class="col-form-label">Assigned Person</label>
 								<select class=" form-control form-select" name="owner_id" id="create-lead-owners" readonly>
 									<option value="">Unassigned</option>
 									@foreach(App\Models\User::admins()->get() as $user)
-									<option value="{{$user->id}}" {{Auth::user()->id==$user->id?'selected':''}}>{{$user->name}}</option>
+									<option value="{{$user->id}}" {{Auth::user()->id==$user->id?'selected':''}}>{{$user->name}}(Counsellor)</option>
+									@endforeach
+									@foreach(App\Models\User::cros()->get() as $user)
+									<option value="{{$user->id}}" {{Auth::user()->id==$user->id?'selected':''}}>{{$user->name}}(CRO)</option>
 									@endforeach
 								</select>
 							</div>
@@ -383,14 +402,23 @@
 									<div class="col-sm-12">
 										<label class="col-form-label">Source</label>
 										<select id="lead-source" class=" form-control form-select" name="insert_type" onchange="sourceChanged()">
-											<option value="Linkedin">Linkedin</option>
+											
+											<option value="Linkedin">Linkedin</option>	
+											<option value="Meta">Meta</option>
+											<option value="Website">Website</option>										
 											<option value="Twitter">Twitter</option>
+
 											<option value="Youtube">Youtube</option>
 											<option value="Google">Google</option>
 											<option value="Event">Event</option>
 											<option value="Offline">Offline</option>
 											<option value="Subagent">Subagent</option>
-											<option value="Other Social Platform">Other Social Platform</option>
+											
+<option value="Pinterest">Pinterest</option>
+											<option value="Referral">Referral</option>
+											<option value="Internal">Internal</option>
+										
+<option value="Other Social Platform">Other Social Platform</option>
 											<option value="others" selected>Others</option>
 										</select>
 									</div>

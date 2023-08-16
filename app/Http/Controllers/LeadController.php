@@ -26,6 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 
 use App\Services\FacebookGraphService;
+use Maatwebsite\Excel\HeadingRowImport;
 use Symfony\Component\Console\Input\Input;
 
 class LeadController extends Controller
@@ -102,10 +103,10 @@ class LeadController extends Controller
                 })
                 ->editColumn('source', function ($row) {
                     $value = $row->insert_type;
-                    if ($value == 'from_meta') {
+                    if ($value == 'Meta') {
                         return '<label class="badge badge-info text-center">META</label>';
-                    } else if ($value == 'from_crm') {
-                        return '<label class="badge badge-info text-center">CRM</label>';
+                    } else if ($value == 'Website') {
+                        return '<label class="badge badge-info text-center">Website</label>';
                     } else {
                         return '<label class="badge badge-success text-center">' . $value . '</label>';
                     }
@@ -407,6 +408,7 @@ class LeadController extends Controller
             unset($data['updated_at']);
             unset($data['creator_id']);
             unset($data['subcategory_id']);
+            unset($data['temp_remarks_id']);
             $data['lead_id'] = $lead->id;
             $foundStudent = Student::where('lead_id', $lead->id)->first();
             if (!$foundStudent->id) {
@@ -469,7 +471,24 @@ class LeadController extends Controller
 
     public function import(Request $request)
     {
+
         Excel::import(new LeadsImport, $request->file('file'));
+        $tempRemarks = Lead::where('temp_remarks_id', '!=', null)->get();
+        foreach ($tempRemarks as $tempRemark) {
+            $temp_remarks_ids = explode(',', $tempRemark->temp_remarks_id);
+            foreach ($temp_remarks_ids as $id) {
+                Remarks::find($id)->update(
+                    [
+                        'lead_id' => $tempRemark->id
+                    ]
+                );
+            }
+            Lead::find($tempRemark->id)->update(
+                [
+                    'temp_remarks_id' => null
+                ]
+            );
+        }
         NewLog::create('Leads Imported', 'Multiple leads have been imported.');
         Session::flash('success', 'Leads imported successfully.');
         return Redirect::back()->with('success', 'Lead Imported successfully.');
@@ -496,6 +515,7 @@ class LeadController extends Controller
                 unset($data['updated_at']);
                 unset($data['creator_id']);
                 unset($data['subcategory_id']);
+                unset($data['temp_remarks_id']);
                 $data['lead_id'] = $lead->id;
                 $foundStudent = Student::where('lead_id', $lead->id)->first();
                 if (!$foundStudent) {
