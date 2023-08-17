@@ -46,7 +46,7 @@
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label class="col-form-label">Address</label>
-											<textarea id="edit-address" rows="2" class="form-control" name="address" placeholder="Add Address">
+											<textarea id="edit-lead-address" rows="2" class="form-control" name="address" placeholder="Add Address">
 											</textarea>
 										</div>
 									</div>
@@ -411,6 +411,7 @@
 			url: url,
 			success: async function(data) {
 				var lead = data.lead;
+				await $('#edit-lead-address').val(lead.address);
 				await $('#edit-lead-name').val(lead.name);
 				await $('#edit-lead-email').val(lead.email);
 				await $('#edit-lead-mobile').val(lead.mobile);
@@ -425,8 +426,6 @@
 				await $('#edit-lead-owner_id').val(lead.owner_id);
 				await $('#edit-country-info').val(lead.country);
 				await $('#edit-passport').val(lead.passport);
-				await $('#edit-address').val(lead.address);
-
 				await updateHtml('#edit-lead-last_education', lead.last_education)
 				await updateHtml('#edit-lead-english', lead.english)
 				await updateHtml('#edit-lead-source', lead.insert_type)
