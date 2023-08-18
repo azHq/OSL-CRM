@@ -62,12 +62,14 @@ class DocumentController extends Controller
 
             return datatables()->of($filteredStudents)
                 ->addColumn('name', function ($row) {
-                    $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
-                    $data = '<a href="' . route('students.view', $row->id) . '">
-                                <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
-                            </a>
-                            <a href="' . route('students.view', $row->id) . '">' . $row->name . '</a>';
-                    return $data;
+                    // $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
+                    $data = [
+                        "name" => $row->name,
+                        "id" => $row->id,
+                        "route" => 'gotoRoute(\'' . route('students.view', $row->id) . '\');',
+
+                    ];
+                    return json_encode($data);
                 })
                 ->editColumn('mobile', function ($row) {
                     return $row->mobile;

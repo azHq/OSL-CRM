@@ -83,12 +83,14 @@ class LeadController extends Controller
 
             return datatables()->of($data)
                 ->addColumn('name', function ($row) {
-                    $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
-                    $data = '<a data-id="' . $row->id . '" href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">
-                                <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
-                            </a>
-                            <a href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">' . $row->name . '</a>';
-                    return $data;
+                    // $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
+                    $data = [
+                        "name" => $row->name,
+                        "id" => $row->id,
+                        "route" => 'gotoRoute(\'' . route('leads.view', $row->id) . '\');',
+
+                    ];
+                    return json_encode($data);
                 })
                 ->editColumn('mobile', function ($row) {
                     return $row->mobile;
@@ -164,12 +166,14 @@ class LeadController extends Controller
             $leads = $leads->get();
             return datatables()->of($leads)
                 ->addColumn('name', function ($row) {
-                    $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
-                    $data = '<a data-id="' . $row->id . '" href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">
-                                <span class="person-circle-a person-circle">' . substr($row->name, 0, 1) . '</span>
-                            </a>
-                            <a href="javascript:;" onclick="gotoRoute(\'' . route('leads.view', $row->id) . '\');">' . $row->name . '</a>';
-                    return $data;
+                    // $row->name = $this->convert_from_latin1_to_utf8_recursively($row->name);
+                    $data = [
+                        "name" => $row->name,
+                        "id" => $row->id,
+                        "route" => 'gotoRoute(\'' . route('leads.view', $row->id) . '\');',
+
+                    ];
+                    return json_encode($data);
                 })
                 ->editColumn('mobile', function ($row) {
                     return $row->mobile;

@@ -261,12 +261,12 @@
                                                 <option value="Offline">Offline</option>
                                                 <option value="Subagent">Subagent</option>
                                                 
-<option value="Pinterest">Pinterest</option>
-											<option value="Referral">Referral</option>
-											<option value="Internal">Internal</option>
-										
-<option value="Other Social Platform">Other Social Platform</option>
-                                            </select>`);
+                                <option value="Pinterest">Pinterest</option>
+                                                                            <option value="Referral">Referral</option>
+                                                                            <option value="Internal">Internal</option>
+                                                                        
+                                <option value="Other Social Platform">Other Social Platform</option>
+                                                                            </select>`);
                                 break;
                             case 'Passport':
                                 $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
@@ -341,6 +341,20 @@
             },
             ajax: {
                 'url': '{{ route("leads.list") }}',
+                "dataSrc": function(json) {
+                    let modifiedData = json.data
+                    for (let item of modifiedData) {
+                        let parsedItem = JSON.parse(item.name)
+                        // console.log(JSON.parse(parsedItem.name))
+                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
+                                <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
+                            </a>
+                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
+                        item.name = name
+                    }
+
+                    return modifiedData;
+                },
                 data: function(data) {
                     data.filter_search = $('#filter-search').val();
                     data.filter_sort = $('#filter-sort').val();
@@ -554,6 +568,20 @@
             },
             ajax: {
                 'url': '{{ route("leads.list") }}',
+                "dataSrc": function(json) {
+                    let modifiedData = json.data
+                    for (let item of modifiedData) {
+                        let parsedItem = JSON.parse(item.name)
+                        // console.log(JSON.parse(parsedItem.name))
+                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
+                                <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
+                            </a>
+                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
+                        item.name = name
+                    }
+
+                    return modifiedData;
+                },
                 data: function(data) {
                     data.filter_search = $('#filter-search').val();
                     data.filter_sort = $('#filter-sort').val();
