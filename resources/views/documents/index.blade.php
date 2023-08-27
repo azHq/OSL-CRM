@@ -161,10 +161,10 @@
                     let modifiedData = json.data
                     for (let item of modifiedData) {
                         let parsedItem = JSON.parse(item.name)
-                        let name = `<a data-id="${parsedItem.id}" href="${parsedItem.route}">
+                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
                                 <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
                             </a>
-                            <a href="${parsedItem.route}">${parsedItem.name}</a>`
+                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
                         item.name = name
                     }
 

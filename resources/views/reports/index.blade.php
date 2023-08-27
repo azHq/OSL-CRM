@@ -86,7 +86,10 @@
             success: function(data) {
                 var options = '<option value="" selected>Select Counselor</option>';
                 data.users.forEach(function(user) {
-                    options += '<option value="' + user.id + '">' + user.name + '</option>';
+                    options += '<option value="' + user.id + '">' + user.name  + '(Counsellor)</option>';
+                });
+                data.cros.forEach(function(user) {
+                    options += '<option value="' + user.id + '">' + user.name  + '(CRO)</option>';
                 });
                 $('#filter-user').html(options);
             }

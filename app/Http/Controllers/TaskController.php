@@ -324,14 +324,11 @@ class TaskController extends Controller
                 'assignee_id' => $request->assignee_id,
                 'created_by' => Auth::id(),
             ]);
-            dd($task);
             if ($task->assignee_id) {
                 TaskAssignedEvent::dispatch($task);
             }
             return Redirect::back()->with('success', 'Task assigned successfully.');
         } catch (\Exception $e) {
-            dd($e);
-
             return Redirect::back()->with('error', $e->getMessage());
         }
     }

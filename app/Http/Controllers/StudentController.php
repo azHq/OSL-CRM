@@ -144,7 +144,7 @@ class StudentController extends Controller
     {
         try {
             Student::where('id', $id)->update($request->except('_token', '_method'));
-            return Redirect::route('students.index')->with('success', 'Student updated successfully.');
+            return Redirect::back()->with('success', 'Student updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }

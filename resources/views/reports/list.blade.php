@@ -105,7 +105,7 @@
                                            </select>`);
                                 break;
                             case 'Lead':
-                                $(cell).html(`<select id="filter-activity-user" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                $(cell).html(`<select id="filter-report-user" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                  <option value="">Filter Lead</option>
                                            </select>`);
                                 break;
@@ -215,7 +215,7 @@
                     data.all_users.forEach(function (user) {
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
                     });
-                    $('#filter-activity-user').html(options);
+                    $('#filter-report-user').html(options);
                 }
             }
         });

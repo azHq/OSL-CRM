@@ -20,6 +20,7 @@ class LeadsImport implements ToModel
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
+    public $duplicateCount = 0;
 
     public function data_stringify($data)
     {
@@ -51,6 +52,7 @@ class LeadsImport implements ToModel
         }
         $findExistingLead = Lead::where('email', $row[2])->orWhere('mobile', $row[1])->first();
         if ($findExistingLead) {
+            $this->duplicateCount++;
             return null;
         }
         $country = Country::where('name', $row[11])->first();

@@ -1,4 +1,4 @@
-<div class="modal center fade" id="edit_student" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="edit_student" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 2em;">
 	<div class="modal-dialog lkb-modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">
@@ -75,7 +75,7 @@
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label class="col-form-label">Purpose</label>
-											<select class=" form-control form-select" name="status">
+											<select class=" form-control form-select" name="status" id="edit-student-status">
 												<option value="English Teaching">English Teaching</option>
 												<option value="Study Abroad">Study Abroad</option>
 												<!-- <option value="Not Potential">Not Potential</option> -->

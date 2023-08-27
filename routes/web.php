@@ -69,11 +69,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('documents/initialize/{leadId}', [DocumentController::class, 'initializeDocument'])->name('documents.initialize');
     Route::post('leads/import', [LeadController::class, 'import'])->name('leads.import');
     Route::post('leads/addRemarks', [LeadController::class, 'addRemarks'])->name('leads.addRemarks');
+    Route::post('leads/updateRemarks', [LeadController::class, 'updateRemarks'])->name('leads.updateRemarks');
+    Route::get('leads/getRemarksById/{id}', [LeadController::class, 'getRemarksById'])->name('leads.getRemarksById');
     Route::get('leads/export', [LeadController::class, 'export'])->name('leads.export');
     Route::get('leads/list', [LeadController::class, 'list'])->name('leads.list');
     Route::get('leads/create', [LeadController::class, 'create'])->name('leads.create');
     Route::get('leads/{id}', [LeadController::class, 'view'])->name('leads.view');
     Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::get('english-leads', [LeadController::class, 'englishLeadIndex'])->name('english-leads.index');
     Route::post('leads', [LeadController::class, 'store'])->name('leads.store');
     Route::get('leads/{id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
     Route::get('leads/{id}/mail', [LeadController::class, 'mail'])->name('leads.mail');

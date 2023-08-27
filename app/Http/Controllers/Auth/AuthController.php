@@ -180,7 +180,7 @@ class AuthController extends Controller
         $user = User::find($id);
         if ($user && $user->status == 'Pending') {
             return view('reset', compact('id'));
-        } else if ($user->hasRole('student')) {
+        } else if ($user && $user->hasRole('student')) {
             return Redirect('student-login');
         } else {
             return Redirect('login');

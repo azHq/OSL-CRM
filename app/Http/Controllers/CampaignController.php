@@ -115,7 +115,6 @@ class CampaignController extends Controller
             }
             return $duplicateLeads;
         } catch (\Exception $e) {
-            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }

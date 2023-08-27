@@ -1,4 +1,4 @@
-<div class="modal center fade" id="mail_lead" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="mail_lead" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 2em;">
     <div class="modal-dialog lkb-modal-dialog" role="document">
         <button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
         <div class="modal-content">
@@ -16,6 +16,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group row">
+                                        <input id="mail-lead-name" type="text" class="form-control" name="name" required hidden>
                                         <div class="col-sm-12">
                                             <label class="col-form-label">To <span class="text-danger">*</span></label>
                                             <input id="mail-lead-email" type="text" class="form-control" name="email" required>
@@ -33,14 +34,14 @@
                                     </div>
                                 </div>
                             </div>
-                           <div class="row">
-                               <div class="form-group row">
-                                   <div class="col-sm-12">
-                                       <label class="col-form-label">Body <span class="text-danger">*</span></label>
-                                       <textarea style="height: 200px;" id="lead-email-body" class="form-control" name="email_body" required> </textarea>
-                                   </div>
-                               </div>
-                           </div>
+                            <div class="row">
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Body <span class="text-danger">*</span></label>
+                                        <textarea style="height: 200px;" id="lead-email-body" class="form-control" name="email_body" required> </textarea>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="text-center py-3">
                                 <button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded">Send</button>&nbsp;&nbsp;
                                 <button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
@@ -67,10 +68,10 @@
             success: function(data) {
                 var lead = data.lead;
                 $('#mail-lead-email').val(lead.email);
+                $('#mail-lead-name').val(lead.name);
                 $('#lead-email-subject').val("Email subject goes here");
                 $('#lead-email-body').val("Mail body goes here: This is the body of this email.");
             }
         });
     });
-
 </script>

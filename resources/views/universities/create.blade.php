@@ -1,4 +1,4 @@
-<div class="modal center fade" id="add_university" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="add_university" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 2em;">
 	<div class="modal-dialog lkb-modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">
@@ -44,7 +44,7 @@
 	<!-- modal-dialog -->
 </div>
 
-<div class="modal center fade" id="add_country" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="add_country" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 2em;">
 	<div class="modal-dialog lkb-modal-dialog" role="document">
 		<button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 		<div class="modal-content">

@@ -183,13 +183,18 @@
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
-                if (data.all_users) {
                     var options = '<option value="" selected>Filter User</option>';
-                    data.all_users.forEach(function(user) {
+                    data.users.forEach(function(user) {
+                        options += '<option value="' + user.name + '">' + user.name + '(Counsellor)</option>';
+                    });
+                    data.cros.forEach(function(user) {
+                        options += '<option value="' + user.name + '">' + user.name + '(CRO)</option>';
+                    });
+                    data.me_and_sa.forEach(function(user) {
                         options += '<option value="' + user.name + '">' + user.name + '</option>';
                     });
                     $('#filter-activity-user').html(options);
-                }
+                
             }
         });
     }

@@ -126,7 +126,6 @@ class ApplicationController extends Controller
             ]);
             return Redirect::back()->with('success', 'Application created successfully.');
         } catch (\Exception $e) {
-            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
@@ -145,7 +144,7 @@ class ApplicationController extends Controller
         try {
             $application = Application::find($id);
             $application->update($request->except('_token', '_method', 'name', 'email', 'mobile'));
-            //            return Redirect::back()->with('success', 'Application updated successfully.');
+            return Redirect::back()->with('success', 'Application updated successfully.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', $e->getMessage());
         }

@@ -1,4 +1,4 @@
-<div class="modal center fade" id="edit_application" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 5em;">
+<div class="modal center fade" id="edit_application" tabindex="-1" role="dialog" aria-modal="true" style="margin-top: 2em;">
     <div class="modal-dialog lkb-modal-dialog" role="document">
         <button type="button" class="btn-close md-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
         <div class="modal-content">
@@ -11,8 +11,9 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <form action="{{ route('applications.store') }}" method="POST">
+                        <form action="" method="POST" id="application-update">
                             @csrf
+                            @method('put')
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group row">
@@ -124,48 +125,51 @@
 
         </div><!-- modal-content -->
     </div>
-	<!-- modal-dialog -->
+    <!-- modal-dialog -->
 </div>
 
 <script>
-	$('body').on('click', '.edit-application', function() {
-		var id = $(this).data('id');
-		getApplicationCreate();
-		getApplication(id);
-		var url = "{{ route('applications.update', 'id') }}";
-		url = url.replace('id', id);
-		$('#application-update').attr('action', url);
-	});
+    $('body').on('click', '.edit-application', function() {
+        var id = $(this).data('id');
+        getApplicationCreate();
+        getApplication(id);
+        var url = "{{ route('applications.update', 'id') }}";
+        url = url.replace('id', id);
+        $('#application-update').attr('action', url);
+    });
 
-	function getApplication(id) {
-		var url = "{{ route('applications.edit', 'id') }}";
-		url = url.replace('id', id);
-		$.ajax({
-			type: 'GET',
-			url: url,
-			success: function(data) {
-				$('#application-edit-course').val(data.course);
-				$('#application-edit-intake-year').val(data.intake_year);
-				$('#application-edit-intake-month').val(data.intake_month);
-				$('#application-edit-course-details').val(data.course_details);
-				$('#application-edit-universities').val(data.university_id);
-				$('#application-edit-compliance').val(data.compliance);
-				$('#application-edit-status').val(data.status);
-			}
-		});
-	}
+    function getApplication(id) {
+        var url = "{{ route('applications.edit', 'id') }}";
+        url = url.replace('id', id);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(data) {
+                $('#application-edit-lead-name').val(data.lead.name);
+                $('#application-edit-lead-email').val(data.lead.email);
+                $('#application-edit-lead-mobile').val(data.lead.mobile);
+                $('#application-edit-course').val(data.course);
+                $('#application-edit-intake_year').val(data.intake_year);
+                $('#application-edit-intake_month').val(data.intake_month);
+                $('#application-edit-course_details').val(data.course_details);
+                $('#application-edit-universities').val(data.university_id);
+                $('#application-edit-compliance').val(data.compliance);
+                $('#application-edit-status').val(data.status);
+            }
+        });
+    }
 
-	function getApplicationCreate() {
-		$.ajax({
-			type: 'GET',
-			url: "{{ route('applications.create') }}",
-			success: function(data) {
-				var options = '';
-				data.universities.forEach(function(university) {
-					options += '<option value="' + university.id + '">' + university.name + '</option>';
-				});
-				$('#application-edit-universities').html(options);
-			}
-		});
-	}
+    function getApplicationCreate() {
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('applications.create') }}",
+            success: function(data) {
+                var options = '';
+                data.universities.forEach(function(university) {
+                    options += '<option value="' + university.id + '">' + university.name + '</option>';
+                });
+                $('#application-edit-universities').html(options);
+            }
+        });
+    }
 </script>

@@ -53,7 +53,7 @@ class DocumentController extends Controller
             foreach ($students as $student) {
                 if (
                     $student->lead->subcategory->name == 'Waiting for Documents' ||
-                    $student->lead->subcategory->name == 'Partial Documnets' ||
+                    $student->lead->subcategory->name == 'Partial Documents' ||
                     $student->lead->subcategory->name == 'Document Received'
                 ) {
                     array_push($filteredStudents, $student);
@@ -125,7 +125,6 @@ class DocumentController extends Controller
             $document->update([$request->name => $path]);
             return Redirect::back()->with('success', 'File Uploaded Successfully.');
         } catch (\Exception $e) {
-            dd($e);
             return Redirect::back()->with('error', $e->getMessage());
         }
     }

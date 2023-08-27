@@ -15,16 +15,22 @@
 <div class="page-header pt-3 mb-0 ">
 
     <div class="row">
-        <div class="col-3">
 
+        <div class="col-2">
+            <span>From Date</span>
+            <input id="filter-from" type="date" class="form-control" name="filter-from" placeholder="{{date('Y-m-d')}}">
         </div>
+        <div class="col-2">
+            <span>To Date</span>
+            <input id="filter-to" type="date" class="form-control" name="filter-to" placeholder="{{date('Y-m-d')}}">
+        </div>
+
         <div class="col-1">
 
         </div>
         <div class="col text-end">
             @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
             <ul class="list-inline-item pl-0">
-
                 <li class="list-inline-item">
                     <button class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-lead" data-bs-toggle="modal" data-bs-target="#add_lead">
                         <i class="fa fa-plus" aria-hidden="true"></i> New Lead
@@ -135,7 +141,11 @@
     $(document).ready(function() {
         localStorage.setItem('SelectedLeads', JSON.stringify([]));
         getTransactions();
+        updateRowsBehavior();
 
+    });
+
+    function updateRowsBehavior() {
         $('#myTable tbody').on('click', 'tr', function() {
             let SelectedLeads = JSON.parse(localStorage.getItem('SelectedLeads'));
 
@@ -158,7 +168,7 @@
         $('#button').click(function() {
             alert(table.rows('.selected-row').data().length + ' row(s) selected');
         });
-    });
+    }
 
     $('#filter-search').keyup(function() {
         getTransactions();
@@ -167,16 +177,31 @@
     $('#filter-status').on('change', function() {
         getTransactions();
     });
+    $('#filter-from').on('change', function() {
+        getTransactions();
+        updateRowsBehavior();
+    });
+    $('#filter-to').on('change', function() {
+        getTransactions();
+        updateRowsBehavior();
+    });
 </script>
 
 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 <script>
     function getTransactions() {
+
         $("#myTable").dataTable().fnDestroy();
-        $('#myTable thead tr')
-            .clone(true)
-            .addClass('filters')
-            .appendTo('#myTable thead');
+        if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+                .appendTo('#myTable thead');
+        } else {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+        }
 
         var table = $('#myTable').DataTable({
             responsive: true,
@@ -190,152 +215,137 @@
             }],
             initComplete: function() {
                 var api = this.api();
-                api.columns().eq(0)
-                    .each(function(colIdx) {
-                        var cell = $('.filters th').eq(
-                            $(api.column(colIdx).header()).index()
-                        );
-                        $(cell).removeClass('sorting_asc');
-                        var title = $(cell).text();
-                        switch (title) {
-                            case 'Lead Status':
-                                $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Status</option>
-                                            </select>`);
-                                break;
-                            case 'Counsellor':
-                                $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Counsellor</option>
-                                            </select>`);
-                                break;
-                            case 'Purpose':
-                                $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Purpose</option>
-												<option value="">Unknown</option>
-												<option value="English Teaching">English Teaching</option>
-												<option value="Study Abroad">Study Abroad</option>
-												<!-- <option value="Not Potential">Not Potential</option> -->
-										
-                                            </select>`);
-                                break;
-                                // case 'Created By':
-                                //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                //                     <option value="" selected>Filter Creator</option>
-                                //                 </select>`);
-                                //     break;
-                                // case 'Lead Created':
-                                //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
-                                //     break;
+                if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+                    api.columns().eq(0)
+                        .each(function(colIdx) {
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            $(cell).removeClass('sorting_asc');
+                            var title = $(cell).text();
+                            switch (title) {
+                                case 'Lead Status':
+                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Status</option>
+                                                </select>`);
+                                    break;
+                                case 'Counsellor':
+                                    $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Counsellor</option>
+                                                </select>`);
+                                    break;
+                                case 'Purpose':
+                                    $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Purpose</option>
+                                                    <option value="">Unknown</option>
+                                                    <option value="English Teaching">English Teaching</option>
+                                                    <option value="Study Abroad">Study Abroad</option>
+                                                    <!-- <option value="Not Potential">Not Potential</option> -->
+                                            
+                                                </select>`);
+                                    break;
+                                    // case 'Created By':
+                                    //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                    //                     <option value="" selected>Filter Creator</option>
+                                    //                 </select>`);
+                                    //     break;
+                                    // case 'Lead Created':
+                                    //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                    //     break;
 
-                            case 'Source':
-                                $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Source</option>
-                                                <option value="Linkedin">Linkedin</option>
-                                                <option value="Meta">Meta</option>
-                                                <option value="Website">Website</option>
-                                                <option value="Twitter">Twitter</option>
-                                                <option value="Youtube">Youtube</option>
-                                                <option value="Google">Google</option>
-                                                <option value="Event">Event</option>
-                                                <option value="Offline">Offline</option>
-                                                <option value="Subagent">Subagent</option>
+                                case 'Source':
+                                    $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Source</option>
+                                                    <option value="Linkedin">Linkedin</option>
+                                                    <option value="Meta">Meta</option>
+                                                    <option value="Website">Website</option>
+                                                    <option value="Twitter">Twitter</option>
+                                                    <option value="Youtube">Youtube</option>
+                                                    <option value="Google">Google</option>
+                                                    <option value="Event">Event</option>
+                                                    <option value="Offline">Offline</option>
+                                                    <option value="Subagent">Subagent</option>
+    
+                                                    <option value="Pinterest">Pinterest</option>
+                                                    <option value="Referral">Referral</option>
+                                                    <option value="Internal">Internal</option>
+    
+                                                    <option value="Other Social Platform">Other Social Platform</option>
+                                                    <option value="others">Others</option>
+                                            
+                                                </select>`);
+                                    break;
+                                case 'Passport':
+                                    $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Passport</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>`);
+                                    break;
+                                case 'Destination':
+                                    $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Destination</option>
+                                                        <option value="Australia">Australia</option>
+                                                        <option value="Canada">Canada</option>
+                                                        <option value="Sweden">Sweden</option>
+                                                        <option value="USA">USA</option>
+                                                        <option value="UK">UK</option>
+                                                        <option value="others">Others</option>
+                                            
+                                                </select>`);
+                                    break;
+                                case '#':
+                                    $(cell).html(title);
+                                    break;
+                                case 'Action':
+                                    $(cell).html(title);
+                                    break;
 
-                                                <option value="Pinterest">Pinterest</option>
-                                                <option value="Referral">Referral</option>
-                                                <option value="Internal">Internal</option>
+                                default:
+                                    $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
+                                    break;
+                            }
+                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
 
-                                                <option value="Other Social Platform">Other Social Platform</option>
-                                                <option value="others">Others</option>
-										
-                                            </select>`);
-                                break;
-                            case 'Source':
-                                $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Source</option>
-												<option value="">Unknown</option>
-                                                <option value="Linkedin">Linkedin</option>
-                                                <option value="Twitter">Twitter</option>
-                                                <option value="Youtube">Youtube</option>
-                                                <option value="Google">Google</option>
-                                                <option value="Event">Event</option>
-                                                <option value="Offline">Offline</option>
-                                                <option value="Subagent">Subagent</option>
-                                                
-                                <option value="Pinterest">Pinterest</option>
-                                                                            <option value="Referral">Referral</option>
-                                                                            <option value="Internal">Internal</option>
-                                                                        
-                                <option value="Other Social Platform">Other Social Platform</option>
-                                                                            </select>`);
-                                break;
-                            case 'Passport':
-                                $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Passport</option>
-												<option value="Yes">Yes</option>
-												<option value="No">No</option>
-                                            </select>`);
-                                break;
-                            case 'Destination':
-                                $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Destination</option>
-													<option value="Australia">Australia</option>
-													<option value="Canada">Canada</option>
-													<option value="Sweden">Sweden</option>
-													<option value="USA">USA</option>
-													<option value="UK">UK</option>
-													<option value="others">Others</option>
-										
-                                            </select>`);
-                                break;
-                            case '#':
-                                $(cell).html(title);
-                                break;
-                            case 'Action':
-                                $(cell).html(title);
-                                break;
+                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
+                        });
+                }
 
-                            default:
-                                $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
-                                break;
-                        }
-                        $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                            .off('keyup change')
-                            .on('change', function(e) {
-                                $(this).attr('title', $(this).val());
-                                var regexr = '({search})';
-                                var cursorPosition = this.selectionStart;
-                                api.column(colIdx)
-                                    .search(
-                                        this.value != '' ?
-                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                        this.value != '',
-                                        this.value == ''
-                                    ).draw();
-                            })
-                            .on('keyup', function(e) {
-                                e.stopPropagation();
-                                $(this).trigger('change');
-                            });
 
-                        $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                            .off('keyup change')
-                            .on('change', function(e) {
-                                $(this).attr('title', $(this).val());
-                                var regexr = '({search})';
-                                var cursorPosition = this.selectionStart;
-                                api.column(colIdx)
-                                    .search(
-                                        this.value != '' ?
-                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                        this.value != '',
-                                        this.value == ''
-                                    ).draw();
-                            })
-                            .on('keyup', function(e) {
-                                e.stopPropagation();
-                                $(this).trigger('change');
-                            });
-                    });
                 getOwners();
 
             },
@@ -356,11 +366,14 @@
                     return modifiedData;
                 },
                 data: function(data) {
+                    console.log({
+                        data
+                    })
                     data.filter_search = $('#filter-search').val();
                     data.filter_sort = $('#filter-sort').val();
                     data.filter_status = $('#filter-status').val();
-                    data.startDate = $('#startDate').val();
-                    data.endDate = $('#endDate').val();
+                    data.startDate = $('#filter-from').val();
+                    data.endDate = $('#filter-to').val();;
                 }
             },
             "fnDrawCallback": function(oSettings) {
@@ -418,10 +431,16 @@
 <script>
     function getTransactions() {
         $("#myTable").dataTable().fnDestroy();
-        $('#myTable thead tr')
-            .clone(true)
-            .addClass('filters')
-            .appendTo('#myTable thead');
+        if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+                .appendTo('#myTable thead');
+        } else {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+        }
 
         var table = $('#myTable').DataTable({
             dom: 'Blfrtip',
@@ -446,125 +465,127 @@
             }],
             initComplete: function() {
                 var api = this.api();
-                api.columns().eq(0)
-                    .each(function(colIdx) {
-                        var cell = $('.filters th').eq(
-                            $(api.column(colIdx).header()).index()
-                        );
-                        $(cell).removeClass('sorting_asc');
-                        var title = $(cell).text();
-                        switch (title) {
-                            case 'Lead Status':
-                                $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Status</option>
-                                            </select>`);
-                                break;
-                            case 'Counsellor':
-                                $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Counsellor</option>
-                                            </select>`);
-                                break;
-                            case 'Purpose':
-                                $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Purpose</option>
-												<option value="">Unknown</option>
-												<option value="English Teaching">English Teaching</option>
-												<option value="Study Abroad">Study Abroad</option>
-												<!-- <option value="Not Potential">Not Potential</option> -->
-										
-                                            </select>`);
-                                break;
-                                // case 'Lead Created':
-                                //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
-                                //     break;
-                            case 'Source':
-                                $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Source</option>
-												<option value="">Unknown</option>
-                                                <option value="Linkedin">Linkedin</option>
-                                                <option value="Twitter">Twitter</option>
-                                                <option value="Youtube">Youtube</option>
-                                                <option value="Google">Google</option>
-                                                <option value="Event">Event</option>
-                                                <option value="Offline">Offline</option>
-                                                <option value="Subagent">Subagent</option>
-                                                
-<option value="Pinterest">Pinterest</option>
-											<option value="Referral">Referral</option>
-											<option value="Internal">Internal</option>
-										
-<option value="Other Social Platform">Other Social Platform</option>
-                                            </select>`);
-                                break;
-                            case 'Passport':
-                                $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Passport</option>
-												<option value="Yes">Yes</option>
-												<option value="No">No</option>
-                                            </select>`);
-                                break;
-                            case 'Destination':
-                                $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                 <option value="" selected>Filter Destination</option>
+                if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+                    api.columns().eq(0)
+                        .each(function(colIdx) {
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            $(cell).removeClass('sorting_asc');
+                            var title = $(cell).text();
+                            switch (title) {
+                                case 'Lead Status':
+                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Status</option>
+                                        </select>`);
+                                    break;
+                                case 'Counsellor':
+                                    $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Counsellor</option>
+                                        </select>`);
+                                    break;
+                                case 'Purpose':
+                                    $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Purpose</option>
+                                            <option value="">Unknown</option>
+                                            <option value="English Teaching">English Teaching</option>
+                                            <option value="Study Abroad">Study Abroad</option>
+                                            <!-- <option value="Not Potential">Not Potential</option> -->
+                                    
+                                        </select>`);
+                                    break;
+                                    // case 'Lead Created':
+                                    //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                    //     break;
+                                case 'Source':
+                                    $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Source</option>
+                                            <option value="">Unknown</option>
+                                            <option value="Linkedin">Linkedin</option>
+                                            <option value="Twitter">Twitter</option>
+                                            <option value="Youtube">Youtube</option>
+                                            <option value="Google">Google</option>
+                                            <option value="Event">Event</option>
+                                            <option value="Offline">Offline</option>
+                                            <option value="Subagent">Subagent</option>
+                                            
+                                <option value="Pinterest">Pinterest</option>
+                                                                            <option value="Referral">Referral</option>
+                                                                            <option value="Internal">Internal</option>
+                                                                        
+                                <option value="Other Social Platform">Other Social Platform</option>
+                                                                            </select>`);
+                                    break;
+                                case 'Passport':
+                                    $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Passport</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>`);
+                                    break;
+                                case 'Destination':
+                                    $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                             <option value="" selected>Filter Destination</option>
 
-													<option value="Australia">Australia</option>
-													<option value="Canada">Canada</option>
-													<option value="Sweden">Sweden</option>
-													<option value="USA">USA</option>
-													<option value="UK">UK</option>
-													<option value="others">Others</option>
-										
-                                            </select>`);
-                                break;
-                            case '#':
-                                $(cell).html(title);
-                                break;
-                            case 'Action':
-                                $(cell).html(title);
-                                break;
+                                                <option value="Australia">Australia</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="Sweden">Sweden</option>
+                                                <option value="USA">USA</option>
+                                                <option value="UK">UK</option>
+                                                <option value="others">Others</option>
+                                    
+                                        </select>`);
+                                    break;
+                                case '#':
+                                    $(cell).html(title);
+                                    break;
+                                case 'Action':
+                                    $(cell).html(title);
+                                    break;
 
-                            default:
-                                $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
-                                break;
-                        }
-                        $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                            .off('keyup change')
-                            .on('change', function(e) {
-                                $(this).attr('title', $(this).val());
-                                var regexr = '({search})';
-                                var cursorPosition = this.selectionStart;
-                                api.column(colIdx)
-                                    .search(
-                                        this.value != '' ?
-                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                        this.value != '',
-                                        this.value == ''
-                                    ).draw();
-                            })
-                            .on('keyup', function(e) {
-                                e.stopPropagation();
-                                $(this).trigger('change');
-                            });
+                                default:
+                                    $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
+                                    break;
+                            }
+                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
 
-                        $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                            .off('keyup change')
-                            .on('change', function(e) {
-                                $(this).attr('title', $(this).val());
-                                var regexr = '({search})';
-                                var cursorPosition = this.selectionStart;
-                                api.column(colIdx)
-                                    .search(
-                                        this.value != '' ?
-                                        regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                        this.value != '',
-                                        this.value == ''
-                                    ).draw();
-                            })
-                            .on('keyup', function(e) {
-                                e.stopPropagation();
-                                $(this).trigger('change');
-                            });
-                    });
+                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
+                        });
+                }
             },
             ajax: {
                 'url': '{{ route("leads.list") }}',
@@ -583,6 +604,9 @@
                     return modifiedData;
                 },
                 data: function(data) {
+                    console.log({
+                        data
+                    })
                     data.filter_search = $('#filter-search').val();
                     data.filter_sort = $('#filter-sort').val();
                     data.filter_status = $('#filter-status').val();

@@ -252,6 +252,9 @@
                                         <tr>
                                             <td>{{ $remark->value }}</td>
                                             <td>{{ $remark->user->name }}</td>
+                                            <td>
+                                                <a href="javascript:;" data-id="{{ $remark->id }}" data-bs-toggle="modal" data-bs-target="#edit_remarks" class="edit_remarks lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -263,6 +266,7 @@
             </div>
         </div>
         @endif
+        @if($lead->category != 'Leads' && $lead->category != 'Student')
         <div class="crms-title row bg-white mt-4">
             <div class="col  p-0">
                 <h3 class="page-title m-0">
@@ -282,6 +286,7 @@
         <div>
             @include('leads.applications')
         </div>
+        @endif
         <div class="crms-title row bg-white mt-4">
             <div class="col  p-0">
                 <h3 class="page-title m-0">
@@ -342,6 +347,8 @@
         @endcomponent
 
         @component('leads.remarks')
+        @endcomponent
+        @component('leads.edit-remarks')
         @endcomponent
         <script>
             $(document).ready(function() {

@@ -83,9 +83,10 @@ class ReportController extends Controller
         if ($request->user_id && $request->user_id != '') {
             $leads->where('owner_id', $request->user_id);
             $students->where('owner_id', $request->user_id);
-            $applications->whereHas('student', function ($query) use ($request) {
-                return $query->where('owner_id', $request->user_id);
-            });
+            $applications->where('owner_id', $request->user_id);
+            // $applications->whereHas('student', function ($query) use ($request) {
+            //     return $query->where('owner_id', $request->user_id);
+            // });
 
             $potential_leads->where('owner_id', $request->user_id);
             $not_potential_leads->where('owner_id', $request->user_id);

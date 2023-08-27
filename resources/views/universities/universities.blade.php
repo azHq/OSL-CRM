@@ -14,7 +14,7 @@
 
 <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
     <li class="nav-item"><a class="nav-link active" href="#bottom-justified-tab1" data-bs-toggle="tab">Universities</a></li>
-    <li class="nav-item"><a class="nav-link" href="#bottom-justified-tab2" data-bs-toggle="tab">Countries</a></li>
+    <!-- <li class="nav-item"><a class="nav-link" href="#bottom-justified-tab2" data-bs-toggle="tab">Countries</a></li> -->
 </ul>
 
 <div class="tab-content">
@@ -65,7 +65,7 @@
         </div>
         <!-- /Content End -->
     </div>
-    <div class="tab-pane" id="bottom-justified-tab2">
+    <!-- <div class="tab-pane" id="bottom-justified-tab2">
         <div class="page-header pt-3 mb-0 ">
 
             <div class="row">
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <!-- Content Starts -->
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-0">
@@ -110,8 +110,7 @@
                 </div>
             </div>
         </div>
-        <!-- /Content End -->
-    </div>
+    </div> -->
 
 </div>
 

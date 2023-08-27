@@ -63,6 +63,9 @@
 				</li>
 				@endif
 				@endforeach
+				<li id="english-leads" class="nav-li {{ Request::is('english-leads') ? 'active' : '' }}">
+					<a data-nav="english-leads" data-href="{{route('english-leads.index')}}" class="url"><i class="feather-target"></i> <span>Admitted For English</span></a>
+				</li>
 				@if(!Auth::user()->hasRole('cro'))
 				<li id="applications" class="nav-li {{ Request::is('applications*') ? 'active' : '' }}">
 					<a data-nav="applications" data-href="{{route('applications.index')}}" class="url"><i class="fa fa-file-text" aria-hidden="true"></i> <span>Applications</span></a>

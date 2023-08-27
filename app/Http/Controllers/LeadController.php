@@ -8,6 +8,7 @@ use App\Helper\NewLog;
 use App\Imports\LeadsImport;
 use App\Models\Application;
 use App\Models\Category;
+use App\Models\Country;
 use App\Models\Remarks;
 use App\Models\Lead;
 use App\Models\Report;
@@ -40,6 +41,15 @@ class LeadController extends Controller
         return view('layout.mainlayout');
     }
 
+    public function englishLeadIndex(Request $request)
+    {
+        if (\request()->ajax()) {
+
+            return view('leads.english-lead');
+        }
+        return view('layout.mainlayout');
+    }
+
     public function indexByStatus($status, Request $request)
     {
         if (\request()->ajax()) {
@@ -68,7 +78,7 @@ class LeadController extends Controller
             return $dat;
         }
     }
-    public function list()
+    public function list(Request $request)
     {
         if (\request()->ajax()) {
             $data = [];
@@ -78,6 +88,15 @@ class LeadController extends Controller
                 // $data = $applications->get();
             } else {
                 $leads = Lead::orderBy('created_at', 'desc');
+                if ($request['startDate']) {
+                    $leads->whereDate('created_at', '>=', $request['startDate']);
+                }
+                if ($request['endDate']) {
+                    $leads->whereDate('created_at', '<=', $request['endDate']);
+                }
+                if ($request['filterOnlyFor']) {
+                    $leads->where('status', $request['filterOnlyFor']);
+                }
                 $data = $leads->get();
             }
 
@@ -156,13 +175,19 @@ class LeadController extends Controller
         }
     }
 
-    public function lisByStatus()
+    public function lisByStatus(Request $request)
     {
         if (\request()->ajax()) {
             $leads = Lead::orderBy('created_at', 'desc');
             $leads->whereHas('subcategory', function ($query) {
                 $query->where('slug', \request('status'));
             });
+            if ($request['startDate']) {
+                $leads->whereDate('created_at', '>=', $request['startDate']);
+            }
+            if ($request['endDate']) {
+                $leads->whereDate('created_at', '<=', $request['endDate']);
+            }
             $leads = $leads->get();
             return datatables()->of($leads)
                 ->addColumn('name', function ($row) {
@@ -186,6 +211,27 @@ class LeadController extends Controller
                         return '<label class="badge badge-success text-center">' . $row->status . '</label>';
                     }
                 })
+                ->editColumn('source', function ($row) {
+                    $value = $row->insert_type;
+                    if ($value == 'Meta') {
+                        return '<label class="badge badge-info text-center">META</label>';
+                    } else if ($value == 'Website') {
+                        return '<label class="badge badge-info text-center">Website</label>';
+                    } else {
+                        return '<label class="badge badge-success text-center">' . $value . '</label>';
+                    }
+                })
+                ->editColumn('passport', function ($row) {
+                    $value = 'No';
+                    if ($row->passport == 1) {
+                        $value = 'Yes';
+                        return '<label class="badge badge-success text-center">' . $value . '</label>';
+                    }
+                    return '<label class="badge badge-info text-center">' . $value . '</label>';
+                })
+                ->editColumn('destination', function ($row) {
+                    return '<label class="badge badge-danger text-center">' . $row->destination . '</label>';
+                })
                 ->editColumn('email', function ($row) {
                     return $row->email;
                 })
@@ -204,6 +250,9 @@ class LeadController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $action = '';
+                    if (!$row->student) {
+                        $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#add_remarks" class="add_remarks lkb-table-action-btn url badge-info btn-edit"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>';
+                    }
                     if (!$row->student)
                         $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_lead" class="edit-lead lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#mail_lead" class="mail-lead lkb-table-action-btn url badge-warning btn-edit"><i class="feather-mail"></i></a>';
@@ -213,10 +262,11 @@ class LeadController extends Controller
                         $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     if ($row->student)
                         $action .= '<a href="' . route('students.view', $row->student->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
+
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'source', 'passport', 'destination', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -372,6 +422,28 @@ class LeadController extends Controller
         }
     }
 
+    public function getRemarksById($id)
+    {
+        try {
+            $remarks  = Remarks::find($id);
+            return response()->json($remarks);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return Redirect::back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateRemarks(Request $request)
+    {
+        try {
+            Remarks::find($request['remarks_id'])->update($request->except('_token', '_method', 'remarks_id'));
+            return Redirect::back()->with('success', 'Remarks Updated Successfully.');
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return Redirect::back()->with('error', $e->getMessage());
+        }
+    }
+
     public function update($id, Request $request)
     {
         try {
@@ -384,18 +456,47 @@ class LeadController extends Controller
                 $comment['lead_id'] = $id;
                 Remarks::create($comment);
             }
+            if (is_numeric($request['subcategory_id']) && number_format($request['subcategory_id']) > 7) {
+                $foundStudent = Student::where('email', $request['email'])->orWhere('mobile', $request['mobile'])->first();
+                if (!$foundStudent) {
+                    $data = $request;
+                    $data['lead_id'] = $lead->id;
+                    Student::create($data->except('_token', '_method', 'category_id', 'subcategory_id', 'remarks'));
+                    $student = [];
+                    $student['email'] = $data->email;
+                    $student['mobile'] = $data->mobile;
+                    $student['password'] = $data->mobile;
+                    $student['name'] = $data->name;
+                    $student['status'] = 'Pending';
+                    $roleId = Role::where('name', 'student')->first()->id;
+                    $student['role_id'] = $roleId;
+                    $user = User::create($student);
+                    $email_body = [];
+                    $email_body['name'] = $data->name;
+                    $email_body['subject'] = 'Pass Reset Request for OSL_CRM';
+                    $email_body['email'] = $student['email'];
+                    $email_body['email_body'] = "
+                    Please View the link & Reset
+                   https://oslcrm.com/reset-password/$user->id
+                    ";
+                    // $this->sendMail($email_body);
+                    $role = Role::findByName('student');
+                    $user->assignRole($role);
+                }
+            }
             if ($lead->owner_id) {
                 $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id', 'remarks'));
             }
 
-            $lead->update($request->except('_token', '_method', 'category_id', 'remarks', 'remarks_id'));
+            $lead->update($request->except('_token', '_method', 'category_id', 'remarks', 'remarks_id', 'lead_id'));
             $lead = Lead::find($id);
             if ($leadCounsellorIdOld != $lead->owner_id && $lead->owner_id) {
                 LeadAssignedEvent::dispatch($lead);
                 NewLog::create('Lead Assigned', 'Lead "' . $lead->name . '" has been assigned to ' . $lead->owner->name . '.');
             }
-            return Redirect::route('leads.index')->with('success', 'Lead updated successfully.');
+            return Redirect::back()->with('success', 'Lead updated successfully.');
         } catch (\Exception $e) {
+            dd($e);
             Log::info($e->getMessage());
             return Redirect::back()->with('error', $e->getMessage());
         }
@@ -473,10 +574,94 @@ class LeadController extends Controller
         }
     }
 
+    public function data_stringify($data)
+    {
+        switch (gettype($data)) {
+            case 'string':
+                return '\'' . addcslashes($data, "'\\") . '\'';
+            case 'boolean':
+                return $data ? 'true' : 'false';
+            case 'NULL':
+                return 'null';
+            case 'object':
+            case 'array':
+                $expressions = [];
+                foreach ($data as $c_key => $c_value) {
+                    $expressions[] = $this->data_stringify($c_value);
+                }
+                return gettype($data) === 'object' ?
+                    '(object)[' . implode(', ', $expressions) . ']' :
+                    implode(',', $expressions);
+            default:
+                return (string)$data;
+        }
+    }
+
     public function import(Request $request)
     {
 
-        Excel::import(new LeadsImport, $request->file('file'));
+        // Excel::import(new LeadsImport, $request->file('file'));
+        $headings = [];
+        $duplicateCount = 0;
+        $imported = 0;
+        $file = fopen($request->file('file'), mode: 'r');
+        while ($row = fgetcsv($file)) {
+            if ($row[1] == 'phone_number') {
+                $headings = $row;
+                continue;
+            }
+            $findExistingLead = Lead::where('email', $row[2])->orWhere('mobile', $row[1])->first();
+            if ($findExistingLead) {
+                $duplicateCount++;
+                continue;
+            }
+            $country = Country::where('name', $row[11])->first();
+            $owner = User::where('email', $row[10])->first();
+            $passport = 0;
+            if ($row[13] == 'yes' || $row[13] == 'Yes') {
+                $passport = 1;
+            }
+            $ownerId = null;
+            $countryId = null;
+            if ($owner) {
+                $ownerId = $owner->id;
+            }
+            if ($country) {
+                $countryId = $country->id;
+            }
+            $temp_remarks_id = [];
+            if (count($row) > 15) {
+                foreach ($row as $index => $item) {
+                    if ($index > 14 && $headings[$index] != '') {
+                        $data = [
+                            'value' => "'" . $headings[$index] . "'  '" .  $item . "'",
+                            'commented_by' => Auth::id()
+                        ];
+                        $remarks = Remarks::create($data);
+                        array_push($temp_remarks_id, $remarks->id);
+                    }
+                }
+            }
+            // if ((strlen($row[1]) < 3) || (!filter_var($row[2], FILTER_VALIDATE_EMAIL)) || (strlen($row[3]) < 7)) return null;
+            Lead::create([
+                'name' => $row[0],
+                'email' => $row[2],
+                'mobile' => $row[1],
+                'insert_type' => $row[3],
+                'status' => $row[4],
+                'last_education' => $row[5],
+                'completion_date' => $row[6],
+                'english' => $row[7],
+                'country' => $countryId,
+                'owner_id' => $ownerId,
+                'passport' => $passport,
+                'address' => $row[12],
+                'desired_course' => $row[14],
+                'temp_remarks_id' => $this->data_stringify($temp_remarks_id),
+                'creator_id' => Auth::id()
+            ]);
+            $imported++;
+        }
         $tempRemarks = Lead::where('temp_remarks_id', '!=', null)->get();
         foreach ($tempRemarks as $tempRemark) {
             $temp_remarks_ids = explode(',', $tempRemark->temp_remarks_id);
@@ -493,9 +678,15 @@ class LeadController extends Controller
                 ]
             );
         }
-        NewLog::create('Leads Imported', 'Multiple leads have been imported.');
-        Session::flash('success', 'Leads imported successfully.');
-        return Redirect::back()->with('success', 'Lead Imported successfully.');
+        if ($imported > 0) {
+            NewLog::create('Leads Imported', '' . $imported . ' leads have been imported.');
+            Session::flash('success', 'Leads imported successfully.');
+        }
+        if ($duplicateCount > 0) {
+            NewLog::create('Duplicate Leads', '"' . $duplicateCount . '" leads duplicate');
+            Session::flash('error', '' . $duplicateCount . ' duplicate Leads found .');
+        }
+        return Redirect::back();
     }
 
     public function export()
@@ -554,7 +745,6 @@ class LeadController extends Controller
             Session::flash('success', 'All Leads converted successfully.');
             // return response('All Leads converted successfully.');
         } catch (\Exception $e) {
-            dd($e);
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
@@ -578,7 +768,6 @@ class LeadController extends Controller
             Session::flash('success', 'All Leads deleted successfully.');
             // return response('All Leads converted successfully.');
         } catch (\Exception $e) {
-            dd($e);
             Session::flash('error', $e->getMessage());
             return response($e->getMessage());
         }
