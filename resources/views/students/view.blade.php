@@ -3,7 +3,7 @@
         @component('components.custombreadcrumb')
         @slot('icon') <i class="fa fa-user" aria-hidden="true"></i> @endslot
         @slot('title') Student @endslot
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super-admin'))
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
         @push('list') <li class="breadcrumb-item"><a href="{{route('students.index')}}">Students</a></li> @endpush
         @endif
         @push('list') <li class="breadcrumb-item active">Student</li> @endpush

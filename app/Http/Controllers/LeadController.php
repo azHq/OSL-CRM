@@ -258,7 +258,7 @@ class LeadController extends Controller
                     $action .= '<a href="javascript:;" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#mail_lead" class="mail-lead lkb-table-action-btn url badge-warning btn-edit"><i class="feather-mail"></i></a>';
                     if (!$row->student)
                         $action .= '<a href="javascript:;" onclick="leadConvert(' . $row->id . ');" class="lkb-table-action-btn badge-success btn-convert"><i class="feather-navigation"></i></a>';
-                    if (!$row->student && Auth::user()->hasRole('super-admin'))
+                    if (!$row->student && (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin')))
                         $action .= '<a href="javascript:;" onclick="leadDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     if ($row->student)
                         $action .= '<a href="' . route('students.view', $row->student->id) . '" class="lkb-table-action-btn badge-primary btn-view"><i class="feather-info"></i></a>';
@@ -471,7 +471,7 @@ class LeadController extends Controller
                     $roleId = Role::where('name', 'student')->first()->id;
                     $student['role_id'] = $roleId;
                     $user = User::create($student);
-                    $email_body = [];
+                    $email_body = clone $request;
                     $email_body['name'] = $data->name;
                     $email_body['subject'] = 'Pass Reset Request for OSL_CRM';
                     $email_body['email'] = $student['email'];
@@ -479,7 +479,7 @@ class LeadController extends Controller
                     Please View the link & Reset
                    https://oslcrm.com/reset-password/$user->id
                     ";
-                    // $this->sendMail($email_body);
+                    $this->sendMail($email_body);
                     $role = Role::findByName('student');
                     $user->assignRole($role);
                 }
@@ -831,7 +831,7 @@ class LeadController extends Controller
     public function studentProfile()
     {
         if (\request()->ajax()) {
-            abort_if((Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro')), 403);
+            abort_if((Auth::user()->hasRole('main-super-admin') || Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro')), 403);
             $email = Auth::user()->email;
             $lead = Lead::where('email', '=', $email)->get()[0];
             $subCategory = Subcategory::find($lead->subcategory_id);

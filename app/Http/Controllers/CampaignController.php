@@ -68,6 +68,46 @@ class CampaignController extends Controller
         $page = $fbGraphService->getPageOrLeadInfo($id);
         return $page;
     }
+    public function syncLeads(Request $request, FacebookGraphService $fbGraphService)
+    {
+        $leads = $fbGraphService->getLeads($request['lead_id']);
+        $metaLead = MetaLeadgenForm::where("lead_id", $request['lead_id'])->first();
+        $duplicateLeads = [];
+        $mapped_fields = json_decode($metaLead->mapped_fields);
+        foreach ($leads as $lead) {
+            $lead_data = [];
+            $lead_data['insert_type'] = "Meta";
+            foreach ($lead["field_data"] as $field) {
+                foreach ($mapped_fields as $map_field) {
+                    foreach ($map_field as $key => $value) {
+                        if ($key == 'Purpose') {
+                            $lead_data['status'] = $value;
+                        } else if ($field['name'] == $value) {
+                            $lead_data[$key] = $field['values'][0];
+                        }
+                    }
+                }
+            }
+
+            $foundLead = Lead::where('mobile', $lead_data['mobile'])->orWhere('email', $lead_data['email'])->first();
+                if ($foundLead) {
+                    foreach ($foundLead->toArray() as $key => $value) {
+                        if (isset($foundLead[$key]) && isset($lead_data[$key])) {
+                            $lead_data[$key] = str_replace("'", "", $lead_data[$key]);
+                            if ($foundLead[$key]  !== $lead_data[$key]) {
+                                array_push($duplicateLeads, $lead_data);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    $lead_data['creator_id'] = Auth::id();
+                    Lead::create($lead_data);
+                }
+        }
+        return $duplicateLeads;
+
+    }
 
     public function mapFields(Request $request, FacebookGraphService $fbGraphService)
     {
@@ -79,15 +119,16 @@ class CampaignController extends Controller
                 $lead_data = [];
                 $lead_data['insert_type'] = "Meta";
                 $lead_data['status'] = $request['status'];
-
+                $map_fields = [];
                 foreach ($lead["field_data"] as $field) {
                     if ($request[$field['name']] && $request[$field['name']] != 'none') {
+                        array_push($map_fields, [$request[$field['name']] => $field['name']]);
                         $lead_data[$request[$field['name']]] = $field['values'][0];
                     }
                 }
+                array_push($map_fields, ['Purpose' => $lead_data['status']]);
 
                 $foundLead = Lead::where('mobile', $lead_data['mobile'])->orWhere('email', $lead_data['email'])->first();
-
                 if ($foundLead) {
                     foreach ($foundLead->toArray() as $key => $value) {
                         if (isset($foundLead[$key]) && isset($lead_data[$key])) {
@@ -111,6 +152,7 @@ class CampaignController extends Controller
                 $metadata['name'] = $lead_info['name'];
                 $metadata['mapped'] = 1;
                 $metadata['mapped_by'] = Auth::id();
+                $metadata['mapped_fields'] = json_encode($map_fields);
                 MetaLeadgenForm::create($metadata);
             }
             return $duplicateLeads;

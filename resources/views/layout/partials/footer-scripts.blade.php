@@ -38,6 +38,7 @@
 <script src="{{ URL::asset('/assets/js/sticky.js')}}"></script>
 <!-- jquery confirmation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -74,7 +75,6 @@
 
     $(document).ready(function() {
         var referrer = document.referrer;
-        console.log(referrer);
     });
 </script>
 

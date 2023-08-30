@@ -14,7 +14,8 @@ class MetaLeadgenForm extends Model
         'name',
         'lead_id',
         'mapped',
-        'mapped_by'
+        'mapped_by',
+        'mapped_fields'
     ];
     protected static function booted()
     {

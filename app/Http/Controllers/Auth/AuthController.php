@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro')) {
+            if (Auth::user()->hasRole('main-super-admin') || Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('cro')) {
                 Session::flush();
                 Auth::logout();
                 return redirect("student-login")->withSuccess('Oppes! You have entered invalid credentials');

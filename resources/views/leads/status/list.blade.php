@@ -73,9 +73,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Action</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Lead Created</th>
                                 <th>Purpose</th>
                                 <th>Source</th>
                                 <th>Passport</th>
@@ -83,12 +85,10 @@
                                 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Counsellor</th>
                                 @endif
-                                <th>Lead Created</th>
                                 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <th>Created By</th>
                                 @endif
                                 <!-- <th>Lead Status</th> -->
-                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -331,6 +331,10 @@
                     data: 'DT_RowIndex'
                 },
                 {
+                    data: 'action',
+                    width: '5%'
+                },
+                {
                     data: 'name'
                 },
                 {
@@ -338,6 +342,9 @@
                 },
                 {
                     data: 'mobile'
+                },
+                {
+                    data: 'created_at'
                 },
                 {
                     data: 'purpose'
@@ -355,14 +362,7 @@
                     data: 'owner'
                 },
                 {
-                    data: 'created_at'
-                },
-                {
                     data: 'created_by'
-                },
-                {
-                    data: 'action',
-                    width: '5%'
                 },
             ]
 
@@ -563,6 +563,10 @@
                     data: 'DT_RowIndex'
                 },
                 {
+                    data: 'action',
+                    width: '5%'
+                },
+                {
                     data: 'name'
                 },
                 {
@@ -570,6 +574,9 @@
                 },
                 {
                     data: 'mobile'
+                },
+                {
+                    data: 'created_at'
                 },
                 {
                     data: 'purpose'
@@ -582,13 +589,6 @@
                 },
                 {
                     data: 'destination'
-                },
-                {
-                    data: 'created_at'
-                },
-                {
-                    data: 'action',
-                    width: '5%'
                 },
             ]
 

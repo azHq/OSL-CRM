@@ -94,6 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('checkDuplicate', [LeadController::class, 'checkDuplicate'])->name('leads.check.duplicate');
     Route::get('getPageName/{lead_id}', [CampaignController::class, 'getLeads'])->name('leads.getLeads.meta');
     Route::post('mapFields', [CampaignController::class, 'mapFields'])->name('leads.map.fields');
+    Route::post('syncLeads', [CampaignController::class, 'syncLeads'])->name('leads.syncLeads');
     Route::get('meta', [CampaignController::class, 'index'])->name('leads.meta');
     Route::post('metaCredentialUpdate', [CampaignController::class, 'metaCredentialUpdate'])->name('meta.update');
     Route::get('getMetaCredential', [CampaignController::class, 'getCredential'])->name('meta.get');

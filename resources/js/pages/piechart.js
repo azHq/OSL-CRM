@@ -1,6 +1,5 @@
 var data = getReportsList();
 
-console.log(data);
 
 // Bar chart
 new Chart(document.getElementById("bar-chart"), {

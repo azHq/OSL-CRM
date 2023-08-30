@@ -7,15 +7,16 @@
 	.dashboard-card {
 		height: 8em;
 	}
-    .floating-div {
-        position: fixed;
-        /* top: 10px; */
-        right: 10px;
-        width: 300px;
-        height: 200px;
-        /* background-color: #de1111; */
-        z-index: 1;
-    }
+
+	.floating-div {
+		position: fixed;
+		/* top: 10px; */
+		right: 10px;
+		width: 300px;
+		height: 200px;
+		/* background-color: #de1111; */
+		z-index: 1;
+	}
 </style>
 @endpush
 
@@ -148,17 +149,17 @@
 							<h3 class="text-center my-3">To Do List</h3>
 							<div class="d-flex justify-content-between">
 								<div>
-                                    @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
+									@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
 									<select id="todo-filter-counsellor" onchange="filterByCounsellor()" class="task-filter-counsellors form-select focus-none mt-2 d-inline-block" aria-label="Default select example" style="width:max-content;">
 										<option value="" selected>Filter Counsellor</option>
 									</select>
-                                    @endif
-{{--                                    <button onclick="fetchTasksByDateRange(0)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">--}}
-{{--                                            Week--}}
-{{--                                    </button>--}}
-{{--                                    <button onclick="fetchTasksByDateRange(1)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">--}}
-{{--                                            Month--}}
-{{--                                    </button>--}}
+									@endif
+									{{-- <button onclick="fetchTasksByDateRange(0)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">--}}
+									{{-- Week--}}
+									{{-- </button>--}}
+									{{-- <button onclick="fetchTasksByDateRange(1)" class="add btn btn-secondary font-weight-bold text-white todo-list-add-btn btn-rounded">--}}
+									{{-- Month--}}
+									{{-- </button>--}}
 								</div>
 								<div>
 									<button onclick="showModal()" class="add btn btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-task" data-bs-toggle="modal" data-bs-target="#add_task">
@@ -190,36 +191,37 @@
 			</div>
 		</div>
 	</div>
-    <div class="floating-div" id="today-scheduled-task" style="position: fixed;
+	<div class="floating-div" id="today-scheduled-task" style="position: fixed;
         bottom: 20px;
         right: 20px;
         width: 400px;
-        z-index: 1;"
-    >
-    </div>
+        z-index: 1;">
+	</div>
 </div>
 <!-- /Page Content -->
 @component('tasks.add')
 @endcomponent
 
 <script>
-	$(document).ready(function(){
+	$(document).ready(function() {
 		getTodoList();
-        getOwners();
-        getScheduledTasks();
+		getOwners();
+		getScheduledTasks();
 	});
 </script>
 <script>
-    function filterByCounsellor(){
-        var assigneeId = $('#todo-filter-counsellor').val();
-        if(assigneeId)
-            filterTodoList(assigneeId)
-        else
-            getTodoList();
-    }
-    function showModal(){
-        $("#add_task").modal('show');
-    }
+	function filterByCounsellor() {
+		var assigneeId = $('#todo-filter-counsellor').val();
+		if (assigneeId)
+			filterTodoList(assigneeId)
+		else
+			getTodoList();
+	}
+
+	function showModal() {
+		$("#add_task").modal('show');
+	}
+
 	function taskDelete(id) {
 		$.confirm({
 			title: 'Confirm',
@@ -324,54 +326,52 @@
 		});
 	}
 
-    function filterTodoList(assigneeId){
-        var url = "{{ route('tasks.todolistByAssignee', 'id') }}";
-        url = url.replace('id', assigneeId);
-        $.ajax({
-            type: 'GET',
-            url: url,
-            data: {},
-            success: function(data) {
-                setTable(data);
-            }
-        });
-    }
+	function filterTodoList(assigneeId) {
+		var url = "{{ route('tasks.todolistByAssignee', 'id') }}";
+		url = url.replace('id', assigneeId);
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: {},
+			success: function(data) {
+				setTable(data);
+			}
+		});
+	}
 
-    function getOwners() {
-        $.ajax({
-            type: 'GET',
-            url: "{{ route('leads.create') }}",
-            success: function(data) {
-                if (data.users) {
-                    var options = '<option value="" selected>Filter Counsellor</option>';
-                    options += '<option value="Unassigned">Unassigned</option>';
-                    data.users.forEach(function(user) {
-                        options += '<option value="' + user.id + '">' + user.name + '</option>';
-                    });
-                    $('.task-filter-counsellors').html(options);
-                }
-                if (data.all_users) {
-                    var options = '<option value="" selected>Filter Counsellor</option>';
-                    data.all_users.forEach(function(user) {
-                        options += '<option value="' + user.id + '">' + user.name + '</option>';
-                    });
-                    $('.task-filter-counsellors').html(options);
-                }
-            }
-        });
-    }
+	function getOwners() {
+		$.ajax({
+			type: 'GET',
+			url: "{{ route('leads.create') }}",
+			success: function(data) {
+				let options = '<option value="" selected>Filter Person</option>';
+				options += '<option value="Unassigned">Unassigned</option>';
+				if (data.users) {
+					data.users.forEach(function(user) {
+						options += '<option value="' + user.id + '">' + user.name + '(Counsellor)</option>';
+					});
+				}
+				if (data.cros) {
+					data.cros.forEach(function(user) {
+						options += '<option value="' + user.id + '">' + user.name + '(CRO)</option>';
+					});
+				}
+				$('.task-filter-counsellors').html(options);
+			}
+		});
+	}
 
-    function setTable(data){
-        if (data.tasks) {
-            var items = '';
-            var i = 0;
-            data.tasks.forEach(function(task) {
-                let resolveButton = task.status === 'Resolved' ? `<button onclick="taskComplete('${task.id}')" disabled type="button" class="btn btn-secondary ms-1">Resolved</button>`
-                    : `<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">&nbsp;Resolve&nbsp;</button>`;
-                let cancelButton = task.status === 'Canceled' ? `<button onclick="taskComplete('${task.id}')" disabled type="button" class="btn btn-secondary ms-1">Canceled</button>`
-                    : `<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-danger ms-1">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>`;
+	function setTable(data) {
+		if (data.tasks) {
+			var items = '';
+			var i = 0;
+			data.tasks.forEach(function(task) {
+				let resolveButton = task.status === 'Resolved' ? `<button onclick="taskComplete('${task.id}')" disabled type="button" class="btn btn-secondary ms-1">Resolved</button>` :
+					`<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-success ms-1">&nbsp;Resolve&nbsp;</button>`;
+				let cancelButton = task.status === 'Canceled' ? `<button onclick="taskComplete('${task.id}')" disabled type="button" class="btn btn-secondary ms-1">Canceled</button>` :
+					`<button onclick="taskComplete('${task.id}')" type="button" class="btn btn-danger ms-1">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>`;
 
-                items += `<tr style="border-style: none !important; color:${task.color} !important;">
+				items += `<tr style="border-style: none !important; color:${task.color} !important;">
 										<th style="border-style: none !important;" scope="row">${++i}</th>
 										<td style="border-style: none !important;"> <b>${task.name}</b> </td>
 										<td style="border-style: none !important;">${task.details}</td>
@@ -384,27 +384,27 @@
 											${resolveButton}
 										</td>
 									</tr>`;
-            });
-            $('#todo-list-table').html(items);
-        } else {
-            var items = `<tr>
+			});
+			$('#todo-list-table').html(items);
+		} else {
+			var items = `<tr>
 									<th scope="row">No Task</th>
 								</tr>`;
-            $('#todo-list-table').html(items);
-        }
-    }
+			$('#todo-list-table').html(items);
+		}
+	}
 
-    function getScheduledTasks(){
-        $.ajax({
-            type: 'GET',
-            url: "{{ route('tasks.todoScheduledList') }}",
-            data: {},
-            success: function(data) {
-                if (data.tasks) {
-                    var items = '';
-                    var i = 0;
-                    data.tasks.forEach(function(task) {
-                        items += `<div class="card shadow mb-2" id="task-scheduled-${task.id}">
+	function getScheduledTasks() {
+		$.ajax({
+			type: 'GET',
+			url: "{{ route('tasks.todoScheduledList') }}",
+			data: {},
+			success: function(data) {
+				if (data.tasks) {
+					var items = '';
+					var i = 0;
+					data.tasks.forEach(function(task) {
+						items += `<div class="card shadow mb-2" id="task-scheduled-${task.id}">
                                     <div class="row">
                                         <div class="text-center mt-1 col-10">${task.name} <br/>
                                             <small>${task.start} - ${task.end} </small>
@@ -419,33 +419,31 @@
                                             </div>
                                         </div>
                                   </div>`;
-                    });
-                    $('#today-scheduled-task').html(items);
-                }
-            }
-        });
-    }
+					});
+					$('#today-scheduled-task').html(items);
+				}
+			}
+		});
+	}
 
-    function hideCard(id){
-        var divId = "task-scheduled-" + id;
-        var div = document.getElementById(divId);
-        div.style.display = "none";
-    }
-
+	function hideCard(id) {
+		var divId = "task-scheduled-" + id;
+		var div = document.getElementById(divId);
+		div.style.display = "none";
+	}
 </script>
 
 <script>
-    function fetchTasksByDateRange(type){
-        var url = "{{ route('tasks.todoListByDateRange', 'type') }}";
-        url = url.replace('type', type);
-        $.ajax({
-            type: 'GET',
-            url: url,
-            data: {},
-            success: function(data) {
-                setTable(data);
-            }
-        });
-    }
+	function fetchTasksByDateRange(type) {
+		var url = "{{ route('tasks.todoListByDateRange', 'type') }}";
+		url = url.replace('type', type);
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: {},
+			success: function(data) {
+				setTable(data);
+			}
+		});
+	}
 </script>
-

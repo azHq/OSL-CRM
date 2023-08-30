@@ -214,9 +214,8 @@
 								<button type="button" class="btn btn-success btn-rounded">Mapped</button>
 								</div>
 								<div class="col-6">
-									<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#lead_meta_fields" onclick="mapFields(${lead.id})" id="dup-modal">Sync</button>&nbsp;&nbsp;
+									<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="" onclick="syncLead(${lead.id})" id="dup-modal">Sync</button>&nbsp;&nbsp;
 								</div>
-
                             </div>`
 							:`<div class="col-3">
 							<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#lead_meta_fields" onclick="mapFields(${lead.id})">Map Fields</button>&nbsp;&nbsp;
@@ -325,6 +324,62 @@
 			},
 			success: function(data) {
 				window.location.reload()
+			}
+		});
+	}
+
+	function syncLead(leadId) {
+		let url = "{{route('leads.syncLeads')}}";
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {
+				_token: '{{csrf_token()}}',
+				lead_id: leadId
+			},
+			success: function(data) {
+
+				if (data.length > 0) {
+					$('#lead_meta_fields').modal('hide')
+					$('#duplicate_leads_meta').modal('show')
+					let encodedValues = encodeURIComponent(JSON.stringify(data))
+					encodedValues = encodedValues.replaceAll("'", "")
+					var subcats = `
+					<div class="row" style="border-bottom: 1px solid #dee2e6; color: grey; font-size: 16px; font-weight: 600; margin-bottom: 5px">
+						<div class="col-6">
+							<p>Name</p>
+						</div>
+						<div class="col-3">
+							<p>Phone</p>
+						</div>
+						<div class="col-2">
+						<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" onclick="updateAllTapped('${encodedValues}')">Update All</button>&nbsp;&nbsp;
+
+						</div>
+
+					</div>`;
+					data.forEach(function(item) {
+						let encodedValues = encodeURIComponent(JSON.stringify(item))
+						encodedValues = encodedValues.replaceAll("'", "")
+
+						subcats += `
+					<div class="row p-2" style="border-bottom: 1px solid #dee2e6">
+						<div class="col-6">
+							<p>${item.name}</p>
+						</div>
+						<div class="col-3">
+							<p>${item.mobile}</p>
+						</div>
+						<div class="col-3">
+							<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#fields_values_modal" onclick="viewFields('${encodedValues}')">View</button>&nbsp;&nbsp;
+						</div>
+					</div>
+						`
+					})
+					$('#duplicateLeads').html(subcats);
+				} else {
+					window.location.reload()
+				}
 			}
 		});
 	}

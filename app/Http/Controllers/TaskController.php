@@ -194,7 +194,7 @@ class TaskController extends Controller
                     $action = '<div style="text-align:end;">';
                     if ($row->start > date('Y-m-d'))
                         $action .= '<a href="#" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#edit_task" class="edit-task lkb-table-action-btn url badge-info btn-edit"><i class="feather-edit"></i></a>';
-                    if (Auth::user()->hasRole('super-admin'))
+                    if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                         $action .= '<a href="javascript:;" onclick="taskDelete(' . $row->id . ');" class="lkb-table-action-btn badge-danger btn-delete"><i class="feather-trash-2"></i></a>';
                     return $action . '</div>';
                 })

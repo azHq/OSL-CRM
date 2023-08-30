@@ -18,7 +18,6 @@
         function callbackThen(response) {
             // read Promise object
             response.json().then(function(data) {
-                console.log(data);
                 if (data.success && data.score > 0.5) {
                     console.log('valid recpatcha');
                 } else {

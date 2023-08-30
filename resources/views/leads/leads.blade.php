@@ -87,9 +87,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Action</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Lead Created</th>
                                 <th>Purpose</th>
                                 <th>Source</th>
                                 <th>Passport</th>
@@ -99,10 +101,8 @@
                                 @endif
                                 <!-- <th>Lead Created</th> -->
                                 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
-                                <!-- <th>Created By</th> -->
                                 @endif
                                 <th>Lead Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -135,8 +135,7 @@
 
 @component('leads.assign')
 @endcomponent
-
-<script>
+<script type="text/javascript">
     // On Load
     $(document).ready(function() {
         localStorage.setItem('SelectedLeads', JSON.stringify([]));
@@ -185,483 +184,7 @@
         getTransactions();
         updateRowsBehavior();
     });
-</script>
 
-@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
-<script>
-    function getTransactions() {
-
-        $("#myTable").dataTable().fnDestroy();
-        if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
-            $('#myTable thead tr')
-                .clone(true)
-                .addClass('filters')
-                .appendTo('#myTable thead');
-        } else {
-            $('#myTable thead tr')
-                .clone(true)
-                .addClass('filters')
-        }
-
-        var table = $('#myTable').DataTable({
-            responsive: true,
-            processing: true,
-            serverSide: true,
-            orderCellsTop: true,
-            fixedHeader: true,
-            'columnDefs': [{
-                'targets': [0, -1],
-                'orderable': false,
-            }],
-            initComplete: function() {
-                var api = this.api();
-                if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
-                    api.columns().eq(0)
-                        .each(function(colIdx) {
-                            var cell = $('.filters th').eq(
-                                $(api.column(colIdx).header()).index()
-                            );
-                            $(cell).removeClass('sorting_asc');
-                            var title = $(cell).text();
-                            switch (title) {
-                                case 'Lead Status':
-                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Status</option>
-                                                </select>`);
-                                    break;
-                                case 'Counsellor':
-                                    $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Counsellor</option>
-                                                </select>`);
-                                    break;
-                                case 'Purpose':
-                                    $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Purpose</option>
-                                                    <option value="">Unknown</option>
-                                                    <option value="English Teaching">English Teaching</option>
-                                                    <option value="Study Abroad">Study Abroad</option>
-                                                    <!-- <option value="Not Potential">Not Potential</option> -->
-                                            
-                                                </select>`);
-                                    break;
-                                    // case 'Created By':
-                                    //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                    //                     <option value="" selected>Filter Creator</option>
-                                    //                 </select>`);
-                                    //     break;
-                                    // case 'Lead Created':
-                                    //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
-                                    //     break;
-
-                                case 'Source':
-                                    $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Source</option>
-                                                    <option value="Linkedin">Linkedin</option>
-                                                    <option value="Meta">Meta</option>
-                                                    <option value="Website">Website</option>
-                                                    <option value="Twitter">Twitter</option>
-                                                    <option value="Youtube">Youtube</option>
-                                                    <option value="Google">Google</option>
-                                                    <option value="Event">Event</option>
-                                                    <option value="Offline">Offline</option>
-                                                    <option value="Subagent">Subagent</option>
-    
-                                                    <option value="Pinterest">Pinterest</option>
-                                                    <option value="Referral">Referral</option>
-                                                    <option value="Internal">Internal</option>
-    
-                                                    <option value="Other Social Platform">Other Social Platform</option>
-                                                    <option value="others">Others</option>
-                                            
-                                                </select>`);
-                                    break;
-                                case 'Passport':
-                                    $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Passport</option>
-                                                    <option value="Yes">Yes</option>
-                                                    <option value="No">No</option>
-                                                </select>`);
-                                    break;
-                                case 'Destination':
-                                    $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Destination</option>
-                                                        <option value="Australia">Australia</option>
-                                                        <option value="Canada">Canada</option>
-                                                        <option value="Sweden">Sweden</option>
-                                                        <option value="USA">USA</option>
-                                                        <option value="UK">UK</option>
-                                                        <option value="others">Others</option>
-                                            
-                                                </select>`);
-                                    break;
-                                case '#':
-                                    $(cell).html(title);
-                                    break;
-                                case 'Action':
-                                    $(cell).html(title);
-                                    break;
-
-                                default:
-                                    $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
-                                    break;
-                            }
-                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                                .off('keyup change')
-                                .on('change', function(e) {
-                                    $(this).attr('title', $(this).val());
-                                    var regexr = '({search})';
-                                    var cursorPosition = this.selectionStart;
-                                    api.column(colIdx)
-                                        .search(
-                                            this.value != '' ?
-                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                            this.value != '',
-                                            this.value == ''
-                                        ).draw();
-                                })
-                                .on('keyup', function(e) {
-                                    e.stopPropagation();
-                                    $(this).trigger('change');
-                                });
-
-                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                                .off('keyup change')
-                                .on('change', function(e) {
-                                    $(this).attr('title', $(this).val());
-                                    var regexr = '({search})';
-                                    var cursorPosition = this.selectionStart;
-                                    api.column(colIdx)
-                                        .search(
-                                            this.value != '' ?
-                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                            this.value != '',
-                                            this.value == ''
-                                        ).draw();
-                                })
-                                .on('keyup', function(e) {
-                                    e.stopPropagation();
-                                    $(this).trigger('change');
-                                });
-                        });
-                }
-
-
-                getOwners();
-
-            },
-            ajax: {
-                'url': '{{ route("leads.list") }}',
-                "dataSrc": function(json) {
-                    let modifiedData = json.data
-                    for (let item of modifiedData) {
-                        let parsedItem = JSON.parse(item.name)
-                        // console.log(JSON.parse(parsedItem.name))
-                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
-                                <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
-                            </a>
-                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
-                        item.name = name
-                    }
-
-                    return modifiedData;
-                },
-                data: function(data) {
-                    console.log({
-                        data
-                    })
-                    data.filter_search = $('#filter-search').val();
-                    data.filter_sort = $('#filter-sort').val();
-                    data.filter_status = $('#filter-status').val();
-                    data.startDate = $('#filter-from').val();
-                    data.endDate = $('#filter-to').val();;
-                }
-            },
-            "fnDrawCallback": function(oSettings) {
-                $("body").tooltip({
-                    selector: '[data-toggle="tooltip"]'
-                });
-            },
-            columns: [{
-                    data: 'DT_RowIndex'
-                },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'email'
-                },
-                {
-                    data: 'mobile'
-                },
-                {
-                    data: 'purpose'
-                },
-                {
-                    data: 'source'
-                },
-                {
-                    data: 'passport'
-                },
-                {
-                    data: 'destination'
-                },
-                {
-                    data: 'owner'
-                },
-                // {
-                //     data: 'created_at'
-                // },
-                // {
-                //     data: 'created_by'
-                // },
-                {
-                    data: 'status'
-                },
-                {
-                    data: 'action',
-                    width: '5%'
-                },
-            ]
-
-        });
-        return table;
-    }
-</script>
-@else
-<script>
-    function getTransactions() {
-        $("#myTable").dataTable().fnDestroy();
-        if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
-            $('#myTable thead tr')
-                .clone(true)
-                .addClass('filters')
-                .appendTo('#myTable thead');
-        } else {
-            $('#myTable thead tr')
-                .clone(true)
-                .addClass('filters')
-        }
-
-        var table = $('#myTable').DataTable({
-            dom: 'Blfrtip',
-            buttons: [
-                'selectAll',
-                'selectNone'
-            ],
-            language: {
-                buttons: {
-                    selectAll: "Select all items",
-                    selectNone: "Select none"
-                }
-            },
-            responsive: true,
-            processing: true,
-            serverSide: true,
-            orderCellsTop: true,
-            fixedHeader: true,
-            'columnDefs': [{
-                'targets': [0, -1],
-                'orderable': false,
-            }],
-            initComplete: function() {
-                var api = this.api();
-                if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
-                    api.columns().eq(0)
-                        .each(function(colIdx) {
-                            var cell = $('.filters th').eq(
-                                $(api.column(colIdx).header()).index()
-                            );
-                            $(cell).removeClass('sorting_asc');
-                            var title = $(cell).text();
-                            switch (title) {
-                                case 'Lead Status':
-                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                            <option value="" selected>Filter Status</option>
-                                        </select>`);
-                                    break;
-                                case 'Counsellor':
-                                    $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                            <option value="" selected>Filter Counsellor</option>
-                                        </select>`);
-                                    break;
-                                case 'Purpose':
-                                    $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                            <option value="" selected>Filter Purpose</option>
-                                            <option value="">Unknown</option>
-                                            <option value="English Teaching">English Teaching</option>
-                                            <option value="Study Abroad">Study Abroad</option>
-                                            <!-- <option value="Not Potential">Not Potential</option> -->
-                                    
-                                        </select>`);
-                                    break;
-                                    // case 'Lead Created':
-                                    //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
-                                    //     break;
-                                case 'Source':
-                                    $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                            <option value="" selected>Filter Source</option>
-                                            <option value="">Unknown</option>
-                                            <option value="Linkedin">Linkedin</option>
-                                            <option value="Twitter">Twitter</option>
-                                            <option value="Youtube">Youtube</option>
-                                            <option value="Google">Google</option>
-                                            <option value="Event">Event</option>
-                                            <option value="Offline">Offline</option>
-                                            <option value="Subagent">Subagent</option>
-                                            
-                                <option value="Pinterest">Pinterest</option>
-                                                                            <option value="Referral">Referral</option>
-                                                                            <option value="Internal">Internal</option>
-                                                                        
-                                <option value="Other Social Platform">Other Social Platform</option>
-                                                                            </select>`);
-                                    break;
-                                case 'Passport':
-                                    $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                            <option value="" selected>Filter Passport</option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>`);
-                                    break;
-                                case 'Destination':
-                                    $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                             <option value="" selected>Filter Destination</option>
-
-                                                <option value="Australia">Australia</option>
-                                                <option value="Canada">Canada</option>
-                                                <option value="Sweden">Sweden</option>
-                                                <option value="USA">USA</option>
-                                                <option value="UK">UK</option>
-                                                <option value="others">Others</option>
-                                    
-                                        </select>`);
-                                    break;
-                                case '#':
-                                    $(cell).html(title);
-                                    break;
-                                case 'Action':
-                                    $(cell).html(title);
-                                    break;
-
-                                default:
-                                    $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
-                                    break;
-                            }
-                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                                .off('keyup change')
-                                .on('change', function(e) {
-                                    $(this).attr('title', $(this).val());
-                                    var regexr = '({search})';
-                                    var cursorPosition = this.selectionStart;
-                                    api.column(colIdx)
-                                        .search(
-                                            this.value != '' ?
-                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                            this.value != '',
-                                            this.value == ''
-                                        ).draw();
-                                })
-                                .on('keyup', function(e) {
-                                    e.stopPropagation();
-                                    $(this).trigger('change');
-                                });
-
-                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
-                                .off('keyup change')
-                                .on('change', function(e) {
-                                    $(this).attr('title', $(this).val());
-                                    var regexr = '({search})';
-                                    var cursorPosition = this.selectionStart;
-                                    api.column(colIdx)
-                                        .search(
-                                            this.value != '' ?
-                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
-                                            this.value != '',
-                                            this.value == ''
-                                        ).draw();
-                                })
-                                .on('keyup', function(e) {
-                                    e.stopPropagation();
-                                    $(this).trigger('change');
-                                });
-                        });
-                }
-            },
-            ajax: {
-                'url': '{{ route("leads.list") }}',
-                "dataSrc": function(json) {
-                    let modifiedData = json.data
-                    for (let item of modifiedData) {
-                        let parsedItem = JSON.parse(item.name)
-                        // console.log(JSON.parse(parsedItem.name))
-                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
-                                <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
-                            </a>
-                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
-                        item.name = name
-                    }
-
-                    return modifiedData;
-                },
-                data: function(data) {
-                    console.log({
-                        data
-                    })
-                    data.filter_search = $('#filter-search').val();
-                    data.filter_sort = $('#filter-sort').val();
-                    data.filter_status = $('#filter-status').val();
-                    data.startDate = $('#startDate').val();
-                    data.endDate = $('#endDate').val();
-                }
-            },
-            "fnDrawCallback": function(oSettings) {
-                $("body").tooltip({
-                    selector: '[data-toggle="tooltip"]'
-                });
-            },
-            columns: [{
-                    data: 'DT_RowIndex'
-                },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'email'
-                },
-                {
-                    data: 'mobile'
-                },
-                {
-                    data: 'purpose'
-                },
-                // {
-                //     data: 'created_at'
-                // },
-                {
-                    data: 'source'
-                },
-                {
-                    data: 'passport'
-                },
-                {
-                    data: 'destination'
-                },
-                {
-                    data: 'status'
-                },
-                {
-                    data: 'action',
-                    width: '5%'
-                },
-            ]
-
-        });
-        return table;
-    }
-</script>
-@endif
-
-<script>
     function showModal() {
         $("#mail_lead").modal('show');
     }
@@ -830,12 +353,6 @@
             }
         });
     }
-</script>
-
-<script>
-    // $(document).ready(function() {
-    //     getCounsellors();
-    // });
 
     function getOwners() {
         $.ajax({
@@ -891,3 +408,478 @@
         });
     }
 </script>
+
+@if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
+<script type="text/javascript">
+    function getTransactions() {
+
+        $("#myTable").dataTable().fnDestroy();
+        if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+                .appendTo('#myTable thead');
+        } else {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+        }
+
+        var table = $('#myTable').DataTable({
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            orderCellsTop: true,
+            fixedHeader: true,
+            'columnDefs': [{
+                'targets': [0, -1],
+                'orderable': false,
+            }],
+            initComplete: function() {
+                var api = this.api();
+                if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+                    api.columns().eq(0)
+                        .each(function(colIdx) {
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            $(cell).removeClass('sorting_asc');
+                            var title = $(cell).text();
+                            switch (title) {
+                                case 'Lead Status':
+                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Status</option>
+                                                </select>`);
+                                    break;
+                                case 'Counsellor':
+                                    $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Counsellor</option>
+                                                </select>`);
+                                    break;
+                                case 'Purpose':
+                                    $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Purpose</option>
+                                                    <option value="">Unknown</option>
+                                                    <option value="English Teaching">English Teaching</option>
+                                                    <option value="Study Abroad">Study Abroad</option>
+                                                    <!-- <option value="Not Potential">Not Potential</option> -->
+                                            
+                                                </select>`);
+                                    break;
+                                    // case 'Created By':
+                                    //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                    //                     <option value="" selected>Filter Creator</option>
+                                    //                 </select>`);
+                                    //     break;
+                                    case 'Lead Created':
+                                        $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                        break;
+
+                                case 'Source':
+                                    $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Source</option>
+                                                    <option value="Linkedin">Linkedin</option>
+                                                    <option value="Meta">Meta</option>
+                                                    <option value="Website">Website</option>
+                                                    <option value="Twitter">Twitter</option>
+                                                    <option value="Youtube">Youtube</option>
+                                                    <option value="Google">Google</option>
+                                                    <option value="Event">Event</option>
+                                                    <option value="Offline">Offline</option>
+                                                    <option value="Subagent">Subagent</option>
+    
+                                                    <option value="Pinterest">Pinterest</option>
+                                                    <option value="Referral">Referral</option>
+                                                    <option value="Internal">Internal</option>
+    
+                                                    <option value="Other Social Platform">Other Social Platform</option>
+                                                    <option value="others">Others</option>
+                                            
+                                                </select>`);
+                                    break;
+                                case 'Passport':
+                                    $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Passport</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>`);
+                                    break;
+                                case 'Destination':
+                                    $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                                    <option value="" selected>Filter Destination</option>
+                                                        <option value="Australia">Australia</option>
+                                                        <option value="Canada">Canada</option>
+                                                        <option value="Sweden">Sweden</option>
+                                                        <option value="USA">USA</option>
+                                                        <option value="UK">UK</option>
+                                                        <option value="others">Others</option>
+                                            
+                                                </select>`);
+                                    break;
+                                case '#':
+                                    $(cell).html(title);
+                                    break;
+                                case 'Action':
+                                    $(cell).html(title);
+                                    break;
+
+                                default:
+                                    $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
+                                    break;
+                            }
+                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
+
+                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
+                        });
+                }
+
+
+                getOwners();
+
+            },
+            ajax: {
+                'url': '{{ route("leads.list") }}',
+                "dataSrc": function(json) {
+                    let modifiedData = json.data
+                    for (let item of modifiedData) {
+                        let parsedItem = JSON.parse(item.name)
+                        // console.log(JSON.parse(parsedItem.name))
+                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
+                                <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
+                            </a>
+                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
+                        item.name = name
+                    }
+
+                    return modifiedData;
+                },
+                data: function(data) {
+                    console.log({
+                        data
+                    })
+                    data.filter_search = $('#filter-search').val();
+                    data.filter_sort = $('#filter-sort').val();
+                    data.filter_status = $('#filter-status').val();
+                    data.startDate = $('#filter-from').val();
+                    data.endDate = $('#filter-to').val();;
+                }
+            },
+            "fnDrawCallback": function(oSettings) {
+                $("body").tooltip({
+                    selector: '[data-toggle="tooltip"]'
+                });
+            },
+            columns: [{
+                    data: 'DT_RowIndex'
+                },
+                {
+                    data: 'action',
+                    width: '5%'
+                },
+                {
+                    data: 'name'
+                },
+                {
+                    data: 'email'
+                },
+                {
+                    data: 'mobile'
+                },
+                {
+                    data: 'created_at'
+                },
+                {
+                    data: 'purpose'
+                },
+                {
+                    data: 'source'
+                },
+                {
+                    data: 'passport'
+                },
+                {
+                    data: 'destination'
+                },
+                {
+                    data: 'owner'
+                },
+                // {
+                //     data: 'created_by'
+                // },
+                {
+                    data: 'status'
+                },
+            ]
+
+        });
+        return table;
+    }
+</script>
+@else
+<script type="text/javascript">
+    function getTransactions() {
+        $("#myTable").dataTable().fnDestroy();
+        if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+                .appendTo('#myTable thead');
+        } else {
+            $('#myTable thead tr')
+                .clone(true)
+                .addClass('filters')
+        }
+
+        var table = $('#myTable').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+                'selectAll',
+                'selectNone'
+            ],
+            language: {
+                buttons: {
+                    selectAll: "Select all items",
+                    selectNone: "Select none"
+                }
+            },
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            orderCellsTop: true,
+            fixedHeader: true,
+            'columnDefs': [{
+                'targets': [0, -1],
+                'orderable': false,
+            }],
+            initComplete: function() {
+                var api = this.api();
+                if ($('#filter-status').val() == null || typeof $('#filter-status').val() == 'undefined') {
+                    api.columns().eq(0)
+                        .each(function(colIdx) {
+                            var cell = $('.filters th').eq(
+                                $(api.column(colIdx).header()).index()
+                            );
+                            $(cell).removeClass('sorting_asc');
+                            var title = $(cell).text();
+                            switch (title) {
+                                case 'Lead Status':
+                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Status</option>
+                                        </select>`);
+                                    break;
+                                case 'Counsellor':
+                                    $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Counsellor</option>
+                                        </select>`);
+                                    break;
+                                case 'Purpose':
+                                    $(cell).html(`<select id="filter-purpose" name="purpose_id" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Purpose</option>
+                                            <option value="">Unknown</option>
+                                            <option value="English Teaching">English Teaching</option>
+                                            <option value="Study Abroad">Study Abroad</option>
+                                            <!-- <option value="Not Potential">Not Potential</option> -->
+                                    
+                                        </select>`);
+                                    break;
+                                    case 'Lead Created':
+                                        $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
+                                        break;
+                                case 'Source':
+                                    $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Source</option>
+                                            <option value="">Unknown</option>
+                                            <option value="Linkedin">Linkedin</option>
+                                            <option value="Twitter">Twitter</option>
+                                            <option value="Youtube">Youtube</option>
+                                            <option value="Google">Google</option>
+                                            <option value="Event">Event</option>
+                                            <option value="Offline">Offline</option>
+                                            <option value="Subagent">Subagent</option>
+                                            
+                                <option value="Pinterest">Pinterest</option>
+                                                                            <option value="Referral">Referral</option>
+                                                                            <option value="Internal">Internal</option>
+                                                                        
+                                <option value="Other Social Platform">Other Social Platform</option>
+                                                                            </select>`);
+                                    break;
+                                case 'Passport':
+                                    $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                            <option value="" selected>Filter Passport</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>`);
+                                    break;
+                                case 'Destination':
+                                    $(cell).html(`<select id="filter-destination" name="destination_id" class="leads-list-destination form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                             <option value="" selected>Filter Destination</option>
+
+                                                <option value="Australia">Australia</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="Sweden">Sweden</option>
+                                                <option value="USA">USA</option>
+                                                <option value="UK">UK</option>
+                                                <option value="others">Others</option>
+                                    
+                                        </select>`);
+                                    break;
+                                case '#':
+                                    $(cell).html(title);
+                                    break;
+                                case 'Action':
+                                    $(cell).html(title);
+                                    break;
+
+                                default:
+                                    $(cell).html('<input class="form-control" type="text" placeholder="' + title + '" />');
+                                    break;
+                            }
+                            $('input', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
+
+                            $('select', $('.filters th').eq($(api.column(colIdx).header()).index()))
+                                .off('keyup change')
+                                .on('change', function(e) {
+                                    $(this).attr('title', $(this).val());
+                                    var regexr = '({search})';
+                                    var cursorPosition = this.selectionStart;
+                                    api.column(colIdx)
+                                        .search(
+                                            this.value != '' ?
+                                            regexr.replace('{search}', '(((' + this.value + ')))') : '',
+                                            this.value != '',
+                                            this.value == ''
+                                        ).draw();
+                                })
+                                .on('keyup', function(e) {
+                                    e.stopPropagation();
+                                    $(this).trigger('change');
+                                });
+                        });
+                }
+            },
+            ajax: {
+                'url': '{{ route("leads.list") }}',
+                "dataSrc": function(json) {
+                    let modifiedData = json.data
+                    for (let item of modifiedData) {
+                        let parsedItem = JSON.parse(item.name)
+                        // console.log(JSON.parse(parsedItem.name))
+                        let name = `<a data-id="${parsedItem.id}" href="javascript:;" onclick="${parsedItem.route}">
+                                <span class="person-circle-a person-circle">${parsedItem.name[0]}</span>
+                            </a>
+                            <a href="javascript:;" onclick="${parsedItem.route}">${parsedItem.name}</a>`
+                        item.name = name
+                    }
+
+                    return modifiedData;
+                },
+                data: function(data) {
+                    console.log({
+                        data
+                    })
+                    data.filter_search = $('#filter-search').val();
+                    data.filter_sort = $('#filter-sort').val();
+                    data.filter_status = $('#filter-status').val();
+                    data.startDate = $('#startDate').val();
+                    data.endDate = $('#endDate').val();
+                }
+            },
+            "fnDrawCallback": function(oSettings) {
+                $("body").tooltip({
+                    selector: '[data-toggle="tooltip"]'
+                });
+            },
+            columns: [{
+                    data: 'DT_RowIndex'
+                },
+                {
+                    data: 'action',
+                    width: '5%'
+                },
+                {
+                    data: 'name'
+                },
+                {
+                    data: 'email'
+                },
+                {
+                    data: 'mobile'
+                },
+                {
+                    data: 'created_at'
+                },
+                {
+                    data: 'purpose'
+                },
+                {
+                    data: 'source'
+                },
+                {
+                    data: 'passport'
+                },
+                {
+                    data: 'destination'
+                },
+                {
+                    data: 'status'
+                },
+            ]
+
+        });
+        return table;
+    }
+</script>
+@endif
+

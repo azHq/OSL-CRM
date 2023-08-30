@@ -18,7 +18,7 @@
 								<div class="col">
 									<div class="form-group row">
 										<div class="col-sm-12">
-											<label class="col-form-label">Counsellor</label>
+											<label class="col-form-label">Assign Person</label>
 											<select class="form-control form-select" name="assignee_id" id="task-edit-counsellor-id">
 
 											</select>
@@ -141,10 +141,18 @@
 			type: 'GET',
 			url: "{{ route('leads.create') }}",
 			success: function(data) {
-				var options = '';
-				data.all_users.forEach(function(user) {
-					options += '<option value="' + user.id + '">' + user.name + '</option>';
-				});
+				let options = '<option value="" selected>Filter Person</option>';
+				options += '<option value="Unassigned">Unassigned</option>';
+				if (data.users) {
+					data.users.forEach(function(user) {
+						options += '<option value="' + user.id + '">' + user.name + '(Counsellor)</option>';
+					});
+				}
+				if (data.cros) {
+					data.cros.forEach(function(user) {
+						options += '<option value="' + user.id + '">' + user.name + '(CRO)</option>';
+					});
+				}
 				$('#task-edit-counsellor-id').html(options);
 			}
 		});
