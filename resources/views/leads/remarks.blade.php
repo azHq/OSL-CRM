@@ -23,7 +23,7 @@
                             </div>
                         </div>
                         <div class="text-center py-3">
-                            <button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded" onclick="addRemarks()">Add</button>&nbsp;&nbsp;
+                            <button type="submit" class="border-0 btn btn-primary btn-gradient-primary btn-rounded" onclick="addRemarks()" data-bs-dismiss="modal" aria-label="Close">Add</button>&nbsp;&nbsp;
                             <button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cancel</button>
                         </div>
                         <!-- </form> -->

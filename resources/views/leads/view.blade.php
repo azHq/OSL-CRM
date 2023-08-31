@@ -228,9 +228,9 @@
             </div>
 
             <div class="col p-0 text-end">
-                <button class="add btn add-application btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-remarks" data-bs-toggle="modal" data-bs-target="#add_remarks">
+                <a href="javascript:;" class="add btn add_remarks btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="add-remarks" data-id="{{ $lead->id }}" data-bs-toggle="modal" data-bs-target="#add_remarks">
                     <i class="fa fa-plus" aria-hidden="true"></i> Add remarks
-                </button>
+                </a>
             </div>
 
         </div>
