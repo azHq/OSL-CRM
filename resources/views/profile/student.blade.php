@@ -11,7 +11,7 @@
         $leadsClass = 'complete';
         $pendingClass = 'active';
         // $admissionClass = 'active';
-    } else if ($lead->category == 'Addmission') {
+    } else if ($lead->category == 'Admission') {
         $leadsClass = 'complete';
         $pendingClass = 'complete';
         $admissionClass = 'active';
@@ -329,13 +329,13 @@
 
 
                     let admissionSubmenu = ''
-                    for (let subcategory of data['Addmission']) {
+                    for (let subcategory of data['Admission']) {
                         if (currentSubcategory == subcategory.name) {
                             foundIndex = true
                         }
                         admissionSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;top:0px;right:0px"></span>':''}${subcategory.name}</div>`
                     }
-                    // getSubmenuElem(admissionSubmenu, data, 'Addmission', currentSubcategory, foundIndex);
+                    // getSubmenuElem(admissionSubmenu, data, 'Admission', currentSubcategory, foundIndex);
                     $('#admission_sub').html(admissionSubmenu);
 
 

@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
     {
         Category::create(['name' => 'Leads']);
         Category::create(['name' => 'Pending']);
-        Category::create(['name' => 'Addmission']);
+        Category::create(['name' => 'Admission']);
         Category::create(['name' => 'Visa Compliance']);
     }
 }

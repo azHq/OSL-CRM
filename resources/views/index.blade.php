@@ -48,7 +48,7 @@
 		</div>
 		<div class="col">
 			@php
-			$studentsIndexUrl = route('leads.status.index', ['status' => 'pending']);
+			$studentsIndexUrl = route('leads.status.index', ['status' => 'student']);
 			@endphp
 			<a class="url" onclick="gotoRoute('{{$studentsIndexUrl}}')">
 				<div class="card inovices-card">
@@ -59,7 +59,7 @@
 							</span>
 							<div class="inovices-dash-count">
 								<div class="inovices-amount">
-									<span class="m-auto">{{ $data['pendings'] }}</span>
+									<span class="m-auto">{{ $data['students'] }}</span>
 								</div>
 							</div>
 						</div>

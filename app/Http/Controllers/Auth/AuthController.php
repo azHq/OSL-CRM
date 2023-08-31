@@ -112,7 +112,7 @@ class AuthController extends Controller
             $query->where('category_id', 1);
         })->count();
 
-        $pendings = Lead::whereHas('subcategory', function ($query) {
+        $students = Lead::whereHas('subcategory', function ($query) {
             $query->where('category_id', 2);
         })->count();
 
@@ -128,7 +128,7 @@ class AuthController extends Controller
         $list = Task::count();
 
         $data['leads'] = $leads;
-        $data['pendings'] = $pendings;
+        $data['students'] = $students;
         $data['admissions'] = $admissions;
         $data['visa_compliances'] = $visa_compliances;
         $data['list'] = $list;

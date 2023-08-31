@@ -89,7 +89,7 @@
 								<div class="form-group row">
 									<div class="col-sm-12">
 										<label class="col-form-label">Purpose</label>
-										<select class=" form-control form-select" name="status">
+										<select class=" form-control form-select" name="status" id="create-lead-status">
 											<option value="English Teaching">English Teaching</option>
 											<option value="Study Abroad">Study Abroad</option>
 											<!-- <option value="Not Potential">Not Potential</option> -->
@@ -261,7 +261,7 @@
 									<div class="col-sm-12">
 										<label class="col-form-label">Category</label>
 										<select id="lead-create-category" class=" form-control form-select" name="category_id">
-											@foreach(App\Models\Category::all() as $category)
+											@foreach(App\Models\Category::where('name','!=','Admission')->where('name','!=','Visa Compliance')->get() as $category)
 											<option value="{{$category->id}}">{{$category->name}}</option>
 											@endforeach
 										</select>
@@ -270,7 +270,7 @@
 							</div>
 							<div class="col">
 								<div class="form-group row">
-									<div class="col-sm-12">
+									<div class="col-sm-12" id="create_subcat_section">
 										<label class="col-form-label">Subcategory</label>
 										<select id="lead-create-subcategory" class=" form-control form-select" name="subcategory_id">
 											@foreach(App\Models\Subcategory::where('category_id', 1)->get() as $subcategory)
@@ -602,10 +602,33 @@
 			url: url,
 			success: function(data) {
 				var subcats = "";
-				data.forEach(function(subcategory) {
-					subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
-				})
-				$('#lead-create-subcategory').html(subcats);
+				if (data.length) {
+					data.forEach(function(subcategory) {
+						subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
+					})
+					$('#create_subcat_section').show();
+					$('#lead-create-subcategory').html(subcats);
+				} else {
+					$('#create_subcat_section').hide();
+
+				}
+
+			}
+		});
+	});
+	$('#create-lead-status').on('change', function() {
+		var purpose = $('#create-lead-status').val();
+		var url = "{{route('leads.categories', 'status')}}";
+		url = url.replace('status', purpose);
+		$.ajax({
+			type: 'GET',
+			url: url,
+			success: async function(data) {
+				let options = ''
+				data.categories.forEach(function(category) {
+					options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
+				});
+				await $('#lead-create-category').html(options);
 			}
 		});
 	});

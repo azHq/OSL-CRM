@@ -386,6 +386,7 @@
                     for (let subcategory of data.subcategories) {
                         options += '<option value="' + subcategory.name + '">' + subcategory.name + '</option>';
                     }
+                    options += '<option value="Admitted">Admitted For English</option>';
                     $('#filter-status').html(options);
                 }
             }

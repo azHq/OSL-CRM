@@ -543,10 +543,16 @@
 			url: url,
 			success: function(data) {
 				var subcats = "";
-				data.forEach(function(subcategory) {
-					subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
-				})
-				$('#lead-create-subcategory').html(subcats);
+				if (data.length) {
+					data.forEach(function(subcategory) {
+						subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
+					})
+					$('#create_subcat_section').show();
+					$('#lead-create-subcategory').html(subcats);
+				} else {
+					$('#create_subcat_section').hide();
+				}
+
 			}
 		});
 	});

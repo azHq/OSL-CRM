@@ -53,8 +53,9 @@ class DocumentController extends Controller
             foreach ($students as $student) {
                 if (
                     $student->lead->subcategory->name == 'Waiting for Documents' ||
+                    $student->lead->subcategory->name == 'Appointment Book'  ||
                     $student->lead->subcategory->name == 'Partial Documents' ||
-                    $student->lead->subcategory->name == 'Document Received'
+                    $student->lead->subcategory->name == 'Document Received' 
                 ) {
                     array_push($filteredStudents, $student);
                 }

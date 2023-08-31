@@ -17,7 +17,7 @@
 				</li>
 				@foreach(App\Models\Category::all() as $category)
 				@if(Auth::user()->hasRole('cro'))
-				@if($category->name != 'Addmission')
+				@if($category->name != 'Admission' && $category->name != 'Admitted')
 				<li class="submenu">
 					<a href="#">{!! $category->icon !!}<span> {{$category->name}} </span> <span class="menu-arrow"></span></a>
 					<ul class="sub-menus">
@@ -40,7 +40,7 @@
 						@foreach(App\Models\Subcategory::where('category_id', $category->id)->get() as $subcategory)
 
 						<li id="{{$subcategory->slug}}" class="nav-li {{ Request::is('leads/status/'.$subcategory->slug) ? 'active' : '' }}">
-							<a data-nav="{{$subcategory->slug}}" data-href="{{route('leads.status.index', $subcategory->slug)}}"  class="url"> {{$subcategory->name}} </a>
+							<a data-nav="{{$subcategory->slug}}" data-href="{{route('leads.status.index', $subcategory->slug)}}" class="url"> {{$subcategory->name}} </a>
 						</li>
 
 						@endforeach
@@ -49,7 +49,7 @@
 					</ul>
 				</li>
 				@endif
-				@else
+				@elseif($category->name != 'Admitted')
 				<li class="submenu">
 					<a href="#">{!! $category->icon !!}<span> {{$category->name}} </span> <span class="menu-arrow"></span></a>
 					<ul class="sub-menus">
@@ -57,8 +57,9 @@
 						<li id="{{$subcategory->slug}}" class="nav-li {{ Request::is('leads/status/'.$subcategory->slug) ? 'active' : '' }}">
 							<a data-nav="{{$subcategory->slug}}" data-href="{{route('leads.status.index', $subcategory->slug)}}" class="url"> {{$subcategory->name}} </a>
 						</li>
-
+						
 						@endforeach
+						
 					</ul>
 				</li>
 				@endif

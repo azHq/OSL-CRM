@@ -11,7 +11,7 @@
         $leadsClass = 'complete';
         $pendingClass = 'active';
         // $admissionClass = 'active';
-    } else if ($lead->category == 'Addmission') {
+    } else if ($lead->category == 'Admission') {
         $leadsClass = 'complete';
         $pendingClass = 'complete';
         $admissionClass = 'active';
@@ -122,6 +122,7 @@
                 <div class="pic">
                     <img src="{{ asset('assets/img/profiles/profile.png') }}" alt="User" class="user-image" />
                 </div>
+                <input id="lead_id" value="{{$lead->id}}" hidden>
                 <div class="col">
                     <div class="form-group row">
                         <div class="col-md-12"><label class="col-form-label">Lead</label></div>
@@ -287,6 +288,8 @@
             @include('leads.applications')
         </div>
         @endif
+        <div id='documents-section'>
+        </div>
         <div class="crms-title row bg-white mt-4">
             <div class="col  p-0">
                 <h3 class="page-title m-0">
@@ -354,6 +357,7 @@
             $(document).ready(function() {
                 getSubCategories();
             });
+
             async function viewDetails(id) {
                 await getLeadEditOwners();
                 await getCountries();
@@ -507,13 +511,13 @@
 
 
                         let admissionSubmenu = ''
-                        for (let subcategory of data['Addmission']) {
+                        for (let subcategory of data['Admission']) {
                             if (currentSubcategory == subcategory.name) {
                                 foundIndex = true
                             }
                             admissionSubmenu += `<div class="dropdown-item "> ${!foundIndex ?'<span class="tick tick-success" style=" width: 20px; margin-right:5px;height: 20px;"></span>':''}${subcategory.name}</div>`
                         }
-                        // getSubmenuElem(admissionSubmenu, data, 'Addmission', currentSubcategory, foundIndex);
+                        // getSubmenuElem(admissionSubmenu, data, 'Admission', currentSubcategory, foundIndex);
                         $('#admission_sub').html(admissionSubmenu);
 
 
@@ -530,6 +534,25 @@
                 });
             }
         </script>
+                @if($lead->category == 'Student')
+        <script>
+            let url = "{{ route('leads.getStudentsByLeadId', 'id') }}";
+            let id = $('#lead_id').val()
+            url = url.replace('id', id);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(res) {
+                    console.log({
+                        res
+                    })
+                    if (res) {
+                        $('#documents-section').html(res)
+                    }
+                }
+            });
+        </script>
+        @endif
         <script>
             function showEditModal(id) {
                 getApplicationCreate();

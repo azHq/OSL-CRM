@@ -86,7 +86,7 @@
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label class="col-form-label">Purpose</label>
-											<select class=" form-control form-select" name="status">
+											<select class=" form-control form-select" name="status" id="edit-lead-status">
 												<option value="English Teaching">English Teaching</option>
 												<option value="Study Abroad">Study Abroad</option>
 												<!-- <option value="Not Potential">Not Potential</option> -->
@@ -259,7 +259,7 @@
 									</div>
 									<div class="col">
 										<div class="form-group row">
-											<div class="col-sm-12">
+											<div class="col-sm-12" id="subcat_section">
 												<label class="col-form-label">Subcategory</label>
 												<select id="lead-edit-subcategory" class=" form-control form-select" name="subcategory_id">
 
@@ -488,10 +488,36 @@
 			url: url,
 			success: function(data) {
 				var subcats = "";
-				data.forEach(function(subcategory) {
-					subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
+				if (data.length) {
+					data.forEach(function(subcategory) {
+						subcats += '<option value="' + subcategory.id + '">' + subcategory.name + '</option>';
+					})
+					$('#subcat_section').show();
+					$('#lead-edit-subcategory').html(subcats);
+				} else {
+					$('#subcat_section').hide();
+
+				}
+			}
+		});
+	});
+
+	$('#edit-lead-status').on('change', function() {
+		var purpose = $('#edit-lead-status').val();
+		var url = "{{route('leads.categories', 'status')}}";
+		url = url.replace('status', purpose);
+		$.ajax({
+			type: 'GET',
+			url: url,
+			success: async function(data) {
+				console.log({
+					data
 				})
-				$('#lead-edit-subcategory').html(subcats);
+				let options = ''
+				data.categories.forEach(function(category) {
+					options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
+				});
+				await $('#lead-edit-category').html(options);
 			}
 		});
 	});

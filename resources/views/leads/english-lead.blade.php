@@ -100,7 +100,7 @@
                                 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
                                 <!-- <th>Created By</th> -->
                                 @endif
-                                <th>Lead Status</th>
+                                <!-- <th>Lead Status</th> -->
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -219,11 +219,11 @@
                             $(cell).removeClass('sorting_asc');
                             var title = $(cell).text();
                             switch (title) {
-                                case 'Lead Status':
-                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                    <option value="" selected>Filter Status</option>
-                                                </select>`);
-                                    break;
+                                // case 'Lead Status':
+                                //     $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                //                     <option value="" selected>Filter Status</option>
+                                //                 </select>`);
+                                //     break;
                                 case 'Counsellor':
                                     $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                     <option value="" selected>Filter Counsellor</option>
@@ -415,9 +415,9 @@
                 // {
                 //     data: 'created_by'
                 // },
-                {
-                    data: 'status'
-                },
+                // {
+                //     data: 'status'
+                // },
                 {
                     data: 'action',
                     width: '5%'
@@ -475,11 +475,11 @@
                             $(cell).removeClass('sorting_asc');
                             var title = $(cell).text();
                             switch (title) {
-                                case 'Lead Status':
-                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                            <option value="" selected>Filter Status</option>
-                                        </select>`);
-                                    break;
+                                // case 'Lead Status':
+                                //     $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                //             <option value="" selected>Filter Status</option>
+                                //         </select>`);
+                                //     break;
                                 case 'Counsellor':
                                     $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                             <option value="" selected>Filter Counsellor</option>
@@ -600,7 +600,7 @@
                     })
                     data.filter_search = $('#filter-search').val();
                     data.filter_sort = $('#filter-sort').val();
-                    data.filter_status = $('#filter-status').val();
+                    // data.filter_status = $('#filter-status').val();
                     data.startDate = $('#startDate').val();
                     data.endDate = $('#endDate').val();
                     data.filterOnlyFor = 'English Teaching'
@@ -635,9 +635,9 @@
                 {
                     data: 'destination'
                 },
-                {
-                    data: 'status'
-                },
+                // {
+                //     data: 'status'
+                // },
                 {
                     data: 'action',
                     width: '5%'

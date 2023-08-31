@@ -95,7 +95,8 @@ class LeadController extends Controller
                     $leads->whereDate('created_at', '<=', $request['endDate']);
                 }
                 if ($request['filterOnlyFor']) {
-                    $leads->where('status', $request['filterOnlyFor']);
+                    $category = Category::where("name", "Admitted")->first();
+                    $leads->where('category_id', $category->id);
                 }
                 $data = $leads->get();
             }
@@ -157,6 +158,12 @@ class LeadController extends Controller
                     return $row->creator ? $row->creator->name : 'NA';
                 })
                 ->editColumn('status', function ($row) {
+                    if ($row->category_id) {
+                        $category = Category::find($row->category_id);
+                        if ($category->name == 'Admitted') {
+                            return '<label class="badge badge-info text-center">' . ucfirst('Admitted') . '</label>';
+                        }
+                    }
                     return '<label class="badge badge-info text-center">' . ucfirst($row->subcategory->name) . '</label>';
                 })
                 ->addColumn('action', function ($row) {
@@ -179,8 +186,23 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $leads = Lead::orderBy('created_at', 'desc');
+
             $leads->whereHas('subcategory', function ($query) {
-                $query->where('slug', \request('status'));
+                $status = \request('status');
+                if ($status == 'student') {
+                    $query->where('slug', 'appointment-book')
+                        ->orWhere('slug', 'waiting-for-documents');
+                } else if ($status == 'admission') {
+                    $query->where('slug', 'partial-documents')
+                        ->orWhere('slug', 'document-received')
+                        ->orWhere('slug', 'applied')
+                        ->orWhere('slug', 'waiting-for-conditional-offer-issued')
+                        ->orWhere('slug', 'waiting-for-unconditional-offer-issued')
+                        ->orWhere('slug', 'paid')
+                        ->orWhere('slug', 'payment-expected');
+                } else {
+                    $query->where('slug', $status);
+                }
             });
             if ($request['startDate']) {
                 $leads->whereDate('created_at', '>=', $request['startDate']);
@@ -246,6 +268,12 @@ class LeadController extends Controller
                 })
 
                 ->editColumn('status', function ($row) {
+                    if ($row->category_id) {
+                        $category = Category::find($row->category_id);
+                        if ($category->name == 'Admitted') {
+                            return '<label class="badge badge-info text-center">' . ucfirst('Admitted') . '</label>';
+                        }
+                    }
                     return '<label class="badge badge-info text-center">' . ucfirst($row->subcategory->name) . '</label>';
                 })
                 ->addColumn('action', function ($row) {
@@ -332,7 +360,7 @@ class LeadController extends Controller
         try {
             $isLeadExist = Lead::where('mobile', $request['mobile'])->orWhere('email', $request['email'])->get();
             if (count($isLeadExist) == 0) {
-                Lead::create($request->except('_token', 'category_id'));
+                Lead::create($request->except('_token'));
                 return Redirect::back()->with('success', 'Lead created successfully.');
             } else {
                 return Redirect::back()->with('error', 'Lead Already Exist with mobile or email.');
@@ -352,7 +380,12 @@ class LeadController extends Controller
             $categories = [];
             $subcategories = [];
             if (Auth::user()->hasRole('cro')) {
-                $categories = Category::where('name', '!=', 'Addmission')->get();
+                $categories = [];
+                if ($lead->status && $lead->status == 'English Teaching') {
+                    $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Visa Compliance')->get();
+                } else {
+                    $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Admitted')->get();
+                }
                 $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
                 $filteredSubcategories = [];
                 foreach ($subcategories as $subCategory) {
@@ -365,7 +398,12 @@ class LeadController extends Controller
                 }
                 $subcategories =   $filteredSubcategories;
             } else {
-                $categories = Category::all();
+                $categories = [];
+                if ($lead->status && $lead->status == 'English Teaching') {
+                    $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Visa Compliance')->get();
+                } else {
+                    $categories = Category::where('name', '!=', 'Admitted')->get();
+                }
                 $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
             }
             return response()->json([
@@ -488,7 +526,7 @@ class LeadController extends Controller
                 $student = Student::where('lead_id', $lead->id)->update($request->except('_token', '_method', 'category_id', 'subcategory_id', 'remarks'));
             }
 
-            $lead->update($request->except('_token', '_method', 'category_id', 'remarks', 'remarks_id', 'lead_id'));
+            $lead->update($request->except('_token', '_method', 'remarks', 'remarks_id', 'lead_id'));
             $lead = Lead::find($id);
             if ($leadCounsellorIdOld != $lead->owner_id && $lead->owner_id) {
                 LeadAssignedEvent::dispatch($lead);
@@ -845,7 +883,43 @@ class LeadController extends Controller
         }
         return view('layout.mainlayout');
     }
+    public function getCategories($status)
+    {
+        $categories = [];
+        if (Auth::user()->hasRole('cro')) {
+            $categories = [];
+            if ($status && $status == 'English Teaching') {
+                $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Visa Compliance')->get();
+            } else {
+                $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Admitted')->get();
+            }
+        } else {
+            $categories = [];
+            if ($status && $status == 'English Teaching') {
+                $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Visa Compliance')->get();
+            } else {
+                $categories = Category::where('name', '!=', 'Admitted')->get();
+            }
+        }
+        return response()->json([
+            'categories' => $categories
+        ]);
+    }
 
+    public function getStudentsByLeadId($id)
+    {
+        try {
+            $student = Student::where('lead_id', $id)->first();
+            return '<div class="d-flex justify-content-center">
+            <a href="javascript:;" onclick="gotoRoute(\'' . route('students.view', $student->id) . '\');" class="add btn mt-4 btn-gradient-primary font-weight-bold text-white todo-list-add-btn btn-rounded" id="documents-initialize">
+                <i class="fa fa-upload" aria-hidden="true"></i>
+                Upload Documents
+            </a>
+        </div>';
+        } catch (\Exception $e) {
+            return response($e->getMessage());
+        }
+    }
     public function getSubcategoriesList()
     {
         if (\request()->ajax()) {

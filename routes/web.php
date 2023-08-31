@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('leads/subcategories/{category_id}', [LeadController::class, 'subcategoriesList'])->name('leads.subcategories.list');
 
     Route::get('leads/status/{status}', [LeadController::class, 'indexByStatus'])->name('leads.status.index');
+    Route::get('leads/getStudentsByLeadId/{id}', [LeadController::class, 'getStudentsByLeadId'])->name('leads.getStudentsByLeadId');
     Route::get('leads/status/{status}/list', [LeadController::class, 'lisByStatus'])->name('leads.status.list');
 
     Route::get('documents/initialize/{leadId}', [DocumentController::class, 'initializeDocument'])->name('documents.initialize');
@@ -86,6 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('leads/{id}', [LeadController::class, 'update'])->name('leads.update');
     Route::get('student-profile', [LeadController::class, 'studentProfile'])->name('profile.student');
     Route::get('getSubcategories', [LeadController::class, 'getSubcategoriesList'])->name('leads.info');
+    Route::get('getCategories/{status}', [LeadController::class, 'getCategories'])->name('leads.categories');
     Route::get('getLeadsFromMeta', [CampaignController::class, 'getCampaigns'])->name('leads.from.meta');
     Route::get('getDuplicateLeadsFromMeta/{lead_id}', [CampaignController::class, 'getDuplicateLeads'])->name('duplicate.leads.meta');
     Route::post('getDuplicateLeadsValues', [CampaignController::class, 'getLeadsValues'])->name('leads.field.values');
