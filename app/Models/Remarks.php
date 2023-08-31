@@ -32,6 +32,9 @@ class Remarks extends Model
         self::updated(function ($remark) {
             NewLog::create('Remarks Updated', 'On Lead "' . $remark->lead->name . '" has been updated.');
         });
+        self::deleted(function ($remark) {
+            NewLog::create('Remarks Deleted', 'Remarks "' . $remark->name . '" has been deleted.');
+        });
     }
     public function user()
     {

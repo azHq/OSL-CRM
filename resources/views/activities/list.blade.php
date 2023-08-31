@@ -51,21 +51,18 @@
 
 <script>
     // On Load
-    $(document).ready(function() {
-        getActivities();
+    $(document).ready(async function() {
+        await getActivities();
     });
-</script>
 
-
-<script>
-    function getActivities() {
-        $("#myTable").dataTable().fnDestroy();
-        $('#myTable thead tr')
+    async function getActivities() {
+        await $("#myTable").dataTable().fnDestroy();
+        await $('#myTable thead tr')
             .clone(true)
             .addClass('filters')
             .appendTo('#myTable thead');
 
-        var table = $('#myTable').DataTable({
+        var table = await $('#myTable').DataTable({
             responsive: true,
             processing: true,
             serverSide: true,
@@ -75,9 +72,9 @@
                 'targets': [0],
                 'orderable': false,
             }],
-            initComplete: function() {
+            initComplete: async function() {
                 var api = this.api();
-                api.columns().eq(0)
+                await api.columns().eq(0)
                     .each(function(colIdx) {
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
@@ -138,6 +135,9 @@
                                 $(this).trigger('change');
                             });
                     });
+
+                await getActivitiesUsers();
+
             },
             ajax: {
                 'url': '{{ route("activities.list") }}',
@@ -170,31 +170,24 @@
         });
         return table;
     }
-</script>
 
-
-<script>
-    $(document).ready(function() {
-        getActivitiesUsers();
-    });
-
-    function getActivitiesUsers() {
-        $.ajax({
+    async function getActivitiesUsers() {
+       await $.ajax({
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
-                    var options = '<option value="" selected>Filter User</option>';
-                    data.users.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '(Counsellor)</option>';
-                    });
-                    data.cros.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '(CRO)</option>';
-                    });
-                    data.me_and_sa.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '</option>';
-                    });
-                    $('#filter-activity-user').html(options);
-                
+                var options = '<option value="" selected>Filter User</option>';
+                data.users.forEach(function(user) {
+                    options += '<option value="' + user.name + '">' + user.name + '(Counsellor)</option>';
+                });
+                data.cros.forEach(function(user) {
+                    options += '<option value="' + user.name + '">' + user.name + '(CRO)</option>';
+                });
+                data.me_and_sa.forEach(function(user) {
+                    options += '<option value="' + user.name + '">' + user.name + '</option>';
+                });
+                $('#filter-activity-user').html(options);
+
             }
         });
     }
