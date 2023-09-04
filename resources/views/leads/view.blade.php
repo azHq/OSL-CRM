@@ -4,6 +4,7 @@
     $pendingClass = '';
     $admissionClass = '';
     $visaClass = '';
+    $admittedForEngClass = '';
     if ($lead->category == 'Leads') {
         $leadsClass = 'active';
         // $pendingClass = 'active';
@@ -21,7 +22,14 @@
         $pendingClass = 'complete';
         $admissionClass = 'complete';
         $visaClass = 'active';
+    } else {
+        $leadsClass = 'complete';
+        $pendingClass = 'complete';
+        $admissionClass = 'complete';
+        $visaClass = 'active';
+        $admittedForEngClass = 'active';
     }
+
     ?>
     <div class="content container-fluid">
         @component('components.custombreadcrumb')
@@ -76,6 +84,7 @@
                     </div>
 
                 </div>
+                @if($lead->status != 'English Teaching')
 
                 <div class="col-md-3 ms-progressbar-step {{$admissionClass}}">
                     <!-- complete -->
@@ -113,6 +122,23 @@
                     </div>
 
                 </div>
+                @else
+                <div class="col-md-3 ms-progressbar-step {{$admittedForEngClass}}">
+                    <!-- active -->
+                    <div class="text-center ms-progressbar-step-number">Admitted For English</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="btn-group ms-progressbar-dot">
+                        @if($admittedForEngClass == 'active')
+                        <button type="button" class="tick tick-success" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        @else
+                        <button type="button" class="btn btn-gray dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                        @endif
+                    </div>
+
+                </div>
+                @endif
             </div>
 
         </div>
@@ -442,12 +468,17 @@
                                 options += '<option value="' + category.id + '"' + (category.id == data.category_id ? 'selected' : '') + '>' + category.name + '</option>';
                             });
                             await $('#lead-edit-category').html(options);
+                            if (data.subcategories.length > 0) {
+                                options = '';
+                                await $('#subcat_section').show();
 
-                            options = '';
-                            data.subcategories.forEach(function(subcategory) {
-                                options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
-                            });
-                            await $('#lead-edit-subcategory').html(options);
+                                data.subcategories.forEach(function(subcategory) {
+                                    options += '<option value="' + subcategory.id + '"' + (subcategory.id == data.subcategory_id ? 'selected' : '') + '>' + subcategory.name + '</option>';
+                                });
+                                await $('#lead-edit-subcategory').html(options);
+                            } else {
+                                await $('#subcat_section').hide();
+                            }
                         }
                     });
                 }
@@ -534,7 +565,7 @@
                 });
             }
         </script>
-                @if($lead->category == 'Student')
+        @if($lead->category == 'Student')
         <script>
             let url = "{{ route('leads.getStudentsByLeadId', 'id') }}";
             let id = $('#lead_id').val()

@@ -303,10 +303,18 @@ class LeadController extends Controller
     {
         if (\request()->ajax()) {
             $lead = Lead::find($id);
-            $subCategory = Subcategory::find($lead->subcategory_id);
-            $category = Category::find($subCategory->category_id);
-            $lead->subCategory = $subCategory->name;
-            $lead->category = $category->name;
+            $category = '';
+            $subCategory = '';
+            if ($lead->subcategory_id) {
+                $subCategory = Subcategory::find($lead->subcategory_id);
+                $lead->subCategory = $subCategory->name;
+            }
+            if (!$lead->category) {
+                $category = Category::find($subCategory->category_id);
+                $lead->category = $category->name;
+            } else {
+                $lead->category = $lead->category->name;
+            }
             $lead->load('applications');
             $lead->load('report');
             $lead->load("report.user");
@@ -386,17 +394,20 @@ class LeadController extends Controller
                 } else {
                     $categories = Category::where('name', '!=', 'Admission')->where('name', '!=', 'Admitted')->get();
                 }
-                $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
-                $filteredSubcategories = [];
-                foreach ($subcategories as $subCategory) {
-                    if (($subCategory->name == 'Appointment Book') || ($subCategory->name == 'Waiting for CAS') || ($subCategory->name == 'CAS or Final Confirmation Letter Issued')
-                        || ($subCategory->name == 'Enrolled')
-                    ) {
+                $subcategories = [];
+                if (!$lead->category ||  $lead->category->name != 'Admitted') {
+                    $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+                    $filteredSubcategories = [];
+                    foreach ($subcategories as $subCategory) {
+                        if (($subCategory->name == 'Appointment Book') || ($subCategory->name == 'Waiting for CAS') || ($subCategory->name == 'CAS or Final Confirmation Letter Issued')
+                            || ($subCategory->name == 'Enrolled')
+                        ) {
 
-                        array_push($filteredSubcategories, $subCategory);
+                            array_push($filteredSubcategories, $subCategory);
+                        }
                     }
+                    $subcategories =   $filteredSubcategories;
                 }
-                $subcategories =   $filteredSubcategories;
             } else {
                 $categories = [];
                 if ($lead->status && $lead->status == 'English Teaching') {
@@ -404,13 +415,23 @@ class LeadController extends Controller
                 } else {
                     $categories = Category::where('name', '!=', 'Admitted')->get();
                 }
-                $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+                $subcategories = [];
+                if (!$lead->category || $lead->category->name != 'Admitted') {
+                    $subcategories = Subcategory::where('category_id', $lead->subcategory->category_id)->get();
+                }
+            }
+            $categoryId = '';
+            if ($lead->category && $lead->category->name == 'Admitted') {
+                $categoryId = $lead->category_id;
+                $subcategories = [];
+            } else {
+                $categoryId = $lead->subcategory->category_id;
             }
             return response()->json([
                 'lead' => $lead,
                 'subcategories' => $subcategories,
                 'categories' => $categories,
-                'category_id' => $lead->subcategory->category_id,
+                'category_id' => $categoryId,
                 'subcategory_id' => $lead->subcategory_id
             ]);
         }
@@ -487,12 +508,19 @@ class LeadController extends Controller
         try {
             $lead = Lead::find($id);
             $leadCounsellorIdOld = $lead->owner_id;
+            // dd($request['category_id']);
             abort_if((!Auth::user()->hasRole('main-super-admin') && !Auth::user()->hasRole('super-admin') && $lead->owner_id != Auth::user()->id), 403);
             if ($request['remarks']) {
                 $comment = [];
                 $comment['value'] = $request->remarks;
                 $comment['lead_id'] = $id;
                 Remarks::create($comment);
+            }
+            if ($request['category_id']) {
+                $category = Category::find($request['category_id']);
+                if ($category->name == 'Admitted') {
+                    $request['subcategory_id'] = null;
+                }
             }
             if (is_numeric($request['subcategory_id']) && number_format($request['subcategory_id']) > 7) {
                 $foundStudent = Student::where('email', $request['email'])->orWhere('mobile', $request['mobile'])->first();

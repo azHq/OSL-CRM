@@ -69,6 +69,11 @@ class Lead extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function report()
     {
         return $this->hasMany(Report::class, 'leads_id')->orderBy('created_at', 'desc');
