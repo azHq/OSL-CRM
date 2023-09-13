@@ -211,7 +211,7 @@
 						${lead.mapped ?
 							`<div class="row col-4">
 								<div class="col-6">
-								<button type="button" class="btn btn-success btn-rounded">Mapped</button>
+									<button type="button" class="btn btn-success btn-rounded" data-bs-toggle="modal" data-bs-target="#lead_meta_fields" onclick="mapFields(${lead.id})">Mapped</button>&nbsp;&nbsp;
 								</div>
 								<div class="col-6">
 									<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="" onclick="syncLead(${lead.id})" id="dup-modal">Sync</button>&nbsp;&nbsp;
@@ -513,18 +513,18 @@
 						encodedValues = encodedValues.replaceAll("'", "")
 
 						subcats += `
-					<div class="row p-2" style="border-bottom: 1px solid #dee2e6">
-						<div class="col-6">
-							<p>${item.name}</p>
+						<div class="row p-2" style="border-bottom: 1px solid #dee2e6">
+							<div class="col-6">
+								<p>${item.name}</p>
+							</div>
+							<div class="col-3">
+								<p>${item.mobile}</p>
+							</div>
+							<div class="col-3">
+								<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#fields_values_modal" onclick="viewFields('${encodedValues}')">View</button>&nbsp;&nbsp;
+							</div>
 						</div>
-						<div class="col-3">
-							<p>${item.mobile}</p>
-						</div>
-						<div class="col-3">
-							<button class="border-0 btn btn-primary btn-gradient-primary btn-rounded" data-bs-toggle="modal" data-bs-target="#fields_values_modal" onclick="viewFields('${encodedValues}')">View</button>&nbsp;&nbsp;
-						</div>
-					</div>
-						`
+							`
 					})
 					$('#duplicateLeads').html(subcats);
 				} else {

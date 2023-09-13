@@ -78,7 +78,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Lead Created</th>
-                                <th>Lead Status</th>
+                                <!-- <th>Lead Status</th> -->
                                 <th>Purpose</th>
                                 <th>Source</th>
                                 <th>Passport</th>
@@ -186,14 +186,14 @@
                             $(cell).removeClass('sorting_asc');
                             var title = $(cell).text();
                             switch (title) {
-                                case 'Lead Status':
-                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Status</option>
-                                                <option value="Unknown">Unknown</option>
-                                                <option value="Potential">Potential</option>
-                                                <option value="Not Potential">Not Potential</option>
-                                            </select>`);
-                                    break;
+                                // case 'Lead Status':
+                                //     $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                //                 <option value="" selected>Filter Status</option>
+                                //                 <option value="Unknown">Unknown</option>
+                                //                 <option value="Potential">Potential</option>
+                                //                 <option value="Not Potential">Not Potential</option>
+                                //             </select>`);
+                                //     break;
                                 case 'Counsellor':
                                     $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Counsellor</option>
@@ -312,6 +312,8 @@
                                 });
                         });
                 }
+                getOwners();
+
             },
             ajax: {
                 'url': '{{ route("leads.status.list",$status) }}',
@@ -354,9 +356,9 @@
                 {
                     data: 'created_at'
                 },
-                {
-                    data: 'status'
-                },
+                // {
+                //     data: 'status'
+                // },
                 {
                     data: 'purpose'
                 },
@@ -429,14 +431,14 @@
                             $(cell).removeClass('sorting_asc');
                             var title = $(cell).text();
                             switch (title) {
-                                case 'Lead Status':
-                                    $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
-                                                <option value="" selected>Filter Status</option>
-                                                <option value="Unknown">Unknown</option>
-                                                <option value="Potential">Potential</option>
-                                                <option value="Not Potential">Not Potential</option>
-                                            </select>`);
-                                    break;
+                                // case 'Lead Status':
+                                //     $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                //                 <option value="" selected>Filter Status</option>
+                                //                 <option value="Unknown">Unknown</option>
+                                //                 <option value="Potential">Potential</option>
+                                //                 <option value="Not Potential">Not Potential</option>
+                                //             </select>`);
+                                //     break;
                                 case 'Counsellor':
                                     $(cell).html(`<select id="filter-owner" name="owner_id" class="leads-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Counsellor</option>
@@ -597,9 +599,9 @@
                 {
                     data: 'created_at'
                 },
-                {
-                    data: 'status'
-                },
+                // {
+                //     data: 'status'
+                // },
                 {
                     data: 'purpose'
                 },
@@ -747,8 +749,8 @@
 
 <script>
     $(document).ready(function() {
-        getOwners();
-        getCounsellors();
+        // getOwners();
+        // getCounsellors();
     });
 
     function getOwners() {
@@ -756,14 +758,20 @@
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
+                var options = '<option value="" selected>Filter Counsellor</option>';
+                options += '<option value="Unassigned">Unassigned</option>';
                 if (data.users) {
-                    var options = '<option value="" selected>Filter Counsellor</option>';
-                    options += '<option value="Unassigned">Unassigned</option>';
-                    data.users.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '</option>';
-                    });
-                    $('.leads-list-owners').html(options);
+                    for (let user of data.users) {
+                        options += '<option value="' + user.name + '">' + user.name + ' (Counsellor)</option>';
+                    }
                 }
+                if (data.cros) {
+                    for (let cro of data.cros) {
+                        options += '<option value="' + cro.name + '">' + cro.name + ' (CRO)</option>';
+                    }
+                }
+                $('.leads-list-owners').html(options);
+
                 if (data.all_users) {
                     var options = '<option value="" selected>Filter Creator</option>';
                     data.all_users.forEach(function(user) {
@@ -775,19 +783,19 @@
         });
     }
 
-    function getCounsellors() {
-        $.ajax({
-            type: 'GET',
-            url: "{{ route('leads.create') }}",
-            success: function(data) {
-                if (data.users) {
-                    var options = '<option value="" selected>Select Counsellor</option>';
-                    data.users.forEach(function(user) {
-                        options += '<option value="' + user.id + '">' + user.name + '</option>';
-                    });
-                    $('#select-counsellor').html(options);
-                }
-            }
-        });
-    }
+    // function getCounsellors() {
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: "{{ route('leads.create') }}",
+    //         success: function(data) {
+    //             if (data.users) {
+    //                 var options = '<option value="" selected>Select Counsellor</option>';
+    //                 data.users.forEach(function(user) {
+    //                     options += '<option value="' + user.id + '">' + user.name + '</option>';
+    //                 });
+    //                 $('#select-counsellor').html(options);
+    //             }
+    //         }
+    //     });
+    // }
 </script>

@@ -63,6 +63,7 @@
     // On Load
     $(document).ready(function() {
         getApplications();
+        getApplicationsCounsellors()
     });
 </script>
 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
@@ -330,25 +331,27 @@
         });
     }
 
-    $(document).ready(function() {
-        getApplicationsCounsellors();
-    });
-
     function getApplicationsCounsellors() {
         $.ajax({
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
+                let options = '<option value="" selected>Filter Counsellor</option>';
+                options += '<option value="Unassigned">Unassigned</option>';
                 if (data.users) {
-                    var options = '<option value="" selected>Filter Counsellor</option>';
-                    options += '<option value="Unassigned">Unassigned</option>';
-                    data.users.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '</option>';
-                    });
-                    $('.applications-list-owners').html(options);
+                    for (let user of data.users) {
+                        options += '<option value="' + user.name + '">' + user.name + ' (Counsellor)</option>';
+                    }
                 }
+                if (data.cros) {
+                    for (let cro of data.cros) {
+                        options += '<option value="' + cro.name + '">' + cro.name + ' (CRO)</option>';
+                    }
+                }
+                $('#filter-owner').html(options);
+
                 if (data.universities) {
-                    var options = '<option value="" selected>Filter University</option>';
+                    let options = '<option value="" selected>Filter University</option>';
                     data.universities.forEach(function(university) {
                         options += '<option value="' + university.name + '">' + university.name + '</option>';
                     });

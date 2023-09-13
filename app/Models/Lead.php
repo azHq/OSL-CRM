@@ -86,7 +86,7 @@ class Lead extends Model
 
     public function applications()
     {
-        return $this->hasMany(Application::class);
+        return $this->hasMany(Application::class, 'lead_id');
     }
 
     public function getUploadedDocumentsNoAttribute()
@@ -102,7 +102,6 @@ class Lead extends Model
 
     public function getTableColumns()
     {
-
         return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
     }
 }

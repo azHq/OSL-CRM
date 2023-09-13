@@ -51,13 +51,18 @@ class DocumentController extends Controller
             $students = $students->get();
             $filteredStudents = [];
             foreach ($students as $student) {
-                if (
-                    $student->lead->subcategory->name == 'Waiting for Documents' ||
-                    $student->lead->subcategory->name == 'Appointment Book'  ||
-                    $student->lead->subcategory->name == 'Partial Documents' ||
-                    $student->lead->subcategory->name == 'Document Received' 
-                ) {
-                    array_push($filteredStudents, $student);
+                if ($student->lead_id) {
+                    $lead = Lead::find($student->lead_id);
+                    if ($lead) {
+                        if (
+                            $lead->subcategory->name == 'Waiting for Documents' ||
+                            $lead->subcategory->name == 'Appointment Book'  ||
+                            $lead->subcategory->name == 'Partial Documents' ||
+                            $lead->subcategory->name == 'Document Received'
+                        ) {
+                            array_push($filteredStudents, $student);
+                        }
+                    }
                 }
             }
 
@@ -67,7 +72,8 @@ class DocumentController extends Controller
                     $data = [
                         "name" => $row->name,
                         "id" => $row->id,
-                        "route" => 'gotoRoute(\'' . route('students.view', $row->id) . '\');',
+                        "route" => 'students/' . $row->id . '',
+
 
                     ];
                     return json_encode($data);

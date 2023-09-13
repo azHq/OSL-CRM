@@ -107,7 +107,7 @@ class LeadController extends Controller
                     $data = [
                         "name" => $row->name,
                         "id" => $row->id,
-                        "route" => 'gotoRoute(\'' . route('leads.view', $row->id) . '\');',
+                        "route" => 'leads/' . $row->id . '',
 
                     ];
                     return json_encode($data);
@@ -217,7 +217,7 @@ class LeadController extends Controller
                     $data = [
                         "name" => $row->name,
                         "id" => $row->id,
-                        "route" => 'gotoRoute(\'' . route('leads.view', $row->id) . '\');',
+                        "route" => 'leads/' . $row->id . '',
 
                     ];
                     return json_encode($data);
@@ -309,7 +309,7 @@ class LeadController extends Controller
                 $subCategory = Subcategory::find($lead->subcategory_id);
                 $lead->subCategory = $subCategory->name;
             }
-            if (!$lead->category) {
+            if (!$lead->category && $subCategory) {
                 $category = Category::find($subCategory->category_id);
                 $lead->category = $category->name;
             } else {
@@ -560,11 +560,10 @@ class LeadController extends Controller
                 LeadAssignedEvent::dispatch($lead);
                 NewLog::create('Lead Assigned', 'Lead "' . $lead->name . '" has been assigned to ' . $lead->owner->name . '.');
             }
-            return Redirect::back()->with('success', 'Lead updated successfully.');
+            return Redirect(route('leads.index'))->with('success', 'Lead updated successfully.');
         } catch (\Exception $e) {
-            dd($e);
             Log::info($e->getMessage());
-            return Redirect::back()->with('error', $e->getMessage());
+            return Redirect(route('leads.index'))->with('error', $e->getMessage());
         }
     }
 

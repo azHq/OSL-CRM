@@ -102,6 +102,8 @@ class CampaignController extends Controller
                     }
                 } else {
                     $lead_data['creator_id'] = Auth::id();
+                    $lead_data['category_id'] = 1;
+                    $lead_data['subcategory_id'] = 1;
                     Lead::create($lead_data);
                 }
         }
@@ -141,6 +143,8 @@ class CampaignController extends Controller
                     }
                 } else {
                     $lead_data['creator_id'] = Auth::id();
+                    $lead_data['category_id'] = 1;
+                    $lead_data['subcategory_id'] = 1;
                     Lead::create($lead_data);
                 }
             }
@@ -154,6 +158,11 @@ class CampaignController extends Controller
                 $metadata['mapped_by'] = Auth::id();
                 $metadata['mapped_fields'] = json_encode($map_fields);
                 MetaLeadgenForm::create($metadata);
+            }
+            else{
+                MetaLeadgenForm::where("lead_id", $lead_info['id'])->first()->update([
+                    "mapped_by" => json_encode($map_fields)
+                ]);
             }
             return $duplicateLeads;
         } catch (\Exception $e) {

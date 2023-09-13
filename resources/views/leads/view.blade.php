@@ -293,7 +293,7 @@
             </div>
         </div>
         @endif
-        @if($lead->category != 'Leads' && $lead->category != 'Student')
+        @if($lead->category != 'Leads' && $lead->category != 'Student' && $lead->category != 'Admitted')
         <div class="crms-title row bg-white mt-4">
             <div class="col  p-0">
                 <h3 class="page-title m-0">

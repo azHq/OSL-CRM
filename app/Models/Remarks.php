@@ -27,10 +27,10 @@ class Remarks extends Model
             $meta->commented_by = Auth::user()->id;
         });
         self::created(function ($remark) {
-            NewLog::create('Remarks Added', 'On Lead "' . $remark->lead->name . '" has been added.');
+            NewLog::create('Remarks Added', '"' . $remark->name . '" has been added.');
         });
         self::updated(function ($remark) {
-            NewLog::create('Remarks Updated', 'On Lead "' . $remark->lead->name . '" has been updated.');
+            NewLog::create('Remarks Updated', '"' . $remark->name . '" has been updated.');
         });
         self::deleted(function ($remark) {
             NewLog::create('Remarks Deleted', 'Remarks "' . $remark->name . '" has been deleted.');
@@ -39,5 +39,10 @@ class Remarks extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'commented_by');
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
     }
 }

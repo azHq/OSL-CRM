@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helper\NewLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
 class Application extends Model
@@ -29,7 +30,7 @@ class Application extends Model
         self::updated(function ($application) {
             $updatedFields = '';
             foreach ($application->getDirty() as $key => $value) {
-                $updatedFields .= (' ' . $key.',');
+                $updatedFields .= (' ' . $key . ',');
             }
             NewLog::create('Application Updated', 'Application updated for student "' . $application->lead->name . '". Changed fields are' . $updatedFields . '.');
         });
@@ -39,11 +40,11 @@ class Application extends Model
         });
     }
 
-    public function lead()
+    public function lead(): BelongsTo
     {
-        return $this->belongsTo(Lead::class);
+        return $this->belongsTo(Lead::class, 'lead_id');
     }
-    
+
     public function student()
     {
         return $this->belongsTo(Student::class);

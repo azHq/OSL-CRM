@@ -68,7 +68,8 @@ class StudentController extends Controller
                     $data = [
                         "name" => $row->name,
                         "id" => $row->id,
-                        "route" => 'gotoRoute(\'' . route('students.view', $row->id) . '\');',
+                        "route" => 'students/' . $row->id . '',
+
 
                     ];
                     return json_encode($data);
