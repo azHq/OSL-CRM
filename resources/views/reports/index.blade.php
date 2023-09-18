@@ -1,6 +1,6 @@
 @push('style')
 <!-- Chart CSS -->
-<link rel="stylesheet" href="http://localhost:8001/assets/plugins/morris.js/morris.css">
+<link rel="stylesheet" href="{{url('assets/plugins/morris.js/morris.css')}}">
 @endpush
 
 <!-- Page Content -->
@@ -17,7 +17,7 @@
         @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
         <div class="col-2">
             <label>Select Counselor</label>
-            <select id="filter-user" class="form-select focus-none" aria-label="Default select example" style="height:45px;">
+            <select id="filter-user" class="form-select focus-none" aria-label="Default select example" style="height:45px;" onchange="fetchData()">
                 <option value="" selected>All</option>
             </select>
         </div>
@@ -78,7 +78,8 @@
 </div>
 <!-- /Page Content -->
 <!-- Chart JS -->
-<script>
+<script type="text/javascript">
+    let barChart, barChart2, barChart3, piechart;
     $(document).ready(async function() {
         $.ajax({
             type: 'GET',
@@ -86,16 +87,16 @@
             success: function(data) {
                 var options = '<option value="" selected>Select Counselor</option>';
                 data.users.forEach(function(user) {
-                    options += '<option value="' + user.id + '">' + user.name  + '(Counsellor)</option>';
+                    options += '<option value="' + user.id + '">' + user.name + '(Counsellor)</option>';
                 });
                 data.cros.forEach(function(user) {
-                    options += '<option value="' + user.id + '">' + user.name  + '(CRO)</option>';
+                    options += '<option value="' + user.id + '">' + user.name + '(CRO)</option>';
                 });
                 $('#filter-user').html(options);
             }
         });
 
-        fetchData();
+        await fetchData();
     });
 
     $('#filter-user').on('change', function() {
@@ -110,97 +111,82 @@
         fetchData();
     });
 
+    async function updateChart(chart, data, labels, text, backgroundColor, type, chartId) {
+        if (chart && type == 'bar') {
+            await chart.destroy()
+        }
+        chart = new Chart(document.getElementById(chartId), {
+            type,
+            data: {
+                labels,
+                datasets: [{
+                    label: "Projects",
+                    backgroundColor,
+                    data
+                }]
+            },
+            options: {
+                legend: {
+                    display: type == 'pie'
+                },
+                title: {
+                    display: true,
+                    text
+                }
+            }
+        });
+
+        return chart
+    }
+
     async function fetchData() {
         var reports = await getReportsList();
-        console.log({
-            reports
-        })
         // Bar chart
-        new Chart(document.getElementById("bar-chart"), {
-            type: 'bar',
-            data: {
-                labels: ["Leads", "Students", "Applications"],
-                datasets: [{
-                    label: "Projects",
-                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9"],
-                    data: [reports.leads, reports.students, reports.applications]
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Counselor Performance'
-                }
-            }
-        });
-
-
+        barChart = await updateChart(
+            window.barChart,
+            [reports.leads, reports.students, reports.applications],
+            ["Leads", "Students", "Applications"],
+            'Counselor Performance',
+            ["#fe7096", "#9a55ff", "#e8c3b9"],
+            'bar',
+            "bar-chart"
+        )
+        if (barChart) window.barChart = barChart
         // Bar chart 2
-        new Chart(document.getElementById("bar-chart-2"), {
-            type: 'bar',
-            data: {
-                labels: ["Potential Leads", "Not Potential Leads", "Converted Leads"],
-                datasets: [{
-                    label: "Projects",
-                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9"],
-                    data: [reports.potential_leads, reports.not_potential_leads, reports.converted_leads]
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Lead Report'
-                }
-            }
-        });
+        barChart2 = await updateChart(
+            window.barChart2,
+            [reports.study_abroad, reports.english_teaching, reports.converted_leads],
+            ["Study Abroad Leads", "English Teaching Leads", "Converted Leads"],
+            'Lead Report',
+            ["#fe7096", "#9a55ff", "#e8c3b9"],
+            'bar',
+            "bar-chart-2"
+        )
+        if (barChart2) window.barChart2 = barChart2
 
         // Bar chart 3
-        new Chart(document.getElementById("bar-chart-3"), {
-            type: 'bar',
-            data: {
-                labels: ["Applied", "Offer Recieved", "Paid", "Visa Applied"],
-                datasets: [{
-                    label: "Projects",
-                    backgroundColor: ["#fe7096", "#9a55ff", "#e8c3b9", "#de2036"],
-                    data: [reports.applied_applications, reports.offer_applications, reports.paid_applications, reports.visa_applications]
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: 'Application Performance'
-                }
-            }
-        });
+        barChart3 = await updateChart(
+            window.barChart3,
+            [reports.applied_applications, reports.offer_applications, reports.paid_applications, reports.visa_applications],
+            ["Applied", "Offer Recieved", "Paid", "Visa Applied"],
+            'Application Performance',
+            ["#fe7096", "#9a55ff", "#e8c3b9", "#de2036"],
+            'bar',
+            "bar-chart-3"
+        )
+        if (barChart3) window.barChart3 = barChart3
 
         /*pie chart*/
-
-        new Chart(document.getElementById("pie-chart"), {
-            type: 'pie',
-            data: {
-                labels: reports.universities,
-                datasets: [{
-                    label: "Population (millions)",
-                    backgroundColor: reports.uni_colors,
-                    data: reports.uni_applications
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: ''
-                }
-            }
-        });
+        piechart = await updateChart(
+            window.piechart,
+            reports.uni_applications,
+            reports.universities,
+            'Application Report',
+            reports.uni_colors,
+            'pie',
+            "pie-chart"
+        )
+        if (piechart) window.piechart = piechart
 
     }
 
@@ -217,16 +203,10 @@
                 to_date: to_date
             },
             success: function(data) {
-                console.log({
-                    data
-                })
                 if (data) return data;
             }
         });
     }
-</script>
-
-<script>
     $('.selectBox').on("click", function() {
         $(this).parent().find('#checkBoxes').fadeToggle();
         $(this).parent().parent().siblings().find('#checkBoxes').fadeOut();

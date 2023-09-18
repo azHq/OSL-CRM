@@ -27,48 +27,47 @@ class ReportController extends Controller
 
     public function list(Request $request)
     {
-        if (\request()->ajax())
-        {
-            try{
+        if (\request()->ajax()) {
+            try {
                 $reports = Report::orderBy('created_at', 'desc')->get();
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 dd($e->getMessage());
             }
-        return datatables()->of($reports)
-            ->addColumn('counselor', function ($row) {
-                return $row->user->name;
-            })
-            ->editColumn('lead', function ($row) {
-                return $row->lead->name;
-            })
-            ->editColumn('description', function ($row) {
-                return $row->description;
-            })
-            ->editColumn('time', function ($row) {
-                return $row->time;
-            })
-            ->editColumn('type', function ($row) {
-                return $row->type;
-            })
-            ->editColumn('title', function ($row) {
-                return $row->title;
-            })
-            ->addIndexColumn()
-            ->rawColumns(['counselor', 'lead', 'description', 'created_at', 'type', 'title'])
-            ->make(true);
+            return datatables()->of($reports)
+                ->addColumn('counselor', function ($row) {
+                    return $row->user->name;
+                })
+                ->editColumn('lead', function ($row) {
+                    return $row->lead->name;
+                })
+                ->editColumn('description', function ($row) {
+                    return $row->description;
+                })
+                ->editColumn('time', function ($row) {
+                    return $row->time;
+                })
+                ->editColumn('type', function ($row) {
+                    return $row->type;
+                })
+                ->editColumn('title', function ($row) {
+                    return $row->title;
+                })
+                ->addIndexColumn()
+                ->rawColumns(['counselor', 'lead', 'description', 'created_at', 'type', 'title'])
+                ->make(true);
         }
     }
-    
+
     public function reportList(Request $request)
     {
         $leads = Lead::query();
         $students = Student::query();
         $applications = Application::query();
 
-        $potential_leads = Lead::query();
-        $potential_leads->where('status', 'Potential');
-        $not_potential_leads = Lead::query();
-        $not_potential_leads->where('status', '!=', 'Potential');
+        $study_abroad = Lead::query();
+        $study_abroad->where('status', 'Study Abroad');
+        $english_teaching = Lead::query();
+        $english_teaching->where('status', 'English Teaching');
         $converted_leads = Student::query();
 
         $applied_applications = Application::query();
@@ -83,13 +82,13 @@ class ReportController extends Controller
         if ($request->user_id && $request->user_id != '') {
             $leads->where('owner_id', $request->user_id);
             $students->where('owner_id', $request->user_id);
-            $applications->where('owner_id', $request->user_id);
-            // $applications->whereHas('student', function ($query) use ($request) {
-            //     return $query->where('owner_id', $request->user_id);
-            // });
+            // $applications->where('owner_id', $request->user_id);
+            $applications->whereHas('student', function ($query) use ($request) {
+                return $query->where('owner_id', $request->user_id);
+            });
 
-            $potential_leads->where('owner_id', $request->user_id);
-            $not_potential_leads->where('owner_id', $request->user_id);
+            $study_abroad->where('owner_id', $request->user_id);
+            $english_teaching->where('owner_id', $request->user_id);
             $converted_leads->where('owner_id', $request->user_id);
 
             $applied_applications->whereHas('student', function ($query) use ($request) {
@@ -111,8 +110,8 @@ class ReportController extends Controller
             $students->whereDate('created_at', '>=', $request->from_date);
             $applications->whereDate('created_at', '>=', $request->from_date);
 
-            $potential_leads->whereDate('created_at', '>=', $request->from_date);
-            $not_potential_leads->whereDate('created_at', '>=', $request->from_date);
+            $study_abroad->whereDate('created_at', '>=', $request->from_date);
+            $english_teaching->whereDate('created_at', '>=', $request->from_date);
             $converted_leads->whereDate('created_at', '>=', $request->from_date);
 
             $applied_applications->whereDate('created_at', '>=', $request->from_date);
@@ -126,8 +125,8 @@ class ReportController extends Controller
             $students->whereDate('created_at', '<=', $request->to_date);
             $applications->whereDate('created_at', '<=', $request->to_date);
 
-            $potential_leads->whereDate('created_at', '<=', $request->to_date);
-            $not_potential_leads->whereDate('created_at', '<=', $request->to_date);
+            $study_abroad->whereDate('created_at', '<=', $request->to_date);
+            $english_teaching->whereDate('created_at', '<=', $request->to_date);
             $converted_leads->whereDate('created_at', '<=', $request->to_date);
 
             $applied_applications->whereDate('created_at', '<=', $request->to_date);
@@ -142,16 +141,22 @@ class ReportController extends Controller
         $uni_colors = [];
         foreach ($db_universities as $university) {
             $universities[] = $university->name;
-            $uni_applications[] = $university->applications()->count();
-            $uni_colors[] = '#'.ColorGenerator::randomColor();
+            $applications = $university->applications();
+            if ($request->user_id && $request->user_id != '') {
+                $applications->whereHas('lead', function ($query) use ($request) {
+                    return $query->where('owner_id', $request->user_id);
+                });
+            }
+            $uni_applications[] = $applications->count();
+            $uni_colors[] = '#' . ColorGenerator::randomColor();
         }
 
         return [
             'leads' => $leads->count(),
             'students' => $students->count(),
             'applications' => $applications->count(),
-            'potential_leads' => $potential_leads->count(),
-            'not_potential_leads' => $not_potential_leads->count(),
+            'study_abroad' => $study_abroad->count(),
+            'english_teaching' => $english_teaching->count(),
             'converted_leads' => $converted_leads->count(),
             'applied_applications' => $applied_applications->count(),
             'offer_applications' => $offer_applications->count(),

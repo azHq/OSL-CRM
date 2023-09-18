@@ -220,7 +220,7 @@ class LeadController extends Controller
                     $data = [
                         "name" => $row->name,
                         "id" => $row->id,
-                        "route" => 'leads/' . $row->id . '',
+                        "route" => '/leads/' . $row->id . '',
 
                     ];
                     return json_encode($data);
