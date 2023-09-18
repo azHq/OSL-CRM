@@ -91,6 +91,7 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Source</th>
+                                <th>Desired Course</th>
                                 <th>Passport</th>
                                 <th>Destination</th>
                                 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
@@ -279,6 +280,24 @@
                                     <option value="Other Social Platform">Other Social Platform</option>
                                                                                 </select>`);
                                     break;
+                                case 'Desired Course':
+                                    $(cell).html(`<select id="filter-desired-course" class="leads-list-courses form-select focus-none mt-2" name="desired_course" style="width:max-content;">
+                                    <option value="" selected>Filter Course</option>
+											<option value="none">N/A</option>
+											<option value="IELTS (Academic)">IELTS (Academic)</option>
+											<option value="IELTS (General)">IELTS (General)</option>
+											<option value="PTE">PTE</option>
+											<option value="OET">OET</option>
+											<option value="Cambridge English">Cambridge English</option>
+											<option value="TOEFL">TOEFL</option>
+											<option value="Spoken">Spoken</option>
+											<option value="English Foundation">English Foundation</option>
+											<option value="Duolingo">Duolingo</option>
+											<option value="OIETC">OIETC</option>
+											<option value="SAT">SAT</option>
+											<option value="GRE">GRE</option>
+										</select>`);
+                                    break;
                                 case 'Passport':
                                     $(cell).html(`<select id="filter-passport" name="passport_id" class="leads-list-passport form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                     <option value="" selected>Filter Passport</option>
@@ -401,6 +420,9 @@
                     data: 'source'
                 },
                 {
+                    data: 'desired_course'
+                },
+                {
                     data: 'passport'
                 },
                 {
@@ -488,6 +510,24 @@
                                     // case 'Lead Created':
                                     //     $(cell).html(`<input type="date" class="form-control" name="date_filter" placeholder="{{date('Y-m-d')}}">`);
                                     //     break;
+                                case 'Desired Course':
+                                    $(cell).html(`<select id="filter-desired-course" class="leads-list-courses form-select focus-none mt-2" name="desired_course" style="width:max-content;">
+                                    <option value="" selected>Filter Course</option>
+											<option value="none">N/A</option>
+											<option value="IELTS (Academic)">IELTS (Academic)</option>
+											<option value="IELTS (General)">IELTS (General)</option>
+											<option value="PTE">PTE</option>
+											<option value="OET">OET</option>
+											<option value="Cambridge English">Cambridge English</option>
+											<option value="TOEFL">TOEFL</option>
+											<option value="Spoken">Spoken</option>
+											<option value="English Foundation">English Foundation</option>
+											<option value="Duolingo">Duolingo</option>
+											<option value="OIETC">OIETC</option>
+											<option value="SAT">SAT</option>
+											<option value="GRE">GRE</option>
+										</select>`);
+                                    break;
                                 case 'Source':
                                     $(cell).html(`<select id="filter-source" name="source" class="leads-list-purposes form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                             <option value="" selected>Filter Source</option>
@@ -628,6 +668,9 @@
                 // },
                 {
                     data: 'source'
+                },
+                {
+                    data: 'desired_course'
                 },
                 {
                     data: 'passport'

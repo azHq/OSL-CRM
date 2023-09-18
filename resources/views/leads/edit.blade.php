@@ -185,11 +185,26 @@
 										</div>
 									</div>
 								</div>
-								<div class="col">
+								<div class="col" id='edit_desiredcourse_col'>
 									<div class="form-group row">
 										<div class="col-sm-12">
 											<label class="col-form-label">Desired Course </label>
-											<input type="text" class="form-control" name="desired_course" placeholder="Desired Course">
+											<select id="edit-lead-desired-course" class=" form-control form-select" name="desired_course" onchange="editDesiredCourseChanged()">
+												<option value="none" selected>N/A</option>
+												<option value="IELTS (Academic)">IELTS (Academic)</option>
+												<option value="IELTS (General)">IELTS (General)</option>
+												<option value="PTE">PTE</option>
+												<option value="OET">OET</option>
+												<option value="Cambridge English">Cambridge English</option>
+												<option value="TOEFL">TOEFL</option>
+												<option value="Spoken">Spoken</option>
+												<option value="English Foundation">English Foundation</option>
+												<option value="Duolingo">Duolingo</option>
+												<option value="OIETC">OIETC</option>
+												<option value="SAT">SAT</option>
+												<option value="GRE">GRE</option>
+												<option value="others">Others</option>
+											</select>
 										</div>
 									</div>
 								</div>
@@ -392,6 +407,43 @@
 
 	}
 
+	function editDesiredCourseChanged() {
+		let destination = $("#edit-lead-desired-course").val();
+		if (destination == 'others') {
+			let newHtml = `	<div class="form-group row">
+									<div class="col-sm-12">
+										<label class="col-form-label">Desired Course </label>
+										<select id="edit-lead-desired-course" class=" form-control form-select" name="desired_course" onchange="editDesiredCourseChanged()">
+											<option value="none">N/A</option>
+											<option value="IELTS (Academic)">IELTS (Academic)</option>
+											<option value="IELTS (General)">IELTS (General)</option>
+											<option value="PTE">PTE</option>
+											<option value="OET">OET</option>
+											<option value="Cambridge English">Cambridge English</option>
+											<option value="TOEFL">TOEFL</option>
+											<option value="Spoken">Spoken</option>
+											<option value="English Foundation">English Foundation</option>
+											<option value="Duolingo">Duolingo</option>
+											<option value="OIETC">OIETC</option>
+											<option value="SAT">SAT</option>
+											<option value="GRE">GRE</option>
+											<option value="others" selected>Others</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" id="edit_desiredcourse_input">
+									<div class="col-sm-12">
+										<label class="col-form-label">Course Name</label>
+										<input type="text" class="form-control" name="desired_course" placeholder="Write a name">
+									</div>
+								</div>`
+			$("#edit_desiredcourse_col").html(newHtml)
+		} else {
+			$("#edit_desiredcourse_input").html('')
+		}
+
+	}
+
 	async function updateHtml(elementId, value) {
 		let pre_html = $(elementId).html()
 		if (value && !pre_html.includes(value)) {
@@ -430,6 +482,7 @@
 				await updateHtml('#edit-lead-english', lead.english)
 				await updateHtml('#edit-lead-source', lead.insert_type)
 				await updateHtml('#edit-lead-destination', lead.destination)
+				await updateHtml('#edit-lead-desired-course', lead.desired_course)
 
 				// let pre_html = $('#edit-lead-last_education').html()
 				// let next_html = `

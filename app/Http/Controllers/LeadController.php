@@ -115,6 +115,9 @@ class LeadController extends Controller
                 ->editColumn('mobile', function ($row) {
                     return $row->mobile;
                 })
+                ->editColumn('desired_course', function ($row) {
+                    return '<label class="badge badge-info text-center">' . $row->desired_course . '</label>';
+                })
                 ->editColumn('purpose', function ($row) {
                     $value = $row->status;
                     if ($value == 'Potential' || $value == 'Not Potential') {
@@ -177,7 +180,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'source', 'passport', 'destination', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'desired_course', 'status', 'owner', 'source', 'passport', 'destination', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }
@@ -232,6 +235,9 @@ class LeadController extends Controller
                     } else {
                         return '<label class="badge badge-success text-center">' . $row->status . '</label>';
                     }
+                })
+                ->editColumn('desired_course', function ($row) {
+                    return '<label class="badge badge-info text-center">' . $row->desired_course . '</label>';
                 })
                 ->editColumn('source', function ($row) {
                     $value = $row->insert_type;
@@ -294,7 +300,7 @@ class LeadController extends Controller
                     return $action;
                 })
                 ->addIndexColumn()
-                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'status', 'owner', 'source', 'passport', 'destination', 'created_at', 'created_by', 'action'])
+                ->rawColumns(['name', 'email', 'mobile', 'purpose', 'desired_course', 'status', 'owner', 'source', 'passport', 'destination', 'created_at', 'created_by', 'action'])
                 ->make(true);
         }
     }

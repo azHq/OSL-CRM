@@ -80,6 +80,7 @@
                                 <th>Lead Created</th>
                                 <!-- <th>Lead Status</th> -->
                                 <th>Purpose</th>
+                                <th>Desired Course</th>
                                 <th>Source</th>
                                 <th>Passport</th>
                                 <th>Destination</th>
@@ -208,6 +209,24 @@
                                                     <!-- <option value="Not Potential">Not Potential</option> -->
                                             
                                                 </select>`);
+                                    break;
+                                case 'Desired Course':
+                                    $(cell).html(`<select id="filter-desired-course" class="leads-list-courses form-select focus-none mt-2" name="desired_course" style="width:max-content;">
+                                            <option value="" selected>Filter Course</option>
+											<option value="none">N/A</option>
+											<option value="IELTS (Academic)">IELTS (Academic)</option>
+											<option value="IELTS (General)">IELTS (General)</option>
+											<option value="PTE">PTE</option>
+											<option value="OET">OET</option>
+											<option value="Cambridge English">Cambridge English</option>
+											<option value="TOEFL">TOEFL</option>
+											<option value="Spoken">Spoken</option>
+											<option value="English Foundation">English Foundation</option>
+											<option value="Duolingo">Duolingo</option>
+											<option value="OIETC">OIETC</option>
+											<option value="SAT">SAT</option>
+											<option value="GRE">GRE</option>
+										</select>`);
                                     break;
                                     // case 'Created By':
                                     //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
@@ -363,6 +382,9 @@
                     data: 'purpose'
                 },
                 {
+                    data: 'desired_course'
+                },
+                {
                     data: 'source'
                 },
                 {
@@ -453,6 +475,25 @@
                                                     <!-- <option value="Not Potential">Not Potential</option> -->
                                             
                                                 </select>`);
+                                    break;
+
+                                case 'Desired Course':
+                                    $(cell).html(`<select id="filter-desired-course" class="leads-list-courses form-select focus-none mt-2" name="desired_course" style="width:max-content;">
+                                            <option value="" selected>Filter Course</option>
+											<option value="none">N/A</option>
+											<option value="IELTS (Academic)">IELTS (Academic)</option>
+											<option value="IELTS (General)">IELTS (General)</option>
+											<option value="PTE">PTE</option>
+											<option value="OET">OET</option>
+											<option value="Cambridge English">Cambridge English</option>
+											<option value="TOEFL">TOEFL</option>
+											<option value="Spoken">Spoken</option>
+											<option value="English Foundation">English Foundation</option>
+											<option value="Duolingo">Duolingo</option>
+											<option value="OIETC">OIETC</option>
+											<option value="SAT">SAT</option>
+											<option value="GRE">GRE</option>
+										</select>`);
                                     break;
                                     // case 'Created By':
                                     //     $(cell).html(`<select id="filter-creator" name="owner_id" class="leads-list-creators form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
@@ -604,6 +645,9 @@
                 // },
                 {
                     data: 'purpose'
+                },
+                {
+                    data: 'desired_course'
                 },
                 {
                     data: 'source'

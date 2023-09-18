@@ -446,6 +446,8 @@
                             await updateHtml('#edit-lead-english', lead.english)
                             await updateHtml('#edit-lead-source', lead.insert_type)
                             await updateHtml('#edit-lead-destination', lead.destination)
+                            await updateHtml('#edit-lead-desired-course', lead.desired_course)
+
                             //             let pre_html = $('#edit-lead-last_education').html()
                             //             let next_html = `
                             // 	<option value="${lead.last_education}">${lead.last_education}</option>
