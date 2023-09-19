@@ -98,7 +98,7 @@
 				</li>
 				@endif
 				@if (Auth::user()->hasRole('main-super-admin'))
-				<li id="super-admins" class="nav-li {{ Request::is('super-admins*') ? 'active' : '' }}">
+				<li id="super-admins" class="nav-li {{ Request::is('admins*') ? 'active' : '' }}">
 					<a data-nav="super-admins" href="{{route('super-admin.index')}}" class="url"><i class="feather-users"></i> <span>Admin Creation</span></a>
 				</li>
 				@endif

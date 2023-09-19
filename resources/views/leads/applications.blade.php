@@ -63,6 +63,7 @@
     // On Load
     $(document).ready(function() {
         getApplications();
+
     });
 </script>
 @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('main-super-admin'))
@@ -94,7 +95,7 @@
                         var title = $(cell).text();
                         switch (title) {
                             case 'Status':
-                                $(cell).html(`<select id="filter-status" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                $(cell).html(`<select id="filter-status-lead" class="form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Status</option>
                                                 <option value="Applied">Applied</option>
                                                 <option value="Offer Received">Offer Received</option>
@@ -104,12 +105,12 @@
                                             </select>`);
                                 break;
                             case 'University':
-                                $(cell).html(`<select id="filter-university" name="university_id" class="applications-list-universities form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                $(cell).html(`<select id="filter-university" name="university_id" class="applications-list-universities-lead form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter University</option>
                                             </select>`);
                                 break;
                             case 'Counsellor':
-                                $(cell).html(`<select id="filter-owner" name="owner_id" class="applications-list-owners form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
+                                $(cell).html(`<select id="filter-owner" name="owner_id" class="applications-list-owners-lead form-select focus-none mt-2" aria-label="Default select example" style="width:max-content;">
                                                 <option value="" selected>Filter Counsellor</option>
                                             </select>`);
                                 break;
@@ -164,6 +165,8 @@
                                 $(this).trigger('change');
                             });
                     });
+                getApplicationsCounsellorsLead();
+
             },
             ajax: {
                 'url': url,
@@ -331,29 +334,31 @@
         });
     }
 
-    $(document).ready(function() {
-        getApplicationsCounsellors();
-    });
-
-    function getApplicationsCounsellors() {
+    function getApplicationsCounsellorsLead() {
         $.ajax({
             type: 'GET',
             url: "{{ route('leads.create') }}",
             success: function(data) {
+                let options = '<option value="" selected>Filter Counsellor</option>';
+                options += '<option value="Unassigned">Unassigned</option>';
                 if (data.users) {
-                    var options = '<option value="" selected>Filter Counsellor</option>';
-                    options += '<option value="Unassigned">Unassigned</option>';
-                    data.users.forEach(function(user) {
-                        options += '<option value="' + user.name + '">' + user.name + '</option>';
-                    });
-                    $('.applications-list-owners').html(options);
+                    for (let user of data.users) {
+                        options += '<option value="' + user.name + '">' + user.name + ' (Counsellor)</option>';
+                    }
                 }
+                if (data.cros) {
+                    for (let cro of data.cros) {
+                        options += '<option value="' + cro.name + '">' + cro.name + ' (CRO)</option>';
+                    }
+                }
+                $('.applications-list-owners-lead').html(options);
+
                 if (data.universities) {
-                    var options = '<option value="" selected>Filter University</option>';
+                    let options = '<option value="" selected>Filter University</option>';
                     data.universities.forEach(function(university) {
                         options += '<option value="' + university.name + '">' + university.name + '</option>';
                     });
-                    $('.applications-list-universities').html(options);
+                    $('.applications-list-universities-lead').html(options);
                 }
 
             }

@@ -195,7 +195,7 @@ class LeadController extends Controller
                 if ($status == 'student') {
                     $query->where('slug', 'appointment-book')
                         ->orWhere('slug', 'waiting-for-documents');
-                } else if ($status == 'admission') {
+                } else if ($status == 'admissions' || $status == 'admission') {
                     $query->where('slug', 'partial-documents')
                         ->orWhere('slug', 'document-received')
                         ->orWhere('slug', 'applied')
