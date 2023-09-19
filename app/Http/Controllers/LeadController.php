@@ -681,7 +681,7 @@ class LeadController extends Controller
                 $headings = $row;
                 continue;
             }
-            $findExistingLead = Lead::where('email', $row[2])->orWhere('mobile', $row[1])->first();
+            $findExistingLead = Lead::where('email', $row[2])->orWhere('mobile', (string)$row[1])->first();
             if ($findExistingLead) {
                 $duplicateCount++;
                 continue;
@@ -717,7 +717,7 @@ class LeadController extends Controller
             Lead::create([
                 'name' => $row[0],
                 'email' => $row[2],
-                'mobile' => $row[1],
+                'mobile' => (string)$row[1],
                 'insert_type' => $row[3],
                 'status' => $row[4],
                 'last_education' => $row[5],
@@ -729,7 +729,9 @@ class LeadController extends Controller
                 'address' => $row[12],
                 'desired_course' => $row[14],
                 'temp_remarks_id' => $this->data_stringify($temp_remarks_id),
-                'creator_id' => Auth::id()
+                'creator_id' => Auth::id(),
+                'category_id' => 1,
+                'subcategory_id' => 1
             ]);
             $imported++;
         }
